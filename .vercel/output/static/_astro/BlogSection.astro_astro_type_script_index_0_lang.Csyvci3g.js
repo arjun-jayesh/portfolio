@@ -1,0 +1,1 @@
+import{g as r}from"./index.CB87Sc6I.js";import{S as o}from"./ScrollTrigger.Cv03IO65.js";r.registerPlugin(o);r.to(".blog-header",{scrollTrigger:{trigger:".blog-header",start:"top 85%"},opacity:1,y:0,duration:.8,ease:"power2.out"});

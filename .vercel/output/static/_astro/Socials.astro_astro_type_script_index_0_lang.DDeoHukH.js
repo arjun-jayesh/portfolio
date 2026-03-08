@@ -1,0 +1,1 @@
+import{g as r}from"./index.CB87Sc6I.js";import{S as t}from"./ScrollTrigger.Cv03IO65.js";r.registerPlugin(t);r.to(".socials-text",{scrollTrigger:{trigger:".socials-text",start:"top 85%"},opacity:1,y:0,duration:.8,ease:"power2.out"});r.to(".social-card",{scrollTrigger:{trigger:".social-card",start:"top 85%"},opacity:1,y:0,duration:.6,stagger:.15,ease:"power2.out"});

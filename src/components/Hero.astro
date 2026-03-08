@@ -52,7 +52,7 @@ const { hero, stats } = siteConfig;
       class="font-poppins text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extralight tracking-tight text-offwhite leading-none hero-corner-text"
       style="opacity: 0;"
     >
-      {hero.firstName}
+      {hero?.firstName || "Arjun"}
     </h1>
   </div>
 
@@ -62,7 +62,7 @@ const { hero, stats } = siteConfig;
       class="font-poppins text-xs sm:text-sm md:text-base uppercase tracking-[0.25em] text-muted hero-corner-text"
       style="opacity: 0;"
     >
-      {hero.role}
+      {hero?.role || "Developer"}
     </p>
   </div>
 
@@ -71,7 +71,7 @@ const { hero, stats } = siteConfig;
     <div class="relative w-52 h-52 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full overflow-hidden"
       style="box-shadow: 0 0 60px var(--color-teal-glow), 0 0 120px rgba(42,157,143,0.15);">
       <div class="w-full h-full bg-gradient-to-br from-teal/20 via-charcoal-light to-charcoal flex items-center justify-center">
-        <span class="font-poppins text-7xl sm:text-8xl md:text-9xl font-bold text-teal/30">{hero.firstName[0]}</span>
+        <span class="font-poppins text-7xl sm:text-8xl md:text-9xl font-bold text-teal/30">{hero?.firstName?.[0] || "A"}</span>
       </div>
     </div>
     <!-- Orbiting ring decoration -->
@@ -90,7 +90,7 @@ const { hero, stats } = siteConfig;
 <section class="section-padding max-w-6xl mx-auto">
   <!-- Stats Row -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-16">
-    {stats.map((stat) => (
+    {(stats || []).map((stat) => (
       <div class="stat-card text-center p-6 rounded-xl border border-charcoal-light/30 bg-charcoal-light/10 backdrop-blur-sm" style="opacity:0; transform:translateY(30px);">
         <span class="block font-mono text-3xl sm:text-4xl md:text-5xl font-bold text-teal mb-2">
           {stat.value}
