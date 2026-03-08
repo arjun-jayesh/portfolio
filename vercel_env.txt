@@ -1,0 +1,11 @@
+# Vercel Environment Variables
+# Paste these into the Vercel Project Settings > Environment Variables
+
+# The master password for your /admin panel
+ADMIN_PASSWORD=your_secret_password_here
+
+# Your production deployment URL (used for sitemap generation)
+SITE=https://arjun-jayesh.com
+
+# Optional: Disable Astro telemetry in production
+ASTRO_TELEMETRY_DISABLED=1
