@@ -5,18 +5,27 @@ import Layout from '../../layouts/Layout.astro';
 import { marked } from 'marked';
 
 const { slug } = Astro.params;
+let post = null;
+let content = "";
 
-const { data: post, error } = await supabase
-  .from('posts')
-  .select('*')
-  .eq('slug', slug)
-  .single();
+if (!supabase) {
+  console.error("Supabase client not initialized.");
+} else {
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('slug', slug)
+    .single();
 
-if (error || !post) {
-  return Astro.redirect('/404');
+  if (!error && data) {
+    post = data;
+    content = await marked(data.body);
+  }
 }
 
-const content = await marked(post.body);
+if (!post) {
+  return Astro.redirect('/404');
+}
 ---
 
 <Layout title={`${post.title} — Arjun Jayesh`} description={post.excerpt}>

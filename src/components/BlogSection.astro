@@ -2,14 +2,21 @@
 import { supabase } from "../lib/supabase";
 import BlogFilter from "./BlogFilter";
 
-const { data: allPosts, error } = await supabase
-  .from("posts")
-  .select("*")
-  .order("date", { ascending: false });
+let allPosts = [];
 
-if (error) console.error("Supabase error fetching posts:", error);
+if (!supabase) {
+  console.error("Supabase client not initialized. Check your environment variables.");
+} else {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .order("date", { ascending: false });
 
-const posts = (allPosts || []).map((post) => ({
+  if (error) console.error("Supabase error fetching posts:", error);
+  allPosts = data || [];
+}
+
+const posts = allPosts.map((post) => ({
   slug: post.slug,
   title: post.title,
   excerpt: post.excerpt,

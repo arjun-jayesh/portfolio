@@ -1,14 +1,21 @@
 ---
 import { supabase } from "../lib/supabase";
 
-const { data: configData, error } = await supabase
-  .from("site_config")
-  .select("data")
-  .eq("key", "primary_settings")
-  .single();
+let siteConfig = { hero: {}, stats: [] };
 
-if (error) console.error("Supabase error:", error);
-const siteConfig = configData?.data || { hero: {}, stats: [] };
+if (!supabase) {
+  console.error("Supabase client not initialized. Check your environment variables.");
+} else {
+  const { data: configData, error } = await supabase
+    .from("site_config")
+    .select("data")
+    .eq("key", "primary_settings")
+    .single();
+
+  if (error) console.error("Supabase error:", error);
+  siteConfig = configData?.data || siteConfig;
+}
+
 const { hero, stats } = siteConfig;
 ---
 

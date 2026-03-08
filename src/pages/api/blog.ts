@@ -4,6 +4,9 @@ export const prerender = false;
 
 export async function GET() {
     try {
+        if (!supabaseAdmin) {
+            throw new Error('Supabase client not initialized. Check your environment variables.');
+        }
         const { data, error } = await supabaseAdmin
             .from('posts')
             .select('*')
@@ -29,6 +32,9 @@ export async function GET() {
 
 export async function POST({ request }: { request: Request }) {
     try {
+        if (!supabaseAdmin) {
+            throw new Error('Supabase client not initialized. Check your environment variables.');
+        }
         const { slug, title, category, date, excerpt, body } = await request.json();
 
         const { error } = await supabaseAdmin
@@ -52,6 +58,9 @@ export async function POST({ request }: { request: Request }) {
 
 export async function DELETE({ request }: { request: Request }) {
     try {
+        if (!supabaseAdmin) {
+            throw new Error('Supabase client not initialized. Check your environment variables.');
+        }
         const url = new URL(request.url);
         const slug = url.searchParams.get('slug');
         if (!slug) return new Response('Missing slug', { status: 400 });

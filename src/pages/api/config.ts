@@ -4,6 +4,9 @@ export const prerender = false;
 
 export async function GET() {
     try {
+        if (!supabaseAdmin) {
+            throw new Error('Supabase client not initialized. Check your environment variables.');
+        }
         const { data, error } = await supabaseAdmin
             .from('site_config')
             .select('data')
@@ -19,6 +22,9 @@ export async function GET() {
 
 export async function POST({ request }: { request: Request }) {
     try {
+        if (!supabaseAdmin) {
+            throw new Error('Supabase client not initialized. Check your environment variables.');
+        }
         const data = await request.json();
         const { error } = await supabaseAdmin
             .from('site_config')
