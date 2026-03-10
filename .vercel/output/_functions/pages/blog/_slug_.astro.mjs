@@ -1,12 +1,12 @@
-import { e as createAstro, f as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead, u as unescapeHTML } from '../../chunks/astro/server_CgrrVIQx.mjs';
+import { e as createAstro, f as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead, u as unescapeHTML } from '../../chunks/astro/server_xv9ZGpXE.mjs';
 import 'piccolore';
-import { a as supabase } from '../../chunks/supabase_C2AHM8W4.mjs';
-import { $ as $$Layout } from '../../chunks/Layout_DCdCGL1q.mjs';
+import { a as supabase } from '../../chunks/supabase_BcKHrXOX.mjs';
+import { $ as $$Layout } from '../../chunks/Layout_BiNcLr2s.mjs';
 import { marked } from 'marked';
 /* empty css                                     */
 export { renderers } from '../../renderers.mjs';
 
-const $$Astro = createAstro("https://arjun-jayesh.com");
+const $$Astro = createAstro("https://portfolio-sage-two-43.vercel.app");
 const prerender = false;
 const $$slug = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);

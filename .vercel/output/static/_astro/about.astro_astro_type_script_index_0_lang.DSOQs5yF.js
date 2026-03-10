@@ -1,0 +1,1 @@
+import{g as r}from"./index.CB87Sc6I.js";import{S as t}from"./ScrollTrigger.Cv03IO65.js";r.registerPlugin(t);r.utils.toArray(".about-section").forEach(o=>{r.to(o,{scrollTrigger:{trigger:o,start:"top 85%"},opacity:1,y:0,duration:.7,ease:"power2.out"})});

@@ -1,4 +1,4 @@
-import { aq as NOOP_MIDDLEWARE_HEADER, ar as REDIRECT_STATUS_CODES, A as AstroError, as as ActionsReturnedInvalidDataError, _ as DEFAULT_404_COMPONENT } from './astro/server_CgrrVIQx.mjs';
+import { aq as NOOP_MIDDLEWARE_HEADER, ar as REDIRECT_STATUS_CODES, A as AstroError, as as ActionsReturnedInvalidDataError, _ as DEFAULT_404_COMPONENT } from './astro/server_xv9ZGpXE.mjs';
 import { parse, stringify } from 'devalue';
 import { escape } from 'html-escaper';
 
@@ -12,7 +12,7 @@ const ACTION_QUERY_PARAMS$1 = {
   actionName: "_action"};
 const ACTION_RPC_ROUTE_PATTERN = "/_actions/[...path]";
 
-const __vite_import_meta_env__ = {"ASSETS_PREFIX": undefined, "BASE_URL": "/", "DEV": false, "MODE": "production", "PROD": true, "PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13d3Z5Y251eXFmb3Njd2l6YmhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MzYyNzgsImV4cCI6MjA4ODUxMjI3OH0.s6ZaOYWiKcZUM3O2L9bv-naGVSSRIBBGnW0wteO1t9w", "PUBLIC_SUPABASE_URL": "https://mwwvycnuyqfoscwizbhk.supabase.co", "SITE": "https://arjun-jayesh.com", "SSR": true};
+const __vite_import_meta_env__ = {"ASSETS_PREFIX": undefined, "BASE_URL": "/", "DEV": false, "MODE": "production", "PROD": true, "PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13d3Z5Y251eXFmb3Njd2l6YmhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MzYyNzgsImV4cCI6MjA4ODUxMjI3OH0.s6ZaOYWiKcZUM3O2L9bv-naGVSSRIBBGnW0wteO1t9w", "PUBLIC_SUPABASE_URL": "https://mwwvycnuyqfoscwizbhk.supabase.co", "SITE": "https://portfolio-sage-two-43.vercel.app", "SSR": true};
 const ACTION_QUERY_PARAMS = ACTION_QUERY_PARAMS$1;
 const codeToStatusMap = {
   // Implemented from IANA HTTP Status Code Registry
@@ -126,7 +126,7 @@ function getActionQueryString(name) {
 }
 function serializeActionResult(res) {
   if (res.error) {
-    if (Object.assign(__vite_import_meta_env__, {})?.DEV) {
+    if (Object.assign(__vite_import_meta_env__, { PORT: "4321" })?.DEV) {
       actionResultErrorStack.set(res.error.stack);
     }
     let body2;
@@ -193,7 +193,7 @@ function deserializeActionResult(res) {
         })
       };
     }
-    if (Object.assign(__vite_import_meta_env__, {})?.PROD) {
+    if (Object.assign(__vite_import_meta_env__, { PORT: "4321" })?.PROD) {
       return { error: ActionError.fromJson(json), data: void 0 };
     } else {
       const error = ActionError.fromJson(json);

@@ -6,8 +6,7 @@ async function GET() {
   try {
     if (!supabaseAdmin) {
       return new Response(JSON.stringify({
-        error: "Supabase client not initialized.",
-        details: "Check PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables."
+        error: "Supabase not initialized."
       }), {
         status: 500
       });
@@ -15,27 +14,17 @@ async function GET() {
     const {
       data,
       error
-    } = await supabaseAdmin.from("posts").select("*").order("date", {
+    } = await supabaseAdmin.from("ideas").select("*").order("created_at", {
       ascending: false
     });
     if (error) throw error;
-    const formattedPosts = data.map((post) => ({
-      slug: post.slug,
-      title: post.title,
-      category: post.category,
-      date: post.date,
-      excerpt: post.excerpt,
-      body: post.body
-    }));
-    return new Response(JSON.stringify(formattedPosts), {
+    return new Response(JSON.stringify(data), {
       status: 200
     });
   } catch (e) {
-    console.error("API Blog GET Error:", e);
+    console.error("API Ideas GET Error:", e);
     return new Response(JSON.stringify({
-      error: "Internal Server Error",
-      message: e.message,
-      stack: e.stack
+      error: e.message
     }), {
       status: 500
     });
@@ -47,29 +36,39 @@ async function POST({
   try {
     if (!supabaseAdmin) {
       return new Response(JSON.stringify({
-        error: "Supabase client not initialized."
+        error: "Supabase not initialized."
       }), {
         status: 500
       });
     }
-    const {
-      slug,
-      title,
-      category,
-      date,
-      excerpt,
-      body
-    } = await request.json();
+    const body = await request.json();
+    const required = ["name", "email", "project_type", "idea_title", "idea_description"];
+    for (const field of required) {
+      if (!body[field] || !body[field].trim()) {
+        return new Response(JSON.stringify({
+          error: `Missing required field: ${field}`
+        }), {
+          status: 400
+        });
+      }
+    }
     const {
       error
-    } = await supabaseAdmin.from("posts").upsert({
-      slug,
-      title,
-      category,
-      date,
-      excerpt,
-      body,
-      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+    } = await supabaseAdmin.from("ideas").insert({
+      name: body.name,
+      email: body.email,
+      phone: body.phone || null,
+      project_type: body.project_type,
+      budget: body.budget || null,
+      timeline: body.timeline || null,
+      idea_title: body.idea_title,
+      idea_description: body.idea_description,
+      target_audience: body.target_audience || null,
+      features: body.features || null,
+      portfolio_url: body.portfolio_url || null,
+      linkedin: body.linkedin || null,
+      additional_notes: body.additional_notes || null,
+      status: "new"
     });
     if (error) throw error;
     return new Response(JSON.stringify({
@@ -78,11 +77,9 @@ async function POST({
       status: 200
     });
   } catch (e) {
-    console.error("API Blog POST Error:", e);
+    console.error("API Ideas POST Error:", e);
     return new Response(JSON.stringify({
-      error: "Internal Server Error",
-      message: e.message,
-      stack: e.stack
+      error: e.message
     }), {
       status: 500
     });
@@ -94,19 +91,19 @@ async function DELETE({
   try {
     if (!supabaseAdmin) {
       return new Response(JSON.stringify({
-        error: "Supabase client not initialized."
+        error: "Supabase not initialized."
       }), {
         status: 500
       });
     }
     const url = new URL(request.url);
-    const slug = url.searchParams.get("slug");
-    if (!slug) return new Response("Missing slug", {
+    const id = url.searchParams.get("id");
+    if (!id) return new Response("Missing id", {
       status: 400
     });
     const {
       error
-    } = await supabaseAdmin.from("posts").delete().eq("slug", slug);
+    } = await supabaseAdmin.from("ideas").delete().eq("id", parseInt(id));
     if (error) throw error;
     return new Response(JSON.stringify({
       success: true
@@ -114,11 +111,9 @@ async function DELETE({
       status: 200
     });
   } catch (e) {
-    console.error("API Blog DELETE Error:", e);
+    console.error("API Ideas DELETE Error:", e);
     return new Response(JSON.stringify({
-      error: "Internal Server Error",
-      message: e.message,
-      stack: e.stack
+      error: e.message
     }), {
       status: 500
     });

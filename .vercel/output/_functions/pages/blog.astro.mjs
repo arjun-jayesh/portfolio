@@ -1,7 +1,7 @@
-import { f as createComponent, m as maybeRenderHead, k as renderComponent, n as renderScript, r as renderTemplate } from '../chunks/astro/server_CgrrVIQx.mjs';
+import { f as createComponent, m as maybeRenderHead, k as renderComponent, l as renderScript, r as renderTemplate } from '../chunks/astro/server_xv9ZGpXE.mjs';
 import 'piccolore';
-import { $ as $$Layout } from '../chunks/Layout_DCdCGL1q.mjs';
-import { a as supabase } from '../chunks/supabase_C2AHM8W4.mjs';
+import { $ as $$Layout } from '../chunks/Layout_BiNcLr2s.mjs';
+import { a as supabase } from '../chunks/supabase_BcKHrXOX.mjs';
 import { useState } from 'preact/hooks';
 import { jsxs, jsx } from 'preact/jsx-runtime';
 export { renderers } from '../renderers.mjs';

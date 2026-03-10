@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 import { renderToStringAsync } from 'preact-render-to-string';
-import { v as renderJSX, w as createVNode, x as AstroJSX, y as AstroUserError } from './chunks/astro/server_CgrrVIQx.mjs';
+import { v as renderJSX, w as createVNode, x as AstroJSX, y as AstroUserError } from './chunks/astro/server_xv9ZGpXE.mjs';
 import 'piccolore';
 import 'clsx';
 
