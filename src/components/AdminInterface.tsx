@@ -1,10 +1,12 @@
 import { useState, useEffect } from "preact/hooks";
 
 export default function AdminInterface() {
-    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas">("blog");
+    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise">("blog");
     const [posts, setPosts] = useState<any[]>([]);
     const [config, setConfig] = useState<any>(null);
     const [ideas, setIdeas] = useState<any[]>([]);
+    const [products, setProducts] = useState<any[]>([]);
+    const [enterprise, setEnterprise] = useState<any>({ hero_video_url: "", locations: "INDIA | CHINA | GCC", company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED" });
     const [editingPost, setEditingPost] = useState<any>(null);
     const [isNewPost, setIsNewPost] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -17,17 +19,24 @@ export default function AdminInterface() {
     async function fetchData() {
         setLoading(true);
         try {
-            const [postsRes, configRes, ideasRes] = await Promise.all([
+            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes] = await Promise.all([
                 fetch("/api/blog"),
                 fetch("/api/config"),
+                fetch("/api/config?key=enterprise_assets"),
                 fetch("/api/ideas"),
+                fetch("/api/products"),
             ]);
             const postsData = await postsRes.json();
             const configData = await configRes.json();
+            const enterpriseData = await enterpriseRes.json();
             const ideasData = await ideasRes.json();
+            const productsData = await productsRes.json();
+
             setPosts(Array.isArray(postsData) ? postsData : []);
             setConfig(configData);
+            setEnterprise(enterpriseData || { hero_video_url: "", locations: "INDIA | CHINA | GCC", company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED" });
             setIdeas(Array.isArray(ideasData) ? ideasData : []);
+            setProducts(Array.isArray(productsData) ? productsData : []);
         } catch (e) {
             console.error("Fetch error:", e);
         }
@@ -116,6 +125,20 @@ export default function AdminInterface() {
                         }`}
                 >
                     Ideas ({ideas.length})
+                </button>
+                <button
+                    onClick={() => setActiveTab("products")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "products" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Products ({products.length})
+                </button>
+                <button
+                    onClick={() => setActiveTab("enterprise")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "enterprise" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Enterprise Assets
                 </button>
             </div>
 
@@ -217,17 +240,51 @@ export default function AdminInterface() {
             {activeTab === "ideas" && (
                 <IdeasViewer ideas={ideas} onRefresh={fetchData} />
             )}
+
+            {activeTab === "products" && (
+                <ProductsManager products={products} onRefresh={fetchData} />
+            )}
+
+            {activeTab === "enterprise" && (
+                <EnterpriseManager assets={enterprise} onRefresh={fetchData} />
+            )}
         </div>
     );
 }
 
-function Input({ label, value, onChange }: any) {
+function Input({ label, value, onChange, type = "text", required = false }: any) {
+    const isImage = label.toLowerCase().includes('logo') || label.toLowerCase().includes('image') || (label.toLowerCase().includes('url') && !label.toLowerCase().includes('video'));
+
+    const handleUpload = async (e: any) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.url) onChange(data.url);
+            else alert('Upload failed: ' + data.error);
+        } catch (err) {
+            alert('Upload error');
+        }
+    };
+
     return (
         <div class="space-y-1">
-            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">{label}</label>
+            <div class="flex justify-between items-end">
+                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">{label}</label>
+                {isImage && (
+                    <label class="cursor-pointer text-teal hover:underline font-mono text-[10px] uppercase">
+                        [ Upload File ]
+                        <input type="file" accept="image/*" class="hidden" onChange={handleUpload} />
+                    </label>
+                )}
+            </div>
             <input
-                type="text"
+                type={type}
                 value={value}
+                required={required}
                 onInput={(e) => onChange((e.target as any).value)}
                 class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
             />
@@ -455,6 +512,214 @@ function IdeasViewer({ ideas, onRefresh }: { ideas: any[]; onRefresh: () => void
                     )}
                 </div>
             ))}
+        </div>
+    );
+}
+
+function ProductsManager({ products, onRefresh }: { products: any[]; onRefresh: () => void }) {
+    const [editingProduct, setEditingProduct] = useState<any>(null);
+    const [isNew, setIsNew] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    async function handleSave(e: Event) {
+        e.preventDefault();
+        setSaving(true);
+        try {
+            const res = await fetch("/api/products", {
+                method: "POST",
+                body: JSON.stringify(editingProduct),
+                headers: { "Content-Type": "application/json" },
+            });
+            if (res.ok) {
+                setEditingProduct(null);
+                setIsNew(false);
+                onRefresh();
+            }
+        } catch (e) {
+            console.error("Save error:", e);
+        }
+        setSaving(false);
+    }
+
+    async function handleDelete(id: number) {
+        if (!confirm("Delete this product?")) return;
+        try {
+            const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" });
+            if (res.ok) onRefresh();
+        } catch (e) {
+            console.error("Delete error:", e);
+        }
+    }
+
+    if (editingProduct || isNew) {
+        const prod = editingProduct || { name: "", tagline: "", description: "", features: "", category: "", status: "active", sort_order: 0 };
+        return (
+            <div class="space-y-6 animate-fadeIn">
+                <div class="flex justify-between items-center bg-teal/5 p-4 rounded border-l-4 border-teal">
+                    <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                        {isNew ? "New Product" : `Editing: ${prod.name}`}
+                    </h3>
+                    <button onClick={() => { setEditingProduct(null); setIsNew(false); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
+                </div>
+
+                <form onSubmit={handleSave} class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <Input label="Product Name *" value={prod.name} onChange={(v: string) => setEditingProduct({ ...prod, name: v })} required />
+                        <Input label="Tagline" value={prod.tagline} onChange={(v: string) => setEditingProduct({ ...prod, tagline: v })} />
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <Input label="Logo URL" value={prod.logo_url} onChange={(v: string) => setEditingProduct({ ...prod, logo_url: v })} />
+                        <Input label="Category" value={prod.category} onChange={(v: string) => setEditingProduct({ ...prod, category: v })} />
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <Input label="Play Store Link" value={prod.play_store_link} onChange={(v: string) => setEditingProduct({ ...prod, play_store_link: v })} />
+                        <Input label="App Store Link" value={prod.app_store_link} onChange={(v: string) => setEditingProduct({ ...prod, app_store_link: v })} />
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-end">
+                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Screenshot URLs (one per line)</label>
+                            <label class="cursor-pointer text-teal hover:underline font-mono text-[10px] uppercase">
+                                [ Add Files ]
+                                <input type="file" accept="image/*" multiple class="hidden" onChange={async (e) => {
+                                    const files = Array.from((e.target as HTMLInputElement).files || []);
+                                    if (!files.length) return;
+                                    let newUrls = [...(Array.isArray(prod.screenshots) ? prod.screenshots : [])];
+                                    for (const file of files) {
+                                        const formData = new FormData();
+                                        formData.append('file', file);
+                                        try {
+                                            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                                            const data = await res.json();
+                                            if (data.url) newUrls.push(data.url);
+                                        } catch (err) { }
+                                    }
+                                    setEditingProduct({ ...prod, screenshots: newUrls });
+                                }} />
+                            </label>
+                        </div>
+                        <textarea
+                            value={Array.isArray(prod.screenshots) ? prod.screenshots.join('\n') : prod.screenshots}
+                            onInput={(e) => setEditingProduct({ ...prod, screenshots: (e.target as any).value.split('\n').filter((s: string) => s.trim()) })}
+                            class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-mono text-xs focus:border-teal outline-none transition-all h-24"
+                            placeholder="https://example.com/shot1.png&#10;https://example.com/shot2.png"
+                        ></textarea>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Status</label>
+                            <select
+                                value={prod.status}
+                                onChange={(e) => setEditingProduct({ ...prod, status: (e.target as any).value })}
+                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+                            >
+                                <option value="active">Active</option>
+                                <option value="coming-soon">Coming Soon</option>
+                                <option value="deprecated">Deprecated</option>
+                            </select>
+                        </div>
+                        <Input label="Sort Order" type="number" value={prod.sort_order} onChange={(v: string) => setEditingProduct({ ...prod, sort_order: parseInt(v) })} />
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Description *</label>
+                        <textarea
+                            value={prod.description}
+                            onInput={(e) => setEditingProduct({ ...prod, description: (e.target as any).value })}
+                            class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-lora text-sm focus:border-teal outline-none transition-all h-32"
+                            required
+                        ></textarea>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Features (one per line)</label>
+                        <textarea
+                            value={prod.features}
+                            onInput={(e) => setEditingProduct({ ...prod, features: (e.target as any).value })}
+                            class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-mono text-xs focus:border-teal outline-none transition-all h-32"
+                            placeholder="Dynamic Progress Tracking&#10;In-depth Image Analysis"
+                        ></textarea>
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={saving}
+                        class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                    >
+                        {saving ? "SAVING..." : "[ Save Product Node ]"}
+                    </button>
+                </form>
+            </div>
+        );
+    }
+
+    return (
+        <div class="space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Products</h2>
+                <button
+                    onClick={() => setIsNew(true)}
+                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                >
+                    + Add Product
+                </button>
+            </div>
+
+            <div class="grid gap-4">
+                {products.map((p) => (
+                    <div key={p.id} class="p-4 bg-charcoal-light/20 border border-charcoal-light/30 rounded-lg flex justify-between items-center hover:border-teal/30 transition-all">
+                        <div>
+                            <h4 class="text-offwhite font-poppins font-medium">{p.name}</h4>
+                            <div class="flex gap-2 items-center">
+                                <p class="text-[9px] text-muted font-mono uppercase tracking-widest">{p.category || "General"}</p>
+                                <span class={`text-[8px] px-1.5 py-0.5 rounded border ${p.status === 'active' ? 'border-teal/30 text-teal bg-teal/5' : 'border-muted/30 text-muted'}`}>{p.status}</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onClick={() => setEditingProduct(p)} class="text-teal font-mono text-[10px] uppercase hover:underline">[ EDIT ]</button>
+                            <button onClick={() => handleDelete(p.id)} class="text-red-400 font-mono text-[10px] uppercase hover:underline">[ DELETE ]</button>
+                        </div>
+                    </div>
+                ))}
+                {products.length === 0 && <p class="text-center py-12 text-muted font-mono text-xs">No dynamic products found.</p>}
+            </div>
+        </div>
+    );
+}
+
+function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () => void }) {
+    const [localAssets, setLocalAssets] = useState(assets);
+    const [saving, setSaving] = useState(false);
+
+    async function handleSave(e: Event) {
+        e.preventDefault();
+        setSaving(true);
+        try {
+            const res = await fetch("/api/config", {
+                method: "POST",
+                body: JSON.stringify({ key: "enterprise_assets", value: localAssets }),
+                headers: { "Content-Type": "application/json" },
+            });
+            if (res.ok) onRefresh();
+        } catch (e) {
+            console.error("Save error:", e);
+        }
+        setSaving(false);
+    }
+
+    return (
+        <div class="space-y-8 animate-fadeIn">
+            <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Enterprise Assets</h2>
+            <form onSubmit={handleSave} class="space-y-6 bg-charcoal-light/5 p-8 rounded-2xl border border-charcoal-light/20">
+                <Input label="Company Name" value={localAssets.company_name} onChange={(v: string) => setLocalAssets({ ...localAssets, company_name: v })} />
+                <Input label="Locations (separator |)" value={localAssets.locations} onChange={(v: string) => setLocalAssets({ ...localAssets, locations: v })} />
+                <Input label="Hero Video URL (MP4)" value={localAssets.hero_video_url} onChange={(v: string) => setLocalAssets({ ...localAssets, hero_video_url: v })} />
+                <Input label="Global Logo URL" value={localAssets.logo_url} onChange={(v: string) => setLocalAssets({ ...localAssets, logo_url: v })} />
+
+                <button
+                    type="submit"
+                    disabled={saving}
+                    class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                >
+                    {saving ? "SAVING..." : "[ Update Enterprise Core ]"}
+                </button>
+            </form>
         </div>
     );
 }

@@ -12,6 +12,9 @@ import node from '@astrojs/node';
 export default defineConfig({
   site: 'https://arjun-jayesh.com',
   output: 'server',
+  security: {
+    checkOrigin: false
+  },
   integrations: [preact(), mdx(), sitemap()],
 
   vite: {

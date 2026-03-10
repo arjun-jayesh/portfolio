@@ -1,0 +1,55 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import Works from "../components/Works.astro";
+import Socials from "../components/Socials.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+---
+
+<Layout title="Founder" description="Arjun Jayesh — Systems Architect, Independent Researcher, and Developer building KINBO TECHNOLOGIES PRIVATE LIMITED.">
+  <section class="max-w-7xl mx-auto pt-24 px-6 mb-[-4rem]">
+    <Breadcrumbs />
+  </section>
+  <Hero />
+  
+  <!-- About the Founder -->
+  <section class="section-padding max-w-4xl mx-auto">
+    <div class="text-center mb-12 founder-section" style="opacity:0; transform:translateY(20px);">
+      <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">About</span>
+      <h2 class="font-poppins text-3xl sm:text-4xl font-bold text-offwhite">
+        The Mind Behind <span class="text-teal">KINBO</span>
+      </h2>
+    </div>
+    <div class="founder-section font-lora text-muted leading-relaxed space-y-4 max-w-3xl mx-auto" style="opacity:0; transform:translateY(20px);">
+      <p>
+        Arjun Jayesh is a systems architect, independent researcher, and developer with a passion for building deterministic, constraint-bound systems that deliver measurable outcomes. As the founder of KINBO TECHNOLOGIES PRIVATE LIMITED, he leads the technical vision and product strategy for KINBO's growing ecosystem of intelligent everyday applications.
+      </p>
+      <p>
+        With deep expertise spanning software engineering, automation, and applied artificial intelligence, Arjun brings a methodical approach to product development. He believes that the best technology disappears into the background — working reliably, transparently, and in service of the user rather than the platform.
+      </p>
+      <p>
+        Before founding KINBO, Arjun spent years studying how consumer technology fails its users — through unnecessary complexity, opaque algorithms, and engagement-driven design patterns that prioritize metrics over meaning. KINBO was created to prove that a different approach is possible: one where every feature exists because it genuinely helps someone.
+      </p>
+      <p>
+        Currently scaling KINBO across India, China, and the GCC, Arjun continues to lead the mission to build practical, responsible technology that improves everyday outcomes. When not architecting systems, he explores independent research in constraint-based computing and deterministic system design.
+      </p>
+    </div>
+  </section>
+
+  <Works />
+  <Socials />
+</Layout>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+  
+  gsap.utils.toArray(".founder-section").forEach((el: any) => {
+    gsap.to(el, {
+      scrollTrigger: { trigger: el, start: "top 85%" },
+      opacity: 1, y: 0, duration: 0.7, ease: "power2.out"
+    });
+  });
+</script>

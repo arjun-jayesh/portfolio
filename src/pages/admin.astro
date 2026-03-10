@@ -3,7 +3,7 @@ export const prerender = false;
 import Layout from "../layouts/Layout.astro";
 import AdminInterface from "../components/AdminInterface";
 
-const adminPassword = import.meta.env.ADMIN_PASSWORD || "admin123";
+const adminPassword = "local"; // Hardcoded default key
 let isAuthenticated = Astro.cookies.has("admin_session");
 let error = "";
 
@@ -58,7 +58,7 @@ if (Astro.request.method === "POST") {
           </div>
         )}
 
-        <form method="POST" class="flex flex-col gap-4">
+        <form method="POST" data-astro-reload class="flex flex-col gap-4">
           <div>
             <label for="password" class="block font-mono text-xs text-muted mb-2 uppercase tracking-widest">Master Key</label>
             <input 
