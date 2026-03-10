@@ -827,15 +827,55 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
             <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Enterprise Assets & Hero Editor</h2>
             <form onSubmit={handleSave} class="space-y-8">
 
-                {/* Company Info */}
-                <div class="bg-charcoal-light/5 p-6 rounded-2xl border border-charcoal-light/20 space-y-4">
-                    <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">Company Info</h3>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <Input label="Company Name" value={localAssets.company_name} onChange={(v: string) => setLocalAssets({ ...localAssets, company_name: v })} />
-                        <Input label="Locations (separator |)" value={localAssets.locations} onChange={(v: string) => setLocalAssets({ ...localAssets, locations: v })} />
+                {/* Company & Founder Info */}
+                <div class="bg-charcoal-light/5 p-6 rounded-2xl border border-charcoal-light/20 space-y-6">
+                    <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">Company & Founder</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <Input label="Company Name" value={localAssets.company_name} onChange={(v: string) => setLocalAssets({ ...localAssets, company_name: v })} />
+                            <Input label="Locations (separator |)" value={localAssets.locations} onChange={(v: string) => setLocalAssets({ ...localAssets, locations: v })} />
+                            <Input label="Global Logo URL" value={localAssets.logo_url} onChange={(v: string) => setLocalAssets({ ...localAssets, logo_url: v })} />
+                        </div>
+
+                        {/* Dedicated Founder Portrait Upload */}
+                        <div class="space-y-3">
+                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Founder Portrait PNG</label>
+                            <div class="flex items-center gap-6">
+                                <div class="relative group">
+                                    <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-teal/20 group-hover:border-teal/50 transition-all bg-charcoal-dark">
+                                        {localAssets.founder_photo_url ? (
+                                            <img src={localAssets.founder_photo_url} alt="Founder" class="w-full h-full object-cover" />
+                                        ) : (
+                                            <div class="w-full h-full flex items-center justify-center text-teal/20">
+                                                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div class="absolute -bottom-1 -right-1 bg-teal text-charcoal p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all">
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <DragDropZone
+                                        accept="image/png,image/webp,image/jpeg"
+                                        className="border border-dashed rounded-xl py-4 px-6 text-center"
+                                        onUpload={(urls) => { if (urls[0]) setLocalAssets({ ...localAssets, founder_photo_url: urls[0] }); }}
+                                    >
+                                        <p class="font-mono text-[9px] text-teal/80 uppercase tracking-widest">Drop Portrait PNG here</p>
+                                        <p class="font-mono text-[8px] text-muted/60 mt-1 italic">Click or drag & drop</p>
+                                    </DragDropZone>
+                                    <input 
+                                        type="text" 
+                                        value={localAssets.founder_photo_url} 
+                                        onInput={(e) => setLocalAssets({ ...localAssets, founder_photo_url: (e.target as any).value })}
+                                        placeholder="Or paste URL here..."
+                                        class="w-full mt-2 bg-charcoal-dark/50 border border-charcoal-light/20 rounded px-2 py-1.5 text-offwhite font-mono text-[9px] focus:border-teal outline-none transition-all"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <Input label="Global Logo URL" value={localAssets.logo_url} onChange={(v: string) => setLocalAssets({ ...localAssets, logo_url: v })} />
-                    <Input label="Founder Photo URL" value={localAssets.founder_photo_url} onChange={(v: string) => setLocalAssets({ ...localAssets, founder_photo_url: v })} />
                 </div>
 
                 {/* KINBO HOME HERO EDITOR */}
