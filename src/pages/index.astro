@@ -1,34 +1,34 @@
 ---
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
-import { supabase } from "../lib/supabase";
+import { supabaseAdmin } from "../lib/supabase";
 
 let enterpriseAssets = {
     hero_video_url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-circuit-board-1113-large.mp4",
     logo_url: "",
     locations: "INDIA | CHINA | GCC",
-    company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED"
+    company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED",
+    hero_bg_type: 'video',
+    hero_bg_opacity: 0.4,
+    hero_bg_darkness: 0.6,
+    hero_bg_blur: 2,
+    hero_parallax_intensity: 20
 };
 
-if (supabase) {
+if (supabaseAdmin) {
     try {
-        const { data, error } = await supabase
+        const { data } = await supabaseAdmin
             .from('site_config')
             .select('data')
             .eq('key', 'enterprise_assets')
             .single();
         
-        if (error && error.code !== 'PGRST116') {
-            console.error('Homepage Data Fetch Error:', error);
-        } else if (data?.data) {
+        if (data?.data) {
             enterpriseAssets = { ...enterpriseAssets, ...data.data };
         }
     } catch (e) {
-        console.error('Homepage SSR Crash Caught:', e);
-        // Fallback already defined in enterpriseAssets variable
+        console.error('Homepage SSR Fetch Error:', e);
     }
-} else {
-    console.warn('Supabase client not available on homepage SSR');
 }
 ---
 
