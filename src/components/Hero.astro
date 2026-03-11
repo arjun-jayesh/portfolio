@@ -1,11 +1,11 @@
 ---
-import { supabase } from "../lib/supabase";
+import { supabaseAdmin } from "../lib/supabase";
 
 let siteConfig = { hero: {}, stats: [] };
 
-if (supabase) {
+if (supabaseAdmin) {
   try {
-    const { data: configData, error } = await supabase
+    const { data: configData, error } = await supabaseAdmin
       .from("site_config")
       .select("data")
       .eq("key", "primary_settings")
@@ -19,7 +19,8 @@ if (supabase) {
   } catch (e) {
     console.error("Hero SSR Crash Caught:", e);
   }
-} else {
+}
+ else {
   console.warn("Supabase client not available for Hero SSR");
 }
 
@@ -78,7 +79,7 @@ const { hero, stats } = siteConfig;
     <div class="relative w-52 h-52 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full overflow-hidden"
       style="box-shadow: 0 0 60px var(--color-teal-glow), 0 0 120px rgba(42,157,143,0.15);">
       <div class="w-full h-full bg-gradient-to-br from-teal/20 via-charcoal-light to-charcoal flex items-center justify-center">
-        <span class="font-poppins text-7xl sm:text-8xl md:text-9xl font-bold text-teal/30">{hero?.firstName?.[0] || "A"}</span>
+        <span class="font-poppins text-7xl sm:text-8xl md:text-9xl font-bold text-teal/30">{(hero?.firstName || "A")[0]}</span>
       </div>
     </div>
     <!-- Orbiting ring decoration -->

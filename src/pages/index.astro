@@ -41,7 +41,7 @@ if (supabaseAdmin) {
         {enterpriseAssets.logo_url ? (
           <img src={enterpriseAssets.logo_url} alt="Logo" class="w-full h-full object-contain p-4" />
         ) : (
-          <span class="text-teal font-poppins text-4xl font-bold">{enterpriseAssets.company_name.charAt(0)}</span>
+          <span class="text-teal font-poppins text-4xl font-bold">{(enterpriseAssets.company_name || "K")[0]}</span>
         )}
       </div>
       <div id="startup-bar" class="absolute -bottom-4 left-0 w-0 h-px bg-teal shadow-[0_0_10px_rgba(42,157,143,0.8)]"></div>

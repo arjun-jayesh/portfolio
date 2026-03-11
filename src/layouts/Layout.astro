@@ -181,7 +181,7 @@ const safeLogo = enterpriseAssets.logo_url || "";
               <img src={safeLogo} alt="Logo" class="w-16 h-16 object-contain mb-2" />
             ) : (
               <div class="w-16 h-16 bg-teal/10 rounded-2xl flex items-center justify-center border border-teal/20 mb-2">
-                  <span class="text-teal font-poppins text-3xl font-bold">{safeCompanyName.charAt(0)}</span>
+                  <span class="text-teal font-poppins text-3xl font-bold">{(safeCompanyName || 'K').charAt(0)}</span>
               </div>
             )}
             <h2 class="font-poppins text-xl font-bold text-offwhite tracking-widest uppercase">{safeCompanyName}</h2>
@@ -232,10 +232,32 @@ const safeLogo = enterpriseAssets.logo_url || "";
         </div>
 
         <p class="font-mono text-[9px] text-muted/60 tracking-[0.2em] uppercase">
-          © {new Date().getFullYear()} Kinbo Technologies Private Limited. All rights reserved.
+          © {new Date().getFullYear()} {safeCompanyName}. All rights reserved.
         </p>
+
+        <!-- Dynamic Asset Diagnostics (Visible with ?debug=true) -->
+        <div id="asset-diagnostics" class="hidden w-full max-w-2xl mt-8 p-4 bg-red-900/20 border border-red-500/30 rounded-lg font-mono text-[10px] text-red-200">
+            <h4 class="text-xs font-bold mb-2 uppercase text-red-400">Diagnostic: Enterprise Assets</h4>
+            <div class="grid grid-cols-2 gap-2">
+                <div>Client Anon: <span class={supabase ? "text-teal" : "text-red-500"}>{supabase ? "LOADED" : "MISSING"}</span></div>
+                <div>Client Admin: <span class={supabaseAdmin ? "text-teal" : "text-red-500"}>{supabaseAdmin ? "LOADED" : "MISSING"}</span></div>
+                <div>Config Found: <span class={enterpriseAssets.company_name ? "text-teal" : "text-red-500"}>{enterpriseAssets.company_name ? "YES" : "NO"}</span></div>
+                <div>Logo State: <span class={safeLogo ? "text-teal" : "text-red-500"}>{safeLogo ? "SET" : "EMPTY"}</span></div>
+            </div>
+            <pre class="mt-4 p-2 bg-black/40 rounded overflow-x-auto whitespace-pre-wrap">
+              {JSON.stringify(enterpriseAssets, null, 2)}
+            </pre>
+        </div>
       </div>
     </footer>
+
+    <script>
+      // Toggle diagnostics if requested
+      if (window.location.search.includes('debug=true')) {
+        const diag = document.getElementById('asset-diagnostics');
+        if (diag) diag.classList.remove('hidden');
+      }
+    </script>
 
     <!-- ─── Global Scripts ─── -->
     <script>
