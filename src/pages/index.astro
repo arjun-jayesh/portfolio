@@ -1,34 +1,34 @@
 ---
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
-import { supabaseAdmin } from "../lib/supabase";
+import { supabase } from "../lib/supabase";
 
 let enterpriseAssets = {
     hero_video_url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-circuit-board-1113-large.mp4",
     logo_url: "",
     locations: "INDIA | CHINA | GCC",
-    company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED",
-    hero_bg_type: 'video',
-    hero_bg_opacity: 0.4,
-    hero_bg_darkness: 0.6,
-    hero_bg_blur: 2,
-    hero_parallax_intensity: 20
+    company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED"
 };
 
-if (supabaseAdmin) {
+if (supabase) {
     try {
-        const { data } = await supabaseAdmin
+        const { data, error } = await supabase
             .from('site_config')
             .select('data')
             .eq('key', 'enterprise_assets')
             .single();
         
-        if (data?.data) {
+        if (error && error.code !== 'PGRST116') {
+            console.error('Homepage Data Fetch Error:', error);
+        } else if (data?.data) {
             enterpriseAssets = { ...enterpriseAssets, ...data.data };
         }
     } catch (e) {
-        console.error('Homepage SSR Fetch Error:', e);
+        console.error('Homepage SSR Crash Caught:', e);
+        // Fallback already defined in enterpriseAssets variable
     }
+} else {
+    console.warn('Supabase client not available on homepage SSR');
 }
 ---
 
@@ -37,12 +37,8 @@ if (supabaseAdmin) {
   <!-- Startup Animation Overlay -->
   <div id="startup-overlay" class="fixed inset-0 z-[100] bg-charcoal hidden flex-col items-center justify-center overflow-hidden">
     <div class="relative">
-      <div id="startup-logo" class="w-24 h-24 bg-teal/10 rounded-2xl border border-teal/20 flex items-center justify-center mb-8 scale-0 overflow-hidden">
-        {enterpriseAssets.logo_url ? (
-          <img src={enterpriseAssets.logo_url} alt="Logo" class="w-full h-full object-contain p-4" />
-        ) : (
-          <span class="text-teal font-poppins text-4xl font-bold">{(enterpriseAssets.company_name || "K")[0]}</span>
-        )}
+      <div id="startup-logo" class="w-24 h-24 bg-teal/10 rounded-2xl border border-teal/20 flex items-center justify-center mb-8 scale-0">
+        <span class="text-teal font-poppins text-4xl font-bold">K</span>
       </div>
       <div id="startup-bar" class="absolute -bottom-4 left-0 w-0 h-px bg-teal shadow-[0_0_10px_rgba(42,157,143,0.8)]"></div>
     </div>

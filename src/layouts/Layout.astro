@@ -13,35 +13,15 @@ const {
   description = "Portfolio of Arjun Jayesh — Systems Architect, Independent Researcher, and Developer building deterministic, constraint-bound systems.",
 } = Astro.props;
 
-import { supabaseAdmin } from "../lib/supabase";
-
-let enterpriseAssets = {
-    logo_url: "",
-    company_name: "KINBO TECHNOLOGIES",
-    locations: "INDIA | CHINA | GCC",
-    hero_video_url: "",
-    hero_bg_type: "video",
-    hero_bg_opacity: 0.4,
-    hero_bg_darkness: 0.6,
-    hero_bg_blur: 2,
-    hero_parallax_intensity: 20
-};
-
-if (supabaseAdmin) {
-    try {
-        const { data } = await supabaseAdmin.from('site_config').select('data').eq('key', 'enterprise_assets').single();
-        if (data?.data) {
-            enterpriseAssets = { ...enterpriseAssets, ...data.data };
-        }
-    } catch (e) {
-        console.error("Layout SSR Fetch Error:", e);
-    }
-}
-
-// Robust safety fallbacks for string operations
-const safeCompanyName = enterpriseAssets.company_name || "KINBO";
-const safeLocations = enterpriseAssets.locations || "INDIA | CHINA | GCC";
-const safeLogo = enterpriseAssets.logo_url || "";
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Products", href: "/products" },
+  { label: "Founder", href: "/founder" },
+  { label: "Blog", href: "/blog" },
+  { label: "Ideas", href: "/ideas" },
+  { label: "Contact", href: "/chat" },
+];
 ---
 
 <!doctype html>
@@ -109,16 +89,10 @@ const safeLogo = enterpriseAssets.logo_url || "";
           class="flex items-center gap-3 font-poppins text-2xl font-bold text-teal hover:text-offwhite transition-colors duration-300 group"
           aria-label="Go to home"
         >
-          {safeLogo ? (
-            <img src={safeLogo} alt="Logo" class="w-8 h-8 object-contain" />
-          ) : (
-            <div class="w-8 h-8 bg-teal/10 rounded flex items-center justify-center group-hover:bg-teal/20 transition-all border border-teal/20">
-              <span class="text-teal font-mono text-sm">{safeCompanyName.charAt(0)}</span>
-            </div>
-          )}
-          <span class="tracking-widest truncate max-w-[150px] sm:max-w-none">
-            {safeCompanyName.split(' ')[0]}
-          </span>
+          <div class="w-8 h-8 bg-teal/10 rounded flex items-center justify-center group-hover:bg-teal/20 transition-all border border-teal/20">
+            <span class="text-teal font-mono text-sm">K</span>
+          </div>
+          <span class="tracking-widest">KINBO</span>
         </a>
 
         <!-- Desktop Nav Links -->
@@ -177,25 +151,20 @@ const safeLogo = enterpriseAssets.logo_url || "";
       <div class="max-w-7xl mx-auto flex flex-col items-center gap-12">
         <!-- Brand/Logo Area -->
         <div class="flex flex-col items-center gap-4 text-center">
-            {safeLogo ? (
-              <img src={safeLogo} alt="Logo" class="w-16 h-16 object-contain mb-2" />
-            ) : (
-              <div class="w-16 h-16 bg-teal/10 rounded-2xl flex items-center justify-center border border-teal/20 mb-2">
-                  <span class="text-teal font-poppins text-3xl font-bold">{(safeCompanyName || 'K').charAt(0)}</span>
-              </div>
-            )}
-            <h2 class="font-poppins text-xl font-bold text-offwhite tracking-widest uppercase">{safeCompanyName}</h2>
+            <div class="w-16 h-16 bg-teal/10 rounded-2xl flex items-center justify-center border border-teal/20 mb-2">
+                <span class="text-teal font-poppins text-3xl font-bold">K</span>
+            </div>
+            <h2 class="font-poppins text-xl font-bold text-offwhite tracking-widest uppercase">KINBO TECHNOLOGIES PRIVATE LIMITED</h2>
             <p class="font-lora text-sm text-muted max-w-md">Building intelligent everyday apps that improve real-world outcomes through practical technology and user-focused design.</p>
         </div>
 
         <!-- Locations -->
         <div class="flex flex-wrap justify-center items-center gap-6 font-mono text-[10px] text-teal uppercase tracking-[0.3em]">
-            {safeLocations.split('|').map((loc, i, arr) => (
-              <>
-                <span>{loc.trim()}</span>
-                {i < arr.length - 1 && <div class="w-1 h-1 bg-charcoal-light/40 rounded-full"></div>}
-              </>
-            ))}
+            <span>INDIA</span>
+            <div class="w-1 h-1 bg-charcoal-light/40 rounded-full"></div>
+            <span>CHINA</span>
+            <div class="w-1 h-1 bg-charcoal-light/40 rounded-full"></div>
+            <span>GCC</span>
         </div>
 
         <!-- Badges Area -->
@@ -232,32 +201,10 @@ const safeLogo = enterpriseAssets.logo_url || "";
         </div>
 
         <p class="font-mono text-[9px] text-muted/60 tracking-[0.2em] uppercase">
-          © {new Date().getFullYear()} {safeCompanyName}. All rights reserved.
+          © {new Date().getFullYear()} Kinbo Technologies Private Limited. All rights reserved.
         </p>
-
-        <!-- Dynamic Asset Diagnostics (Visible with ?debug=true) -->
-        <div id="asset-diagnostics" class="hidden w-full max-w-2xl mt-8 p-4 bg-red-900/20 border border-red-500/30 rounded-lg font-mono text-[10px] text-red-200">
-            <h4 class="text-xs font-bold mb-2 uppercase text-red-400">Diagnostic: Enterprise Assets</h4>
-            <div class="grid grid-cols-2 gap-2">
-                <div>Client Anon: <span class={supabase ? "text-teal" : "text-red-500"}>{supabase ? "LOADED" : "MISSING"}</span></div>
-                <div>Client Admin: <span class={supabaseAdmin ? "text-teal" : "text-red-500"}>{supabaseAdmin ? "LOADED" : "MISSING"}</span></div>
-                <div>Config Found: <span class={enterpriseAssets.company_name ? "text-teal" : "text-red-500"}>{enterpriseAssets.company_name ? "YES" : "NO"}</span></div>
-                <div>Logo State: <span class={safeLogo ? "text-teal" : "text-red-500"}>{safeLogo ? "SET" : "EMPTY"}</span></div>
-            </div>
-            <pre class="mt-4 p-2 bg-black/40 rounded overflow-x-auto whitespace-pre-wrap">
-              {JSON.stringify(enterpriseAssets, null, 2)}
-            </pre>
-        </div>
       </div>
     </footer>
-
-    <script>
-      // Toggle diagnostics if requested
-      if (window.location.search.includes('debug=true')) {
-        const diag = document.getElementById('asset-diagnostics');
-        if (diag) diag.classList.remove('hidden');
-      }
-    </script>
 
     <!-- ─── Global Scripts ─── -->
     <script>
