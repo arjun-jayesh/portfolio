@@ -14,7 +14,7 @@ interface Props {
 }
 
 const {
-  title = "KINBO - Custom Software Engineering & Architecture",
+  title = "kinbo technologies | indias most direct software company",
   description = "We don't have a sales team. You talk directly to the engineer from day one. Mobile apps, web platforms, ERPs, and custom AI systems built with lifelong support.",
   image = "/favicon.png",
   canonical,
@@ -135,13 +135,26 @@ if (pathSegments.length > 0) {
     <link rel="alternate" type="text/markdown" href="/llms.txt" />
     <meta name="content-signal" content="search=yes, ai-input=yes, ai-train=yes" />
 
-    {/* Preconnect Fonts */}
+    {/* High-Performance Asynchronous Typography (Eliminates Render Blocking) */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      />
+    </noscript>
 
     {/* Open Graph / Social */}
     <meta property="og:type" content="website" />
