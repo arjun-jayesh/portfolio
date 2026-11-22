@@ -1,0 +1,151 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import { supabase } from "../lib/supabase";
+
+let teamAssets: any = {
+  heading: "Direct engineering acumen without organizational friction.",
+  subtitle: "Every member of our team is a hands-on systems architect or engineer. You communicate directly with the builders.",
+  members: []
+};
+
+if (supabase) {
+  try {
+    const { data } = await supabase
+      .from("site_config")
+      .select("data")
+      .eq("key", "team_assets")
+      .maybeSingle();
+    if (data?.data) {
+      teamAssets = {
+        heading: data.data.heading || teamAssets.heading,
+        subtitle: data.data.subtitle || teamAssets.subtitle,
+        members: data.data.members || []
+      };
+    }
+  } catch (e) {
+    console.error("Failed to load team_assets:", e);
+  }
+}
+
+// Fallback if no members returned from DB
+if (!teamAssets.members || teamAssets.members.length === 0) {
+  teamAssets.members = [
+    {
+      name: "Arjun Jayesh",
+      role: "Principal Systems Architect & Founder",
+      photo_url: "/arjun-portrait.png",
+      bio: "Distributed computing, healthcare informatics (QueueZero), and deterministic runtime systems."
+    },
+    {
+      name: "Systems Engineering Desk",
+      role: "Full-Stack & Edge Infrastructure",
+      photo_url: "",
+      bio: "High-concurrency database ledgers, edge vision pipelines, and Flutter/Node SSR production architectures."
+    }
+  ];
+}
+---
+
+<Layout
+  title="Engineering Team — KINBO | 01 SIGNAL"
+  description="Meet the engineering core of KINBO TECHNOLOGIES. Zero sales reps, direct engineer communication from day one."
+  schemaType="AboutPage"
+>
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">TEAM</span>
+    </div>
+
+    {/* Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-12 mb-16">
+      <div class="font-mono text-xs text-[#FF5A52] uppercase mb-2">
+        05 / ENGINEERING CORE
+      </div>
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#FFFFFF] max-w-4xl leading-[1.1]">
+        {teamAssets.heading}
+      </h1>
+      <p class="text-base sm:text-xl text-[rgba(244,243,239,0.8)] mt-4 max-w-2xl leading-relaxed">
+        {teamAssets.subtitle}
+      </p>
+    </div>
+
+    {/* Members Grid */}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {teamAssets.members.map((member: any, i: number) => (
+        <div
+          key={member.name || i}
+          class="bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px] p-6 flex flex-col justify-between group hover:border-[#D9261C] transition-colors"
+        >
+          <div>
+            <div class="w-20 h-20 rounded-full overflow-hidden bg-[#181818] border border-[rgba(244,243,239,0.16)] mb-4 flex items-center justify-center">
+              {member.photo_url ? (
+                <img
+                  src={member.photo_url}
+                  alt={member.name}
+                  width="80"
+                  height="80"
+                  class="w-full h-full object-cover grayscale"
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <span class="font-mono text-xl text-[rgba(244,243,239,0.5)]">KB</span>
+              )}
+            </div>
+
+            <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-1">
+              ENGINEER.{String(i + 1).padStart(2, "0")}
+            </div>
+            <h2 class="text-xl font-bold text-white tracking-tight">
+              {member.name}
+            </h2>
+            <div class="font-mono text-xs text-[rgba(244,243,239,0.7)] mt-1 mb-3">
+              {member.role}
+            </div>
+
+            {member.bio && (
+              <p class="text-xs text-[rgba(244,243,239,0.7)] leading-relaxed">
+                {member.bio}
+              </p>
+            )}
+          </div>
+
+          <div class="pt-5 mt-5 border-t border-[rgba(244,243,239,0.1)]">
+            <button
+              type="button"
+              data-open-modal="engineer"
+              data-goal={`Brief engineer: ${member.name}`}
+              class="touch-target text-xs font-mono text-[#F4F3EF] hover:text-[#FF5A52] underline underline-offset-4"
+            >
+              Consult with this Engineer →
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Bottom Work With Us */}
+    <div class="mt-16 p-8 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px] text-center max-w-2xl mx-auto space-y-4">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase">JOIN THE SQUAD</div>
+      <h2 class="text-2xl font-bold text-white tracking-tight">
+        Are You a Principal Software Engineer?
+      </h2>
+      <p class="text-xs sm:text-sm text-[rgba(244,243,239,0.7)]">
+        We hire autonomous builders with deep systems empathy. No corporate theater.
+      </p>
+      <div>
+        <a
+          href="/apply"
+          class="touch-target px-5 py-2.5 bg-[#181818] hover:bg-[#222222] border border-[rgba(244,243,239,0.16)] text-xs font-mono text-white rounded-[4px] inline-flex items-center gap-2"
+        >
+          <span>View Engineering Openings (/apply)</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>

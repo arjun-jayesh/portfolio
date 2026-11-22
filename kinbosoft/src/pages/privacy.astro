@@ -1,0 +1,67 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Privacy Policy & Data Sovereignty — KINBO | 01 SIGNAL"
+  description="Privacy Policy and client data protection principles for KINBO TECHNOLOGIES PRIVATE LIMITED."
+  schemaType="AboutPage"
+>
+  <div class="max-w-4xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">PRIVACY POLICY</span>
+    </div>
+
+    {/* Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-8 mb-10">
+      <div class="font-mono text-xs text-[#FF5A52] uppercase mb-1">
+        LEGAL & DATA GOVERNANCE
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-[#FFFFFF]">
+        Privacy Policy
+      </h1>
+      <p class="text-xs sm:text-sm font-mono text-[rgba(244,243,239,0.6)] mt-2">
+        VERSION 2026.1 // EFFECTIVE IMMEDIATELY // DATA SOVEREIGNTY STANDARD
+      </p>
+    </div>
+
+    <div class="space-y-8 text-sm text-[rgba(244,243,239,0.85)] leading-relaxed">
+      <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+        <div class="font-mono text-xs text-[#FF5A52] mb-1">01 / DATA COLLECTION PRINCIPLES</div>
+        <h2 class="text-lg font-semibold text-white mb-2">Minimalist Collection</h2>
+        <p>
+          KINBO TECHNOLOGIES PRIVATE LIMITED collects only the personal information (name, contact email, phone number, and project briefs) voluntarily transmitted via our direct intake forms or authenticated administrator portals. We do not operate third-party tracking scripts or advertising trackers on this domain.
+        </p>
+      </div>
+
+      <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+        <div class="font-mono text-xs text-[#FF5A52] mb-1">02 / USE OF INFORMATION</div>
+        <h2 class="text-lg font-semibold text-white mb-2">Technical Delivery Only</h2>
+        <p>
+          Information submitted to KINBO is utilized strictly to formulate architectural specifications, evaluate project scope, deliver direct engineering support, and maintain contracted systems. We will never sell, rent, or monetize your contact or project data to any third party.
+        </p>
+      </div>
+
+      <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+        <div class="font-mono text-xs text-[#FF5A52] mb-1">03 / SECURITY & STORAGE</div>
+        <h2 class="text-lg font-semibold text-white mb-2">Encryption & Cloud Storage</h2>
+        <p>
+          Data submitted via our website is secured in flight via TLS 1.3 and stored in partitioned databases backed by Supabase with Row Level Security (RLS) enforcement. Resume files uploaded via our recruitment intake are transmitted server-to-server to encrypted storage buckets.
+        </p>
+      </div>
+
+      <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+        <div class="font-mono text-xs text-[#FF5A52] mb-1">04 / DIRECT CONTACT</div>
+        <h2 class="text-lg font-semibold text-white mb-2">Privacy & Data Inquiries</h2>
+        <p>
+          For privacy inquiries, data deletion requests, or technical governance questions, contact our engineering desk directly at:
+          <span class="block font-mono text-xs text-white mt-1">legal@kinbosoft.com // KINBO TECHNOLOGIES PRIVATE LIMITED</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</Layout>

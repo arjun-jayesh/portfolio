@@ -1,0 +1,127 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="About KINBO TECHNOLOGIES PRIVATE LIMITED | 01 SIGNAL"
+  description="We don't have a sales team. You talk directly to the engineer from day one. Engineering discipline, Swiss modernist clarity, and absolute technical sovereignty."
+  schemaType="AboutPage"
+>
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">ABOUT</span>
+    </div>
+
+    {/* Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-12 mb-16">
+      <div class="font-mono text-xs text-[#FF5A52] uppercase mb-2">
+        01 SIGNAL · INSTITUTIONAL CHARTER
+      </div>
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#FFFFFF] max-w-4xl leading-[1.1]">
+        Building deterministic software that actually stands.
+      </h1>
+      <p class="text-base sm:text-xl text-[rgba(244,243,239,0.85)] mt-4 max-w-2xl leading-relaxed">
+        Software engineering has been distorted by layers of sales intermediaries, padded retainers, and fragile vendor lock-in. KINBO operates on the opposite thesis: direct engineer access, fixed-scope milestones, and complete client technical sovereignty.
+      </p>
+    </div>
+
+    {/* The Direct Engineering Thesis */}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pb-16 border-b border-[rgba(244,243,239,0.14)]">
+      <div class="lg:col-span-5">
+        <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-1">OUR THESIS</div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#FFFFFF] tracking-tight">
+          Zero Sales Middlemen
+        </h2>
+        <p class="text-sm text-[rgba(244,243,239,0.72)] mt-3 leading-relaxed">
+          When requirements pass through non-technical business development reps, engineering details are diluted. We removed the entire sales layer. The person discussing your system on Day 1 is the software architect engineering your code.
+        </p>
+      </div>
+
+      <div class="lg:col-span-7 space-y-4">
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">01 / DISCIPLINE</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Architectural Transparency</h3>
+          <p class="text-xs sm:text-sm text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Every database schema, cloud cost, and network boundary is inspectable. We deliver clean, decoupled architectures that your internal teams can maintain without proprietary dependencies.
+          </p>
+        </div>
+
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">02 / DISCIPLINE</div>
+          <h3 class="text-lg font-semibold text-white mb-2">100% Day-1 Ownership</h3>
+          <p class="text-xs sm:text-sm text-[rgba(244,243,239,0.7)] leading-relaxed">
+            All code repositories, server instances, domains, and database keys are provisioned directly under your company's credentials. We never hold your infrastructure hostage.
+          </p>
+        </div>
+
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">03 / DISCIPLINE</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Lifelong Support*</h3>
+          <p class="text-xs sm:text-sm text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Critical defect fixes on the delivered scope remain free for the operational lifetime of the product, backed by transparent optional AMC sprints for new features.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {/* Operational Pillars */}
+    <div class="py-16 border-b border-[rgba(244,243,239,0.14)]">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-2">CORE CAPABILITIES</div>
+      <h2 class="text-2xl sm:text-3xl font-bold text-[#FFFFFF] tracking-tight mb-8">
+        Full-Stack Systems Engineering
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">MOBILE & EDGE</div>
+          <div class="text-base font-semibold text-white mb-2">Native & Flutter</div>
+          <p class="text-xs text-[rgba(244,243,239,0.68)]">Offline-first mobile runtimes with cryptographic sync and local SQLite caches.</p>
+        </div>
+
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">WEB PLATFORMS</div>
+          <div class="text-base font-semibold text-white mb-2">SSR & Preact</div>
+          <p class="text-xs text-[rgba(244,243,239,0.68)]">High-performance SSR applications with sub-150ms INP and zero bloated bundles.</p>
+        </div>
+
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">ENTERPRISE ERP</div>
+          <div class="text-base font-semibold text-white mb-2">PostgreSQL Cores</div>
+          <p class="text-xs text-[rgba(244,243,239,0.68)]">Strict double-entry ledgers, RBAC role gates, and live audit telemetry.</p>
+        </div>
+
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">APPLIED AI & VISION</div>
+          <div class="text-base font-semibold text-white mb-2">Python & Rust</div>
+          <p class="text-xs text-[rgba(244,243,239,0.68)]">Edge OpenCV pipelines, local neural fine-tuning, and real-time inference.</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Direct Action Card */}
+    <div class="mt-16 p-8 bg-[#111111] border border-[rgba(244,243,239,0.16)] rounded-[8px] text-center max-w-3xl mx-auto space-y-4">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase">ENGINEERING DESK</div>
+      <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+        Ready to Discuss Your Architecture?
+      </h2>
+      <p class="text-sm text-[rgba(244,243,239,0.75)] max-w-lg mx-auto">
+        We don't have a sales team. You talk directly to the engineer from day one.
+      </p>
+      <div class="pt-2">
+        <button
+          type="button"
+          data-open-modal="engineer"
+          data-goal="Company Overview & Architecture Advisory"
+          class="touch-target px-6 py-3 bg-[#D9261C] hover:bg-[#B81D14] text-white text-sm font-semibold rounded-[4px] transition-colors inline-flex items-center gap-2"
+        >
+          <span>Talk Directly to an Engineer</span>
+          <span class="font-mono">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</Layout>

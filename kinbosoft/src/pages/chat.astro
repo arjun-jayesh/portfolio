@@ -1,0 +1,36 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import ChatSection from "../components/Chat.astro";
+---
+
+<Layout
+  title="Direct Engineering Console — KINBO | 01 SIGNAL"
+  description="Direct terminal connection to KINBO Technologies systems engineering leadership. Transmit architecture audit parameters and project briefs."
+  schemaType="ContactPage"
+>
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">CONSOLE</span>
+    </div>
+
+    {/* Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-8 mb-10">
+      <div class="font-mono text-xs text-[#FF5A52] uppercase mb-1">
+        03 // DIRECT ENGINEERING DESK
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-[#FFFFFF]">
+        Systems Terminal Transmission
+      </h1>
+      <p class="text-sm sm:text-base text-[rgba(244,243,239,0.78)] mt-2">
+        We skip sales boilerplate. Reach out directly for architecture reviews, system audits, or fixed-scope sprint execution.
+      </p>
+    </div>
+
+    {/* Console Island */}
+    <ChatSection />
+  </div>
+</Layout>

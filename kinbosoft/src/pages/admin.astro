@@ -1,0 +1,99 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import AdminInterface from "../components/AdminInterface";
+import {
+  createAdminSessionToken,
+  verifyAdminSessionToken,
+  hmacSignHex,
+  timingSafeEqualHex,
+} from "../lib/auth";
+
+const adminPassword =
+  import.meta.env.ADMIN_PASSWORD ||
+  (typeof process !== "undefined" ? process.env.ADMIN_PASSWORD : "") ||
+  "local";
+
+const existingToken = Astro.cookies.get("admin_session")?.value;
+let isAuthenticated = await verifyAdminSessionToken(existingToken);
+let error = "";
+
+if (Astro.request.method === "POST") {
+  const data = await Astro.request.formData();
+  const submittedPassword = String(data.get("password") ?? "");
+
+  // Constant-time password comparison via HMAC digest
+  const [submittedHash, expectedHash] = await Promise.all([
+    hmacSignHex("kinbo_login_cmp", submittedPassword),
+    hmacSignHex("kinbo_login_cmp", adminPassword),
+  ]);
+
+  if (timingSafeEqualHex(submittedHash, expectedHash)) {
+    const signedToken = await createAdminSessionToken();
+    Astro.cookies.set("admin_session", signedToken, {
+      path: "/",
+      httpOnly: true,
+      secure: import.meta.env.PROD,
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24,
+    });
+    isAuthenticated = true;
+  } else {
+    error = "Invalid connection key.";
+  }
+}
+---
+
+<Layout title="Command Center — KINBO Admin Portal" hideHeaderFooter={true}>
+  {isAuthenticated ? (
+    <div class="pt-16 pb-24 px-4 sm:px-8 max-w-7xl mx-auto">
+      <AdminInterface client:only="preact" />
+    </div>
+  ) : (
+    <div class="min-h-screen flex items-center justify-center p-4 bg-[#050505]">
+      <div class="w-full max-w-md p-8 bg-[#111111] border border-[rgba(244,243,239,0.16)] rounded-[8px] shadow-2xl relative">
+        <div class="font-mono text-xs text-[#FF5A52] uppercase mb-1">
+          00 // ROOT AUTHENTICATION
+        </div>
+        <h1 class="text-2xl font-bold text-white tracking-tight mb-2">
+          Systems Command Center
+        </h1>
+        <p class="text-xs text-[rgba(244,243,239,0.7)] mb-6">
+          Authenticated administrative access for site configuration, redirects, and content registries.
+        </p>
+
+        {error && (
+          <div class="mb-4 p-3 bg-[#D9261C]/15 border border-[#D9261C] text-[#FF5A52] font-mono text-xs rounded-[4px] text-center">
+            {error}
+          </div>
+        )}
+
+        <form method="POST" data-astro-reload class="space-y-4">
+          <div>
+            <label for="password" class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1.5">
+              Master Connection Key
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              autocomplete="current-password"
+              class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3.5 py-2.5 text-sm text-[#F4F3EF] font-mono focus:border-[#FF5A52] focus:outline-none"
+              placeholder="••••••••••••"
+              required
+            />
+          </div>
+
+          <div class="pt-2">
+            <button
+              type="submit"
+              class="w-full touch-target bg-[#D9261C] hover:bg-[#B81D14] text-white font-mono text-xs font-semibold uppercase tracking-wider rounded-[4px] px-4 py-3 transition-colors"
+            >
+              [ Establish Authenticated Session ]
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )}
+</Layout>

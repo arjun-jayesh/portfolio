@@ -1,0 +1,64 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import { socials } from "../data/socials";
+---
+
+<Layout
+  title="Socials & Direct Channels — KINBO | 01 SIGNAL"
+  description="Verified direct links to KINBO TECHNOLOGIES and founder Arjun Jayesh across GitHub, Zenodo, ORCID, LinkedIn, and WhatsApp."
+  schemaType="ContactPage"
+>
+  <div class="max-w-4xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">SOCIALS</span>
+    </div>
+
+    {/* Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-8 mb-10">
+      <div class="font-mono text-xs text-[#FF5A52] uppercase mb-1">
+        VERIFIED CHANNELS // DIRECT DISPATCH
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-[#FFFFFF]">
+        Direct Links & Verification
+      </h1>
+      <p class="text-sm sm:text-base text-[rgba(244,243,239,0.78)] mt-2">
+        Open science repositories, code registries, and direct engineer channels.
+      </p>
+    </div>
+
+    {/* Swiss Link-in-Bio List */}
+    <div class="space-y-3">
+      {socials.map((item, idx) => (
+        <a
+          key={item.name}
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="touch-target p-5 bg-[#111111] hover:bg-[#181818] border border-[rgba(244,243,239,0.14)] hover:border-[#D9261C] rounded-[6px] transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+        >
+          <div>
+            <div class="flex items-center gap-2 font-mono text-[11px] text-[#FF5A52] mb-1">
+              <span>0{idx + 1} / {item.category}</span>
+            </div>
+            <div class="text-lg font-semibold text-[#FFFFFF] group-hover:text-[#FF5A52] transition-colors flex items-center gap-2">
+              <span>{item.name}</span>
+              <span class="text-xs font-mono text-[rgba(244,243,239,0.5)]">({item.handle})</span>
+            </div>
+            <p class="text-xs text-[rgba(244,243,239,0.7)] mt-1 max-w-xl">
+              {item.description}
+            </p>
+          </div>
+
+          <div class="font-mono text-xs text-[#F4F3EF] group-hover:text-white flex items-center gap-1 self-start sm:self-center">
+            <span>Connect</span>
+            <span>↗</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</Layout>

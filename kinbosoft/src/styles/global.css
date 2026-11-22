@@ -1,0 +1,275 @@
+@import "tailwindcss";
+
+:root {
+  --void: #050505;
+  --carbon: #111111;
+  --dark-surface: #181818;
+  --ground: #F4F3EF;            /* Warm archival off-white */
+  --surface: #FFFFFF;
+  --surface-muted: #ECEAE4;
+  --signal: #D9261C;            /* Large marks (>=24px), buttons w/ #FFF text, borders */
+  --signal-light-bg: #B81D14;   /* WCAG AA (5.9:1) for small 12-14px text on #F4F3EF */
+  --signal-dark-bg: #FF5A52;    /* WCAG AA (6.1:1) for small 12-14px text on #111111 */
+  --ink-light: #F4F3EF;
+  --ink-light-muted: rgba(244, 243, 239, 0.78);
+  --ink-dark: #111111;
+  --ink-dark-muted: rgba(17, 17, 17, 0.72);
+  --rule-light: rgba(17, 17, 17, 0.14);
+  --rule-dark: rgba(244, 243, 239, 0.16);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --ease-damped: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme {
+  --color-void: var(--void);
+  --color-carbon: var(--carbon);
+  --color-dark-surface: var(--dark-surface);
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-signal: var(--signal);
+  --color-signal-light-bg: var(--signal-light-bg);
+  --color-signal-dark-bg: var(--signal-dark-bg);
+  --color-ink-light: var(--ink-light);
+  --color-ink-light-muted: var(--ink-light-muted);
+  --color-ink-dark: var(--ink-dark);
+  --color-ink-dark-muted: var(--ink-dark-muted);
+  --color-rule-light: var(--rule-light);
+  --color-rule-dark: var(--rule-dark);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+  scroll-padding-bottom: 84px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--void);
+  color: var(--ink-light);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--void);
+  color: var(--ink-light);
+  /* Never apply overflow-x: hidden on body per WCAG 2.2 checklist */
+}
+
+/* ── Typography & Display Headings ── */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  margin: 0;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.mono-sm {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px; /* Strict 12px minimum — never render 10px mono labels */
+  letter-spacing: 0.06em;
+}
+
+/* ── Interactive targets (WCAG 2.2 AA minimum 44px) ── */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--signal-dark-bg);
+  outline-offset: 2px;
+}
+
+/* ── Skip to content link ── */
+.skip-link {
+  position: absolute;
+  top: -120px;
+  left: 1rem;
+  background-color: var(--signal);
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  z-index: 10000;
+  transition: top 0.2s var(--ease-damped);
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ── Brand SVG Sprite Utility ── */
+.svg-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .logo-hover-target:hover .bo-dot {
+    transform: translate(-3.2px, 2px);
+    transition: transform 0.24s var(--ease-damped);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-hover-target:hover .bo-dot,
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    transform: none !important;
+  }
+}
+
+/* ── Swiss Modernist Architectural Layout Utilities ── */
+.swiss-hairline-dark {
+  border: 1px solid var(--rule-dark);
+}
+
+.swiss-hairline-light {
+  border: 1px solid var(--rule-light);
+}
+
+.scrim-dark {
+  background: linear-gradient(180deg, rgba(5, 5, 5, 0.4) 0%, rgba(5, 5, 5, 0.88) 100%);
+}
+
+.scrim-radial {
+  background: radial-gradient(circle at center, rgba(5, 5, 5, 0.2) 0%, rgba(5, 5, 5, 0.92) 100%);
+}
+
+/* ── Text Color Utilities for AA Contrast ── */
+.text-signal-on-dark {
+  color: var(--signal-dark-bg); /* #FF5A52 (6.1:1 on #111111) */
+}
+
+.text-signal-on-light {
+  color: var(--signal-light-bg); /* #B81D14 (5.9:1 on #F4F3EF) */
+}
+
+/* =========================================================================
+   SWISS MODERNIST COMPATIBILITY & ADMIN PALETTE ADAPTATION (ZERO TEAL / ZERO PURPLE)
+   Enforces 01 SIGNAL (#D9261C / #FF5A52) + 02 INVERSE (#050505 / #111111 / #F4F3EF)
+   ========================================================================= */
+
+.text-teal,
+.text-teal-300,
+.text-teal-400,
+.text-teal-500,
+.text-cyan-400,
+.text-emerald-400 {
+  color: var(--signal-dark-bg) !important;
+}
+
+.bg-teal,
+.bg-teal-400,
+.bg-teal-500,
+.bg-teal-600,
+.bg-cyan-500,
+.bg-emerald-500 {
+  background-color: var(--signal) !important;
+  color: #FFFFFF !important;
+}
+
+.border-teal,
+.border-teal-400,
+.border-teal-500,
+.border-teal-600,
+.border-cyan-500 {
+  border-color: var(--signal) !important;
+}
+
+.hover\:text-teal:hover,
+.hover\:text-teal-400:hover {
+  color: var(--signal-dark-bg) !important;
+}
+
+.hover\:bg-teal:hover,
+.hover\:bg-teal-600:hover {
+  background-color: var(--signal-light-bg) !important;
+}
+
+.hover\:border-teal:hover,
+.hover\:border-teal-400:hover {
+  border-color: var(--signal-dark-bg) !important;
+}
+
+.focus\:border-teal:focus,
+.focus\:border-teal-400:focus {
+  border-color: var(--signal-dark-bg) !important;
+  outline-color: var(--signal-dark-bg) !important;
+}
+
+/* Background surfaces */
+.bg-charcoal {
+  background-color: var(--carbon) !important;
+}
+
+.bg-charcoal-dark {
+  background-color: var(--void) !important;
+}
+
+.bg-charcoal-light {
+  background-color: var(--dark-surface) !important;
+}
+
+.text-offwhite {
+  color: var(--ink-light) !important;
+}
+
+.text-muted {
+  color: var(--ink-light-muted) !important;
+}
+
+/* Custom Admin Scrollbar & Swiss Grid */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--void);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--rule-dark);
+  border-radius: var(--radius-sm);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--signal);
+}

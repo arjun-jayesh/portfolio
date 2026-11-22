@@ -1,0 +1,98 @@
+---
+export const prerender = false;
+import Layout from "../../layouts/Layout.astro";
+import ServicesExplorer from "../../components/ServicesExplorer";
+import RatesEstimator from "../../components/RatesEstimator";
+import { supabase } from "../../lib/supabase";
+
+let whatsappNumber = "919074811984";
+if (supabase) {
+  try {
+    const { data } = await supabase
+      .from("site_config")
+      .select("data")
+      .eq("key", "enterprise_assets")
+      .maybeSingle();
+    if (data?.data?.whatsapp_number) {
+      whatsappNumber = data.data.whatsapp_number;
+    }
+  } catch {}
+}
+---
+
+<Layout
+  title="Capabilities & Engineering Services — KINBO | 01 SIGNAL"
+  description="Full-stack mobile applications, enterprise web platforms, custom ERP cores, and applied computer vision systems engineered with lifelong support."
+  schemaType="Service"
+>
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">SERVICES</span>
+    </div>
+
+    {/* Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-8 mb-12">
+      <div class="font-mono text-xs text-[#FF5A52] uppercase mb-1">
+        CAPABILITIES & ARCHITECTURAL PRACTICE
+      </div>
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#FFFFFF]">
+        Systems Architecture & Engineering
+      </h1>
+      <p class="text-base sm:text-lg text-[rgba(244,243,239,0.78)] mt-3 max-w-2xl leading-relaxed">
+        We don't have a sales team. You talk directly to the engineer from day one. Mobile apps, web platforms, ERP systems, and custom AI systems built for operational reliability.
+      </p>
+    </div>
+
+    {/* Interactive Services Explorer */}
+    <div class="mb-20">
+      <ServicesExplorer client:visible />
+    </div>
+
+    {/* Process Breakdown */}
+    <div class="pt-12 border-t border-[rgba(244,243,239,0.14)] mb-20">
+      <div class="mb-8">
+        <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-1">DELIVERY PROTOCOL</div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          30 / 40 / 30 Milestone Payment Gates
+        </h2>
+        <p class="text-xs sm:text-sm text-[rgba(244,243,239,0.7)] mt-1.5 max-w-xl">
+          Deterministic milestones tied to verified code inspections on staging environments.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">STAGE 01 // 30% SPEC</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Architecture & Schemas</h3>
+          <p class="text-xs text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Data models, API contracts, UX boundaries, and cloud topology fixed up front.
+          </p>
+        </div>
+
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">STAGE 02 // 40% BUILD</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Inspectable Staging Sprints</h3>
+          <p class="text-xs text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Live preview deployments for hands-on feature and performance validation.
+          </p>
+        </div>
+
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">STAGE 03 // 30% HANDOVER</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Production & Lifelong Support*</h3>
+          <p class="text-xs text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Full Git ownership transfer, production deployment, and lifelong defect coverage.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {/* Rates & Scope Estimator */}
+    <div class="pt-12 border-t border-[rgba(244,243,239,0.14)]">
+      <RatesEstimator client:visible whatsappNumber={whatsappNumber} />
+    </div>
+  </div>
+</Layout>

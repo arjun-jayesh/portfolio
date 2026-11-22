@@ -1,0 +1,80 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import BlogFilter, { type BlogPost } from "../components/BlogFilter";
+import { supabase } from "../lib/supabase";
+import { getCollection } from "astro:content";
+
+let posts: BlogPost[] = [];
+
+if (supabase) {
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .order("date", { ascending: false });
+
+    if (!error && data && data.length > 0) {
+      posts = data.map((post) => ({
+        slug: post.slug,
+        title: post.title,
+        excerpt: post.excerpt,
+        category: post.category || "Software",
+        date: new Date(post.date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+      }));
+    }
+  } catch (err) {
+    console.error("Supabase blog fetch failed, falling back to MDX:", err);
+  }
+}
+
+// MDX Content Collection Fallback if database had no posts
+if (posts.length === 0) {
+  try {
+    const mdxPosts = await getCollection("blog");
+    posts = mdxPosts.map((entry) => ({
+      slug: entry.slug,
+      title: entry.data.title,
+      excerpt: entry.data.excerpt,
+      category: entry.data.category,
+      date: entry.data.date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
+    }));
+  } catch (err) {
+    console.error("MDX collection fetch failed:", err);
+  }
+}
+---
+
+<Layout
+  title="Technical Journal & Architecture Log — KINBO | 01 SIGNAL"
+  description="Technical writings, applied intelligence architectures, and systems research from KINBO TECHNOLOGIES."
+  schemaType="WebSite"
+>
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Page Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-8 mb-12">
+      <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-2 flex items-center gap-2">
+        <span>04 / TECHNICAL JOURNAL</span>
+        <span class="text-[rgba(244,243,239,0.4)]">//</span>
+        <span>RESEARCH & SYSTEMS</span>
+      </div>
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#FFFFFF]">
+        Engineering logs & research.
+      </h1>
+      <p class="text-base sm:text-lg text-[rgba(244,243,239,0.78)] mt-3 max-w-2xl leading-relaxed">
+        Deterministic schedulers, self-healing runtime topologies, and applied AI systems documentation from our engineering team.
+      </p>
+    </div>
+
+    {/* Filter & Articles Island */}
+    <BlogFilter client:load posts={posts} />
+  </div>
+</Layout>

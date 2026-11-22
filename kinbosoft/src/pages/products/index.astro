@@ -1,0 +1,178 @@
+---
+export const prerender = false;
+import Layout from "../../layouts/Layout.astro";
+import AutoCarousel from "../../components/AutoCarousel";
+import { supabase } from "../../lib/supabase";
+
+let dynamicProducts: any[] = [];
+let industryModels: any[] = [];
+let modelsSectionConfig = {
+  title: "Framework & Architecture Library",
+  description: "Standardized architectural models and engineering frameworks designed to solve specific operational challenges across industrial verticals.",
+  collage_url: "/indian_business_models_collage_1776926783752.png"
+};
+
+if (supabase) {
+  try {
+    const [productsRes, modelsRes, modelsConfigRes] = await Promise.all([
+      supabase.from("products").select("*").eq("status", "active").order("sort_order", { ascending: true }),
+      supabase.from("industry_models").select("*").order("sort_order", { ascending: true }),
+      supabase.from("site_config").select("data").eq("key", "models_section").maybeSingle()
+    ]);
+
+    if (!productsRes.error && productsRes.data) dynamicProducts = productsRes.data;
+    if (!modelsRes.error && modelsRes.data) industryModels = modelsRes.data;
+    if (modelsConfigRes?.data?.data) modelsSectionConfig = modelsConfigRes.data.data;
+  } catch (e) {
+    console.error("Products SSR Error:", e);
+  }
+}
+
+// Fallback products if database is empty
+const defaultProducts = [
+  {
+    name: "QueueZero™ (Q0)",
+    slug: "queuezero",
+    tagline: "Outpatient clinical intake & queue orchestration system",
+    description: "Transforms clinical waiting-room time into structured pre-consultation intelligence. Enables physicians to recover 10-15 minutes per consultation.",
+    status: "Production Ready",
+    href: "/products/queuezero"
+  },
+  {
+    name: "OptiFlow ERP",
+    slug: "optiflow",
+    tagline: "High-integrity multi-warehouse double-entry ledger core",
+    description: "Replaces fragile spreadsheet workflows with strict ledger audits, automated barcode scanning, and automated supply procurement.",
+    status: "Active Deployment",
+    href: "/#rates"
+  },
+  {
+    name: "TelemetryCore",
+    slug: "telemetry",
+    tagline: "Sub-second IoT & edge sensory aggregation pipeline",
+    description: "Engineered in Python and Rust for high-throughput sensor telemetry, video anomaly inference, and real-time operations dashboards.",
+    status: "R&D Prototype",
+    href: "/#rates"
+  }
+];
+
+const displayProducts = dynamicProducts.length > 0 ? dynamicProducts : defaultProducts;
+
+const carouselShowcaseImages = [
+  "/products/q0/hero_bg.png",
+  "/products/q0/product_render.png",
+  "/products/q0/hero_bg.png"
+];
+---
+
+<Layout
+  title="Products & Engineering Systems — KINBO | 01 SIGNAL"
+  description="Explore KINBO TECHNOLOGIES' product systems: clinical intelligence, ERP ledgers, and edge computer vision architectures."
+  schemaType="WebSite"
+>
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Page Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-8 mb-12">
+      <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-2 flex items-center gap-2">
+        <span>01 / SYSTEMS ECOSYSTEM</span>
+        <span class="text-[rgba(244,243,239,0.4)]">//</span>
+        <span>PRODUCTION BUILDS</span>
+      </div>
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#FFFFFF]">
+        A connected ecosystem.
+      </h1>
+      <p class="text-base sm:text-lg text-[rgba(244,243,239,0.78)] mt-3 max-w-2xl leading-relaxed">
+        Engineered with strict architectural sovereignty. Insights generated in one application guide actions in another — from telemetry to execution.
+      </p>
+    </div>
+
+    {/* Primary Products Grid */}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+      {displayProducts.map((p, idx) => (
+        <div
+          key={p.name || idx}
+          class="bg-[#111111] border border-[rgba(244,243,239,0.14)] hover:border-[#D9261C] rounded-[6px] p-6 flex flex-col justify-between transition-colors group"
+        >
+          <div>
+            <div class="flex items-center justify-between font-mono text-[12px] text-[#FF5A52] mb-3">
+              <span>PROD.0{idx + 1}</span>
+              <span class="px-2 py-0.5 bg-[#181818] border border-[rgba(244,243,239,0.1)] rounded text-[11px] text-[rgba(244,243,239,0.8)]">
+                {p.status || "Deployed"}
+              </span>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#FFFFFF] tracking-tight group-hover:text-[#FF5A52] transition-colors">
+              {p.name}
+            </h2>
+            <div class="font-mono text-xs text-[rgba(244,243,239,0.6)] mt-1 mb-3">
+              {p.tagline || p.category || "Applied Software"}
+            </div>
+            <p class="text-sm text-[rgba(244,243,239,0.72)] leading-relaxed">
+              {p.description}
+            </p>
+          </div>
+
+          <div class="pt-6 mt-6 border-t border-[rgba(244,243,239,0.1)] flex items-center justify-between">
+            {p.slug === "queuezero" || p.href?.includes("queuezero") ? (
+              <a
+                href="/products/queuezero"
+                class="touch-target text-xs font-mono text-[#F4F3EF] hover:text-white underline underline-offset-4"
+              >
+                Inspect Technical Dossier →
+              </a>
+            ) : (
+              <button
+                type="button"
+                data-open-modal="engineer"
+                data-goal={`Product Enquiry: ${p.name}`}
+                class="touch-target text-xs font-mono text-[#F4F3EF] hover:text-[#FF5A52] underline underline-offset-4"
+              >
+                Brief Engineer on Deployment →
+              </button>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Production Architecture Hairline Showcase */}
+    <div class="border-t border-[rgba(244,243,239,0.14)] pt-12 mb-20">
+      <div class="flex items-baseline justify-between mb-4">
+        <div>
+          <div class="font-mono text-[12px] text-[#FF5A52] uppercase">02 / HARDWARE & CLIENT RUNTIMES</div>
+          <h2 class="text-2xl font-bold text-[#FFFFFF] tracking-tight">Active Interfaces</h2>
+        </div>
+        <div class="font-mono text-[12px] text-[rgba(244,243,239,0.5)] hidden sm:block">
+          DPR 2.0+ HIGH RESOLUTION
+        </div>
+      </div>
+
+      <AutoCarousel items={carouselShowcaseImages} speed={24} client:visible />
+    </div>
+
+    {/* Framework Library Section */}
+    {industryModels.length > 0 && (
+      <div class="border-t border-[rgba(244,243,239,0.14)] pt-12">
+        <div class="mb-8">
+          <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-1">03 / FRAMEWORK REGISTRY</div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-[#FFFFFF] tracking-tight">
+            {modelsSectionConfig.title}
+          </h2>
+          <p class="text-sm text-[rgba(244,243,239,0.7)] mt-1.5 max-w-xl">
+            {modelsSectionConfig.description}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {industryModels.map((m, i) => (
+            <div key={i} class="bg-[#111111] border border-[rgba(244,243,239,0.12)] p-5 rounded-[4px]">
+              <div class="font-mono text-[12px] text-[#FF5A52] mb-1">MODEL.{String(i + 1).padStart(2, "0")}</div>
+              <h3 class="text-base font-semibold text-[#FFFFFF] mb-1">{m.name || m.title}</h3>
+              <p class="text-xs text-[rgba(244,243,239,0.68)] leading-relaxed">{m.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</Layout>

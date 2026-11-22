@@ -1,0 +1,128 @@
+---
+export const prerender = false;
+import Layout from "../../layouts/Layout.astro";
+import { supabase } from "../../lib/supabase";
+import { getEntry } from "astro:content";
+import { marked } from "marked";
+
+const { slug } = Astro.params;
+
+let post: {
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  body: string;
+} | null = null;
+
+// 1. Try Supabase
+if (supabase && slug) {
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (!error && data) {
+      post = {
+        title: data.title,
+        excerpt: data.excerpt,
+        category: data.category || "Software",
+        date: new Date(data.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }),
+        body: data.body || ""
+      };
+    }
+  } catch (e) {
+    console.error("Supabase post lookup error:", e);
+  }
+}
+
+// 2. Fallback to MDX
+if (!post && slug) {
+  try {
+    const mdxEntry = await getEntry("blog", slug);
+    if (mdxEntry) {
+      post = {
+        title: mdxEntry.data.title,
+        excerpt: mdxEntry.data.excerpt,
+        category: mdxEntry.data.category,
+        date: mdxEntry.data.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }),
+        body: mdxEntry.body
+      };
+    }
+  } catch (e) {
+    console.error("MDX post lookup error:", e);
+  }
+}
+
+if (!post) {
+  return Astro.redirect("/404");
+}
+
+const wordCount = post.body.split(/\s+/).length;
+const readTime = Math.max(1, Math.ceil(wordCount / 200));
+const contentHtml = await marked(post.body);
+---
+
+<Layout
+  title={`${post.title} — KINBO Technical Journal`}
+  description={post.excerpt}
+  schemaType="WebSite"
+>
+  <article class="max-w-4xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <a href="/blog" class="hover:text-white transition-colors">JOURNAL</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">{post.category}</span>
+    </div>
+
+    {/* Post Header */}
+    <header class="border-b border-[rgba(244,243,239,0.14)] pb-8 mb-10">
+      <div class="flex items-center gap-4 font-mono text-xs text-[rgba(244,243,239,0.6)] mb-3">
+        <span>{post.date}</span>
+        <span>·</span>
+        <span>{readTime} MIN READ</span>
+        <span>·</span>
+        <span class="text-[#FF5A52] uppercase">{post.category}</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-[#FFFFFF] leading-[1.15]">
+        {post.title}
+      </h1>
+
+      <p class="text-base sm:text-lg text-[rgba(244,243,239,0.78)] mt-4 leading-relaxed">
+        {post.excerpt}
+      </p>
+    </header>
+
+    {/* Prose Content */}
+    <div
+      class="prose prose-invert max-w-none text-[rgba(244,243,239,0.88)] leading-relaxed space-y-5 text-sm sm:text-base"
+      set:html={contentHtml}
+    />
+
+    {/* Footer Back link & Direct CTA */}
+    <div class="mt-16 pt-8 border-t border-[rgba(244,243,239,0.14)] flex flex-wrap items-center justify-between gap-4">
+      <a
+        href="/blog"
+        class="touch-target font-mono text-xs text-[rgba(244,243,239,0.75)] hover:text-white underline underline-offset-4"
+      >
+        ← Return to Journal Index
+      </a>
+
+      <button
+        type="button"
+        data-open-modal="engineer"
+        data-goal={`Discussion on article: ${post.title}`}
+        class="touch-target px-5 py-2.5 bg-[#D9261C] hover:bg-[#B81D14] text-white text-xs font-semibold rounded-[4px] transition-colors inline-flex items-center gap-1.5"
+      >
+        <span>Discuss Architecture with Author</span>
+        <span>→</span>
+      </button>
+    </div>
+  </article>
+</Layout>

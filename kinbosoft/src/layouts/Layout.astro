@@ -1,0 +1,410 @@
+---
+import "../styles/global.css";
+import DirectEngineerModal from "../components/DirectEngineerModal";
+import { supabase } from "../lib/supabase";
+import Analytics from "@vercel/analytics/astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  schemaType?: "WebSite" | "Service" | "FAQPage" | "AboutPage" | "ContactPage";
+}
+
+const {
+  title = "KINBO — Custom Software Engineering & Architecture",
+  description = "We don't have a sales team. You talk directly to the engineer from day one. Mobile apps, web platforms, ERPs, and custom AI systems built with lifelong support.",
+  image = "/favicon.svg",
+  canonical,
+  schemaType = "WebSite",
+} = Astro.props;
+
+let enterpriseAssets: Record<string, any> = {};
+let primarySettings: Record<string, any> = {};
+
+if (supabase) {
+  try {
+    const { data: configs } = await supabase
+      .from("site_config")
+      .select("key, data")
+      .in("key", ["enterprise_assets", "primary_settings"]);
+    if (configs) {
+      for (const item of configs) {
+        if (item.key === "enterprise_assets" && item.data) enterpriseAssets = item.data;
+        if (item.key === "primary_settings" && item.data) primarySettings = item.data;
+      }
+    }
+  } catch {
+    // Graceful fallback to static defaults
+  }
+}
+
+const whatsappNumber = enterpriseAssets.whatsapp_number || "919074811984";
+const defaultWhatsAppMsg = enterpriseAssets.whatsapp_default_message || "Hello kinbo Engineer, I would like to discuss a software project.";
+const waCleanNumber = whatsappNumber.replace(/[^0-9]/g, "");
+const canonicalUrl = canonical || new URL(Astro.url.pathname, Astro.site || Astro.url.origin).href;
+
+const jsonLdGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://kinbosoft.com/#organization",
+      "name": "KINBO TECHNOLOGIES PRIVATE LIMITED",
+      "url": "https://kinbosoft.com",
+      "logo": "https://kinbosoft.com/favicon.svg",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": `+${waCleanNumber}`,
+          "contactType": "engineering support",
+          "availableLanguage": ["English", "Hindi", "Malayalam"]
+        }
+      ]
+    },
+    {
+      "@type": schemaType,
+      "@id": `${canonicalUrl}#webpage`,
+      "url": canonicalUrl,
+      "name": title,
+      "description": description,
+      "isPartOf": { "@id": "https://kinbosoft.com/#organization" }
+    }
+  ]
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {/* Favicon */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
+
+    {/* Preconnect Fonts */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    />
+
+    {/* Open Graph / Social */}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    {/* Structured Data */}
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />
+      <Analytics />
+  </head>
+  <body class="bg-[#050505] text-[#F4F3EF] selection:bg-[#D9261C] selection:text-white">
+    {/* Accessible Skip Link */}
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
+    {/* Deduplicated Brand SVG Sprite */}
+    <svg class="svg-sprite" aria-hidden="true" focusable="false">
+      <!-- Symbol: kinbo logo light (#D9261C + #111111) -->
+      <symbol id="kinbo-logo-light" viewBox="0 0 170 46">
+        <!-- k -->
+        <path d="M10 8h6v28h-6z" fill="#D9261C" />
+        <path d="M26 18l-10 10h8l6-6z" fill="#D9261C" />
+        <path d="M19 25l8 11h-8l-5-7z" fill="#D9261C" />
+        <!-- i -->
+        <path d="M36 18h6v18h-6z" fill="#D9261C" />
+        <circle cx="39" cy="11" r="3" fill="#D9261C" />
+        <!-- n -->
+        <path d="M50 18h6v18h-6z" fill="#D9261C" />
+        <path d="M55 24c0-4.5 3-7 8-7s8 2.5 8 7v12h-6V24c0-2-1.5-3-3.5-3s-3.5 1-3.5 3v12h-6z" fill="#D9261C" />
+        <!-- b -->
+        <path d="M79 8h6v28h-6z" fill="#111111" />
+        <path d="M85 27c0-6 4.8-10 10.5-10s10.5 4 10.5 10-4.8 10-10.5 10S85 33 85 27zm15 0c0-3.5-2.2-5.5-4.5-5.5s-4.5 2-4.5 5.5 2.2 5.5 4.5 5.5 4.5-2 4.5-5.5z" fill="#111111" />
+        <circle class="bo-dot" cx="98" cy="24" r="2.2" fill="#D9261C" />
+        <!-- o -->
+        <path d="M118 27c0-6 4.8-10 10.5-10s10.5 4 10.5 10-4.8 10-10.5 10S118 33 118 27zm15 0c0-3.5-2.2-5.5-4.5-5.5s-4.5 2-4.5 5.5 2.2 5.5 4.5 5.5 4.5-2 4.5-5.5z" fill="#111111" />
+        <circle class="bo-dot" cx="131" cy="24" r="2.2" fill="#D9261C" />
+      </symbol>
+
+      <!-- Symbol: kinbo logo dark (#D9261C + #F4F3EF) -->
+      <symbol id="kinbo-logo-dark" viewBox="0 0 170 46">
+        <!-- k -->
+        <path d="M10 8h6v28h-6z" fill="#D9261C" />
+        <path d="M26 18l-10 10h8l6-6z" fill="#D9261C" />
+        <path d="M19 25l8 11h-8l-5-7z" fill="#D9261C" />
+        <!-- i -->
+        <path d="M36 18h6v18h-6z" fill="#D9261C" />
+        <circle cx="39" cy="11" r="3" fill="#D9261C" />
+        <!-- n -->
+        <path d="M50 18h6v18h-6z" fill="#D9261C" />
+        <path d="M55 24c0-4.5 3-7 8-7s8 2.5 8 7v12h-6V24c0-2-1.5-3-3.5-3s-3.5 1-3.5 3v12h-6z" fill="#D9261C" />
+        <!-- b -->
+        <path d="M79 8h6v28h-6z" fill="#F4F3EF" />
+        <path d="M85 27c0-6 4.8-10 10.5-10s10.5 4 10.5 10-4.8 10-10.5 10S85 33 85 27zm15 0c0-3.5-2.2-5.5-4.5-5.5s-4.5 2-4.5 5.5 2.2 5.5 4.5 5.5 4.5-2 4.5-5.5z" fill="#F4F3EF" />
+        <circle class="bo-dot" cx="98" cy="24" r="2.2" fill="#D9261C" />
+        <!-- o -->
+        <path d="M118 27c0-6 4.8-10 10.5-10s10.5 4 10.5 10-4.8 10-10.5 10S118 33 118 27zm15 0c0-3.5-2.2-5.5-4.5-5.5s-4.5 2-4.5 5.5 2.2 5.5 4.5 5.5 4.5-2 4.5-5.5z" fill="#F4F3EF" />
+        <circle class="bo-dot" cx="131" cy="24" r="2.2" fill="#D9261C" />
+      </symbol>
+
+      <!-- Symbol: 1:1 square bo mark -->
+      <symbol id="bo-icon" viewBox="0 0 120 120">
+        <rect width="120" height="120" rx="16" fill="#181818" />
+        <!-- b -->
+        <path d="M24 24h10v72h-10z" fill="#F4F3EF" />
+        <path d="M34 60c0-12 9.5-20 21-20s21 8 21 20-9.5 20-21 20-21-8-21-20zm30 0c0-7-4.5-11-9-11s-9 4-9 11 4.5 11 9 11 9-4 9-11z" fill="#F4F3EF" />
+        <circle class="bo-dot" cx="60" cy="54" r="4.5" fill="#D9261C" />
+        <!-- o -->
+        <path d="M72 60c0-12 9.5-20 21-20s21 8 21 20-9.5 20-21 20-21-8-21-20zm30 0c0-7-4.5-11-9-11s-9 4-9 11 4.5 11 9 11 9-4 9-11z" fill="#F4F3EF" />
+        <circle class="bo-dot" cx="98" cy="54" r="4.5" fill="#D9261C" />
+      </symbol>
+    </svg>
+
+    {/* Sticky Floating Swiss Island Navbar */}
+    <header class="fixed top-3 left-0 right-0 z-40 px-3 sm:px-6 pointer-events-none">
+      <nav
+        class="max-w-5xl mx-auto bg-[#111111]/95 backdrop-blur-md border border-[rgba(244,243,239,0.16)] rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-2xl pointer-events-auto"
+        aria-label="Main Navigation"
+      >
+        {/* Left: Kinbo Logo */}
+        <a href="/" class="flex items-center gap-2 logo-hover-target touch-target" aria-label="kinbo home">
+          <svg class="h-6 w-[120px]" viewBox="0 0 170 46" aria-hidden="true">
+            <use href="#kinbo-logo-dark" />
+          </svg>
+        </a>
+
+        {/* Center Desktop Links */}
+        <div class="hidden md:flex items-center gap-6 text-sm text-[rgba(244,243,239,0.85)] font-medium">
+          <a href="/products" class="hover:text-white transition-colors touch-target">Products</a>
+          <a href="/#services" class="hover:text-white transition-colors touch-target">Services</a>
+          <a href="/works" class="hover:text-white transition-colors touch-target">Showcase</a>
+          <a href="/blog" class="hover:text-white transition-colors touch-target">Journal</a>
+          <a href="/#rates" class="hover:text-white transition-colors touch-target">Rates</a>
+          <a href="/founder" class="hover:text-white transition-colors touch-target">Founder</a>
+          <a href="/chat" class="hover:text-white transition-colors touch-target">Console</a>
+        </div>
+
+        {/* Right CTA */}
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            data-open-modal="engineer"
+            class="touch-target bg-[#D9261C] hover:bg-[#B81D14] text-white text-xs sm:text-sm font-medium px-4 py-2 rounded-full transition-colors inline-flex items-center gap-1.5"
+          >
+            <span>Talk to an Engineer</span>
+            <span class="font-mono text-xs">→</span>
+          </button>
+
+          {/* Mobile Hamburger Trigger */}
+          <button
+            type="button"
+            id="mobile-nav-toggle"
+            class="md:hidden touch-target p-2 text-[#F4F3EF] hover:text-white border border-[rgba(244,243,239,0.16)] rounded-full bg-[#181818]"
+            aria-expanded="false"
+            aria-controls="mobile-nav-drawer"
+            aria-label="Toggle navigation menu"
+          >
+            <span class="sr-only">Menu</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      {/* Accessible Mobile Drawer */}
+      <div
+        id="mobile-nav-drawer"
+        class="hidden md:hidden max-w-5xl mx-auto mt-2 bg-[#111111] border border-[rgba(244,243,239,0.16)] rounded-[12px] p-5 shadow-2xl pointer-events-auto"
+      >
+        <div class="flex flex-col gap-3 font-medium text-sm text-[rgba(244,243,239,0.85)]">
+          <div class="px-3 py-1 border-b border-[rgba(244,243,239,0.1)] text-[10px] font-mono text-[#FF5A52] uppercase tracking-widest">
+            NAVIGATION INDEX // DESTINATIONS
+          </div>
+          <a href="/products" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">01 // Products & Deployments</a>
+          <a href="/#services" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">02 // Capabilities & Services</a>
+          <a href="/works" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">03 // Showcase & Client Works</a>
+          <a href="/#rates" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">04 // Transparent Rates & Estimator</a>
+          <a href="/blog" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">05 // Engineering Journal</a>
+          <a href="/about" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">06 // Institutional About</a>
+          <a href="/founder" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">07 // Founder Dossier: Arjun Jayesh</a>
+          <a href="/chat" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">08 // Terminal Console</a>
+          <a href="/ideas" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">09 // Submit Project RFP</a>
+          <a href="/team" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">10 // Engineering Team</a>
+          <a href="/apply" class="mobile-nav-link touch-target px-3 py-2 rounded hover:bg-[#181818]">11 // Careers & Applications</a>
+          <div class="pt-2 border-t border-[rgba(244,243,239,0.1)]">
+            <button
+              type="button"
+              data-open-modal="engineer"
+              class="w-full touch-target bg-[#D9261C] hover:bg-[#B81D14] text-white text-sm font-medium px-4 py-2.5 rounded-[4px] text-center"
+            >
+              Talk Directly to an Engineer
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {/* Main Content Area */}
+    <main id="main-content" class="min-h-screen">
+      <slot />
+    </main>
+
+    {/* 5-Column Swiss Footer */}
+    <footer class="bg-[#111111] text-[#F4F3EF] border-t border-[rgba(244,243,239,0.14)] pt-16 pb-28 md:pb-16 mt-20">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 pb-12 border-b border-[rgba(244,243,239,0.1)]">
+          {/* Col 1: Brand & Status Pill */}
+          <div class="lg:col-span-1 space-y-4">
+            <div class="logo-hover-target inline-block">
+              <svg class="w-12 h-12" viewBox="0 0 120 120" aria-label="kinbo icon">
+                <use href="#bo-icon" />
+              </svg>
+            </div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-[#181818] border border-[rgba(244,243,239,0.14)] rounded-full">
+              <span class="w-2 h-2 rounded-full bg-[#34D399] animate-pulse"></span>
+              <span class="font-mono text-[12px] text-[rgba(244,243,239,0.85)]">Engineers Online</span>
+            </div>
+            <p class="text-xs text-[rgba(244,243,239,0.7)] leading-relaxed">
+              Direct access. No sales team. Direct engineer communication from day one.
+            </p>
+          </div>
+
+          {/* Col 2: Navigation */}
+          <div>
+            <div class="font-mono text-[12px] uppercase text-[#FF5A52] tracking-wider mb-4">
+              01 / NAVIGATION
+            </div>
+            <ul class="space-y-2.5 text-sm text-[rgba(244,243,239,0.75)]">
+              <li><a href="/" class="hover:text-white transition-colors">Home</a></li>
+              <li><a href="/about" class="hover:text-white transition-colors">About</a></li>
+              <li><a href="/founder" class="hover:text-white transition-colors">Founder</a></li>
+              <li><a href="/team" class="hover:text-white transition-colors">Team</a></li>
+            </ul>
+          </div>
+
+          {/* Col 3: Capabilities */}
+          <div>
+            <div class="font-mono text-[12px] uppercase text-[#FF5A52] tracking-wider mb-4">
+              02 / CAPABILITIES
+            </div>
+            <ul class="space-y-2.5 text-sm text-[rgba(244,243,239,0.75)]">
+              <li><a href="/#services" class="hover:text-white transition-colors">Mobile Apps</a></li>
+              <li><a href="/#services" class="hover:text-white transition-colors">Websites & E-Com</a></li>
+              <li><a href="/#services" class="hover:text-white transition-colors">ERP Systems</a></li>
+              <li><a href="/#services" class="hover:text-white transition-colors">AI & Custom R&D</a></li>
+              <li><a href="/products" class="hover:text-white transition-colors">Products (/products)</a></li>
+            </ul>
+          </div>
+
+          {/* Col 4: Engineering Desk */}
+          <div>
+            <div class="font-mono text-[12px] uppercase text-[#FF5A52] tracking-wider mb-4">
+              03 / ENGINEERING
+            </div>
+            <ul class="space-y-2.5 text-sm text-[rgba(244,243,239,0.75)]">
+              <li><button type="button" data-open-modal="engineer" class="text-left hover:text-white transition-colors">Talk to an Engineer</button></li>
+              <li><a href="/#rates" class="hover:text-white transition-colors">Transparent Rates</a></li>
+              <li><a href="/ideas" class="hover:text-white transition-colors">RFP Estimator</a></li>
+              <li><a href="/chat" class="hover:text-white transition-colors">Terminal Chat</a></li>
+              <li><a href="/apply" class="hover:text-white transition-colors">Careers (/apply)</a></li>
+            </ul>
+          </div>
+
+          {/* Col 5: Legal & Terms */}
+          <div>
+            <div class="font-mono text-[12px] uppercase text-[#FF5A52] tracking-wider mb-4">
+              04 / TERMS & GOV
+            </div>
+            <ul class="space-y-2.5 text-sm text-[rgba(244,243,239,0.75)]">
+              <li><a href="/#lifelong-support" class="hover:text-white transition-colors">Lifelong Support*</a></li>
+              <li><a href="/#process" class="hover:text-white transition-colors">Ownership & Hosting</a></li>
+              <li><a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms" class="hover:text-white transition-colors">Terms of Delivery</a></li>
+              <li><a href="/socials" class="hover:text-white transition-colors">Socials (/socials)</a></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[rgba(244,243,239,0.5)]">
+          <div>
+            © 2026 KINBO TECHNOLOGIES PRIVATE LIMITED | 01 SIGNAL · KINBOSOFT.COM
+          </div>
+          <div>
+            100% Day-1 Source Code Ownership · Direct-to-Engineer Model
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    {/* Sticky Mobile Action Bar (< 768px) */}
+    <div
+      class="md:hidden fixed bottom-3 left-3 right-3 z-30 flex items-center gap-2 p-1.5 bg-[#111111]/95 backdrop-blur-md border border-[rgba(244,243,239,0.16)] rounded-[8px] shadow-2xl"
+      aria-label="Mobile Quick Actions"
+    >
+      <a
+        href="/#estimator"
+        class="flex-1 touch-target bg-[#181818] hover:bg-[#222222] text-[#F4F3EF] border border-[rgba(244,243,239,0.16)] rounded-[4px] text-xs font-mono uppercase tracking-wider text-center flex items-center justify-center"
+      >
+        [ Estimate ]
+      </a>
+      <a
+        href={`https://wa.me/${waCleanNumber}?text=${encodeURIComponent(defaultWhatsAppMsg)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex-1 touch-target bg-[#D9261C] hover:bg-[#B81D14] text-white rounded-[4px] text-xs font-medium text-center flex items-center justify-center gap-1.5"
+      >
+        <span>WhatsApp Engineer</span>
+        <span class="font-mono text-xs">→</span>
+      </a>
+    </div>
+
+    {/* Direct-to-Engineer Modal Island */}
+    <DirectEngineerModal client:idle whatsappNumber={whatsappNumber} />
+
+    {/* Mobile Navigation Drawer Script */}
+    <script>
+      const toggle = document.getElementById('mobile-nav-toggle');
+      const drawer = document.getElementById('mobile-nav-drawer');
+
+      if (toggle && drawer) {
+        const toggleMenu = (open?: boolean) => {
+          const isCurrentlyOpen = toggle.getAttribute('aria-expanded') === 'true';
+          const shouldOpen = open !== undefined ? open : !isCurrentlyOpen;
+          toggle.setAttribute('aria-expanded', String(shouldOpen));
+          if (shouldOpen) {
+            drawer.classList.remove('hidden');
+          } else {
+            drawer.classList.add('hidden');
+          }
+        };
+
+        toggle.addEventListener('click', () => toggleMenu());
+
+        document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+          link.addEventListener('click', () => toggleMenu(false));
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+            toggleMenu(false);
+            toggle.focus();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

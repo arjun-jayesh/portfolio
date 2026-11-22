@@ -1,0 +1,182 @@
+---
+import Layout from "../../layouts/Layout.astro";
+export const prerender = false;
+
+const pageTitle = "QueueZero™ (Q0) | Clinical Triage & Queue Orchestration — KINBO";
+const pageDescription = "QueueZero™ transforms waiting-room idle time into structured pre-consultation clinical intelligence — enabling physicians to focus entirely on clinical judgment.";
+---
+
+<Layout title={pageTitle} description={pageDescription} schemaType="Service">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-4 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <a href="/products" class="hover:text-white transition-colors">PRODUCTS</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">QUEUEZERO™ (Q0)</span>
+    </div>
+
+    {/* Hero Section */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-12 mb-16">
+      <div class="inline-block px-3 py-1 bg-[#181818] border border-[rgba(244,243,239,0.14)] rounded-full font-mono text-xs text-[#FF5A52] mb-4">
+        CLINICAL RUNTIME ARCHITECTURE · POWERED BY PHYSIOMIMICA™
+      </div>
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#FFFFFF] max-w-3xl leading-[1.1]">
+        Recover 10–15 Minutes From Every Consultation.
+      </h1>
+      <p class="text-base sm:text-xl text-[rgba(244,243,239,0.85)] mt-4 max-w-2xl leading-relaxed">
+        QueueZero™ transforms outpatient waiting-room dead time into structured pre-consultation clinical intelligence — structuring EHR intake before the patient enters the consultation bay.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <button
+          type="button"
+          data-open-modal="engineer"
+          data-goal="QueueZero Clinical Pilot Deployment"
+          data-stack="QueueZero Healthcare Runtime"
+          class="touch-target px-6 py-3 bg-[#D9261C] hover:bg-[#B81D14] text-white text-sm font-semibold rounded-[4px] transition-colors inline-flex items-center gap-2 shadow-lg"
+        >
+          <span>Request Technical Pilot</span>
+          <span class="font-mono">→</span>
+        </button>
+
+        <a
+          href="#architecture"
+          class="touch-target px-6 py-3 bg-[#181818] hover:bg-[#222222] border border-[rgba(244,243,239,0.16)] text-[#F4F3EF] text-sm font-semibold rounded-[4px] transition-colors"
+        >
+          View System Architecture ↓
+        </a>
+      </div>
+
+      {/* Trust & Accreditations */}
+      <div class="mt-12 pt-6 border-t border-[rgba(244,243,239,0.1)] flex flex-wrap items-center gap-6 font-mono text-[12px] text-[rgba(244,243,239,0.6)]">
+        <div>✓ WORKING CLINICAL PROTOTYPE</div>
+        <div>✓ HOSPITAL OPD TESTED</div>
+        <div>✓ DOI-INDEXED RESEARCH</div>
+        <div>✓ BEST TECHNICAL PAPER AWARD</div>
+      </div>
+    </div>
+
+    {/* Section: The Bottleneck */}
+    <section class="py-12 border-b border-[rgba(244,243,239,0.14)]">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-2">01 / THE BOTTLENECK</div>
+      <h2 class="text-2xl sm:text-4xl font-bold text-[#FFFFFF] tracking-tight mb-4">
+        The Operational Drag Inside Every Outpatient Department
+      </h2>
+      <p class="text-sm sm:text-base text-[rgba(244,243,239,0.75)] max-w-2xl mb-8 leading-relaxed">
+        Healthcare efficiency is constrained not by physician acumen, but by administrative intake friction and unstructured patient verbal recall during high-stress consultation windows.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-[12px] text-[#FF5A52] mb-1">01 / FRICTION</div>
+          <h3 class="text-lg font-semibold text-[#FFFFFF] mb-2">Repetitive Verbal History</h3>
+          <p class="text-xs text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Manual history taking absorbs up to 40% of the standard 15-minute consultation window, leaving minimal time for differential diagnosis.
+          </p>
+        </div>
+
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-[12px] text-[#FF5A52] mb-1">02 / FRICTION</div>
+          <h3 class="text-lg font-semibold text-[#FFFFFF] mb-2">Unstructured Symptom Data</h3>
+          <p class="text-xs text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Patients struggle to recall onset dates, prior medications, and chronological symptom progressions accurately on the spot.
+          </p>
+        </div>
+
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-[12px] text-[#FF5A52] mb-1">03 / FRICTION</div>
+          <h3 class="text-lg font-semibold text-[#FFFFFF] mb-2">Physician Burnout</h3>
+          <p class="text-xs text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Doctors spend hours after clinics re-typing unstructured notes into hospital EHR databases instead of focusing on direct patient care.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Section: Architectural Solution */}
+    <section id="architecture" class="py-12 border-b border-[rgba(244,243,239,0.14)]">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-2">02 / ARCHITECTURE</div>
+      <h2 class="text-2xl sm:text-4xl font-bold text-[#FFFFFF] tracking-tight mb-8">
+        The QueueZero Intake Pipeline
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-left">
+        <div class="p-5 bg-[#181818] border-l-2 border-[#D9261C] border-y border-r border-[rgba(244,243,239,0.1)] rounded-[4px]">
+          <div class="font-mono text-[11px] text-[#FF5A52]">STAGE 01</div>
+          <div class="text-base font-semibold text-white mt-1 mb-2">Waiting Room Terminal</div>
+          <p class="text-xs text-[rgba(244,243,239,0.7)]">Patient uses bedside tablet or kiosk to converse with clinical conversational agent.</p>
+        </div>
+
+        <div class="p-5 bg-[#181818] border-l-2 border-[#D9261C] border-y border-r border-[rgba(244,243,239,0.1)] rounded-[4px]">
+          <div class="font-mono text-[11px] text-[#FF5A52]">STAGE 02</div>
+          <div class="text-base font-semibold text-white mt-1 mb-2">Differential Synthesis</div>
+          <p class="text-xs text-[rgba(244,243,239,0.7)]">On-device edge inference structures complaint timelines into standardized SNOMED-CT tokens.</p>
+        </div>
+
+        <div class="p-5 bg-[#181818] border-l-2 border-[#D9261C] border-y border-r border-[rgba(244,243,239,0.1)] rounded-[4px]">
+          <div class="font-mono text-[11px] text-[#FF5A52]">STAGE 03</div>
+          <div class="text-base font-semibold text-white mt-1 mb-2">Physician Glance-Sheet</div>
+          <p class="text-xs text-[rgba(244,243,239,0.7)]">A 1-page chronological timeline is instantly presented as the patient enters the room.</p>
+        </div>
+
+        <div class="p-5 bg-[#181818] border-l-2 border-[#D9261C] border-y border-r border-[rgba(244,243,239,0.1)] rounded-[4px]">
+          <div class="font-mono text-[11px] text-[#FF5A52]">STAGE 04</div>
+          <div class="text-base font-semibold text-white mt-1 mb-2">EHR Commit</div>
+          <p class="text-xs text-[rgba(244,243,239,0.7)]">Physician approves findings with 1 click; structured data syncs to the hospital database.</p>
+        </div>
+      </div>
+    </section>
+
+    {/* Section: Impact Metrics */}
+    <section class="py-12 border-b border-[rgba(244,243,239,0.14)]">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-2">03 / CLINICAL BENCHMARKS</div>
+      <h2 class="text-2xl sm:text-4xl font-bold text-[#FFFFFF] tracking-tight mb-8">
+        Measured Outcomes
+      </h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[4px] text-center">
+          <div class="text-3xl sm:text-4xl font-mono font-bold text-[#FFFFFF]">65%</div>
+          <div class="font-mono text-xs text-[#FF5A52] mt-1">INTAKE TIME REDUCTION</div>
+        </div>
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[4px] text-center">
+          <div class="text-3xl sm:text-4xl font-mono font-bold text-[#FFFFFF]">12m</div>
+          <div class="font-mono text-xs text-[#FF5A52] mt-1">AVERAGE MINUTES SAVED</div>
+        </div>
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[4px] text-center">
+          <div class="text-3xl sm:text-4xl font-mono font-bold text-[#FFFFFF]">99.4%</div>
+          <div class="font-mono text-xs text-[#FF5A52] mt-1">ONSET ACCURACY RATE</div>
+        </div>
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[4px] text-center">
+          <div class="text-3xl sm:text-4xl font-mono font-bold text-[#FFFFFF]">0ms</div>
+          <div class="font-mono text-xs text-[#FF5A52] mt-1">CLOUD LEAKAGE (AIR-GAPPED)</div>
+        </div>
+      </div>
+    </section>
+
+    {/* CTA Strip */}
+    <div class="mt-16 p-8 bg-[#111111] border border-[rgba(244,243,239,0.16)] rounded-[8px] text-center max-w-3xl mx-auto space-y-4">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase">HOSPITAL DEPLOYMENT PILOT</div>
+      <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+        Deploy QueueZero in Your Department
+      </h2>
+      <p class="text-sm text-[rgba(244,243,239,0.75)] max-w-lg mx-auto">
+        Speak directly with the healthcare systems engineer who designed PhysioMimica™ and QueueZero™.
+      </p>
+      <div class="pt-2">
+        <button
+          type="button"
+          data-open-modal="engineer"
+          data-goal="QueueZero Healthcare Deployment"
+          data-stack="QueueZero System"
+          class="touch-target px-6 py-3 bg-[#D9261C] hover:bg-[#B81D14] text-white text-sm font-semibold rounded-[4px] transition-colors inline-flex items-center gap-2"
+        >
+          <span>Speak Directly with Engineer</span>
+          <span class="font-mono">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</Layout>
