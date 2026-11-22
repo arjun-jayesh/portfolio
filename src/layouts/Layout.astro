@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import DirectEngineerModal from "../components/DirectEngineerModal";
-import { supabase } from "../lib/supabase";
+import { supabase, supabaseAdmin } from "../lib/supabase";
 import Analytics from "@vercel/analytics/astro";
 
 interface Props {
@@ -10,22 +10,25 @@ interface Props {
   image?: string;
   canonical?: string;
   schemaType?: "WebSite" | "Service" | "FAQPage" | "AboutPage" | "ContactPage";
+  hideHeaderFooter?: boolean;
 }
 
 const {
-  title = "KINBO — Custom Software Engineering & Architecture",
+  title = "KINBO - Custom Software Engineering & Architecture",
   description = "We don't have a sales team. You talk directly to the engineer from day one. Mobile apps, web platforms, ERPs, and custom AI systems built with lifelong support.",
-  image = "/favicon.svg",
+  image = "/favicon.png",
   canonical,
   schemaType = "WebSite",
+  hideHeaderFooter = false,
 } = Astro.props;
 
 let enterpriseAssets: Record<string, any> = {};
 let primarySettings: Record<string, any> = {};
 
-if (supabase) {
+const db = supabaseAdmin || supabase;
+if (db) {
   try {
-    const { data: configs } = await supabase
+    const { data: configs } = await db
       .from("site_config")
       .select("key, data")
       .in("key", ["enterprise_assets", "primary_settings"]);
@@ -43,17 +46,42 @@ if (supabase) {
 const whatsappNumber = enterpriseAssets.whatsapp_number || "919074811984";
 const defaultWhatsAppMsg = enterpriseAssets.whatsapp_default_message || "Hello kinbo Engineer, I would like to discuss a software project.";
 const waCleanNumber = whatsappNumber.replace(/[^0-9]/g, "");
-const canonicalUrl = canonical || new URL(Astro.url.pathname, Astro.site || Astro.url.origin).href;
+const siteUrl = "https://kinbosoft.com";
+const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).href;
 
-const jsonLdGraph = {
+const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
+const breadcrumbItems = [
+  {
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": siteUrl
+  },
+  ...pathSegments.map((segment, index) => ({
+    "@type": "ListItem",
+    "position": index + 2,
+    "name": segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " "),
+    "item": `${siteUrl}/${pathSegments.slice(0, index + 1).join("/")}`
+  }))
+];
+
+const jsonLdGraph: Record<string, any> = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://kinbosoft.com/#organization",
+      "@id": `${siteUrl}/#organization`,
       "name": "KINBO TECHNOLOGIES PRIVATE LIMITED",
-      "url": "https://kinbosoft.com",
-      "logo": "https://kinbosoft.com/favicon.svg",
+      "alternateName": ["KINBO", "Kinbo Technologies"],
+      "url": siteUrl,
+      "logo": `${siteUrl}/favicon.png`,
+      "image": `${siteUrl}/favicon.png`,
+      "founder": {
+        "@type": "Person",
+        "name": "Arjun Jayesh",
+        "jobTitle": "Founder & Systems Architect",
+        "url": `${siteUrl}/founder`
+      },
       "contactPoint": [
         {
           "@type": "ContactPoint",
@@ -61,6 +89,10 @@ const jsonLdGraph = {
           "contactType": "engineering support",
           "availableLanguage": ["English", "Hindi", "Malayalam"]
         }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/company/kinbosoft",
+        "https://github.com/arjun-jayesh"
       ]
     },
     {
@@ -69,10 +101,18 @@ const jsonLdGraph = {
       "url": canonicalUrl,
       "name": title,
       "description": description,
-      "isPartOf": { "@id": "https://kinbosoft.com/#organization" }
+      "isPartOf": { "@id": `${siteUrl}/#organization` }
     }
   ]
 };
+
+if (pathSegments.length > 0) {
+  jsonLdGraph["@graph"].push({
+    "@type": "BreadcrumbList",
+    "@id": `${canonicalUrl}#breadcrumb`,
+    "itemListElement": breadcrumbItems
+  });
+}
 ---
 
 <!doctype html>
@@ -84,8 +124,10 @@ const jsonLdGraph = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
 
-    {/* Favicon */}
+    {/* Favicon & Icons */}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
     <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
 
     {/* Preconnect Fonts */}
@@ -117,70 +159,61 @@ const jsonLdGraph = {
 
     {/* Deduplicated Brand SVG Sprite */}
     <svg class="svg-sprite" aria-hidden="true" focusable="false">
-      <!-- Symbol: kinbo logo light (#D9261C + #111111) -->
-      <symbol id="kinbo-logo-light" viewBox="0 0 170 46">
-        <!-- k -->
-        <path d="M10 8h6v28h-6z" fill="#D9261C" />
-        <path d="M26 18l-10 10h8l6-6z" fill="#D9261C" />
-        <path d="M19 25l8 11h-8l-5-7z" fill="#D9261C" />
-        <!-- i -->
-        <path d="M36 18h6v18h-6z" fill="#D9261C" />
-        <circle cx="39" cy="11" r="3" fill="#D9261C" />
-        <!-- n -->
-        <path d="M50 18h6v18h-6z" fill="#D9261C" />
-        <path d="M55 24c0-4.5 3-7 8-7s8 2.5 8 7v12h-6V24c0-2-1.5-3-3.5-3s-3.5 1-3.5 3v12h-6z" fill="#D9261C" />
-        <!-- b -->
-        <path d="M79 8h6v28h-6z" fill="#111111" />
-        <path d="M85 27c0-6 4.8-10 10.5-10s10.5 4 10.5 10-4.8 10-10.5 10S85 33 85 27zm15 0c0-3.5-2.2-5.5-4.5-5.5s-4.5 2-4.5 5.5 2.2 5.5 4.5 5.5 4.5-2 4.5-5.5z" fill="#111111" />
-        <circle class="bo-dot" cx="98" cy="24" r="2.2" fill="#D9261C" />
-        <!-- o -->
-        <path d="M118 27c0-6 4.8-10 10.5-10s10.5 4 10.5 10-4.8 10-10.5 10S118 33 118 27zm15 0c0-3.5-2.2-5.5-4.5-5.5s-4.5 2-4.5 5.5 2.2 5.5 4.5 5.5 4.5-2 4.5-5.5z" fill="#111111" />
-        <circle class="bo-dot" cx="131" cy="24" r="2.2" fill="#D9261C" />
-      </symbol>
+      <defs>
+        <!-- Light-ground wordmark ('bo' in Carbon Black) -->
+        <symbol id="kinbo-logo-light" viewBox="0 0 170 46">
+          <path d="M0 4H9.2V24.2L22.2 12.5H33.6L19.6 24.8L34.4 42H22.8L12.6 29.8L9.2 32.8V42H0V4Z" fill="#D9261C"/>
+          <rect x="38.5" y="4" width="9.2" height="6.8" fill="#D9261C"/>
+          <rect x="38.5" y="13.5" width="9.2" height="28.5" fill="#D9261C"/>
+          <path d="M54 13.5H63V17.4C64.9 14.5 68.1 12.8 72.1 12.8C79.4 12.8 83.6 17.3 83.6 25.1V42H74.4V26.4C74.4 22.4 72.4 20.4 69.1 20.4C65.4 20.4 63.2 22.8 63.2 27.1V42H54V13.5Z" fill="#D9261C"/>
+          <rect x="91" y="4" width="9.2" height="38" fill="#111111"/>
+          <circle cx="107.5" cy="27.8" r="14.7" fill="#111111"/>
+          <circle cx="107.5" cy="27.8" r="7.5" fill="#F4F3EF"/>
+          <circle class="bo-dot" cx="110.2" cy="25.1" r="3.3" fill="#D9261C" style="transform:translate(var(--dot-tx,0px),var(--dot-ty,0px));transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)"/>
+          <circle cx="143.5" cy="27.8" r="14.7" fill="#111111"/>
+          <circle cx="143.5" cy="27.8" r="7.5" fill="#F4F3EF"/>
+          <circle class="bo-dot" cx="146.2" cy="25.1" r="3.3" fill="#D9261C" style="transform:translate(var(--dot-tx,0px),var(--dot-ty,0px));transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)"/>
+        </symbol>
 
-      <!-- Symbol: kinbo logo dark (#D9261C + #F4F3EF) -->
-      <symbol id="kinbo-logo-dark" viewBox="0 0 170 46">
-        <!-- k -->
-        <path d="M10 8h6v28h-6z" fill="#D9261C" />
-        <path d="M26 18l-10 10h8l6-6z" fill="#D9261C" />
-        <path d="M19 25l8 11h-8l-5-7z" fill="#D9261C" />
-        <!-- i -->
-        <path d="M36 18h6v18h-6z" fill="#D9261C" />
-        <circle cx="39" cy="11" r="3" fill="#D9261C" />
-        <!-- n -->
-        <path d="M50 18h6v18h-6z" fill="#D9261C" />
-        <path d="M55 24c0-4.5 3-7 8-7s8 2.5 8 7v12h-6V24c0-2-1.5-3-3.5-3s-3.5 1-3.5 3v12h-6z" fill="#D9261C" />
-        <!-- b -->
-        <path d="M79 8h6v28h-6z" fill="#F4F3EF" />
-        <path d="M85 27c0-6 4.8-10 10.5-10s10.5 4 10.5 10-4.8 10-10.5 10S85 33 85 27zm15 0c0-3.5-2.2-5.5-4.5-5.5s-4.5 2-4.5 5.5 2.2 5.5 4.5 5.5 4.5-2 4.5-5.5z" fill="#F4F3EF" />
-        <circle class="bo-dot" cx="98" cy="24" r="2.2" fill="#D9261C" />
-        <!-- o -->
-        <path d="M118 27c0-6 4.8-10 10.5-10s10.5 4 10.5 10-4.8 10-10.5 10S118 33 118 27zm15 0c0-3.5-2.2-5.5-4.5-5.5s-4.5 2-4.5 5.5 2.2 5.5 4.5 5.5 4.5-2 4.5-5.5z" fill="#F4F3EF" />
-        <circle class="bo-dot" cx="131" cy="24" r="2.2" fill="#D9261C" />
-      </symbol>
+        <!-- Dark-ground wordmark ('bo' in Off-White) -->
+        <symbol id="kinbo-logo-dark" viewBox="0 0 170 46">
+          <path d="M0 4H9.2V24.2L22.2 12.5H33.6L19.6 24.8L34.4 42H22.8L12.6 29.8L9.2 32.8V42H0V4Z" fill="#D9261C"/>
+          <rect x="38.5" y="4" width="9.2" height="6.8" fill="#D9261C"/>
+          <rect x="38.5" y="13.5" width="9.2" height="28.5" fill="#D9261C"/>
+          <path d="M54 13.5H63V17.4C64.9 14.5 68.1 12.8 72.1 12.8C79.4 12.8 83.6 17.3 83.6 25.1V42H74.4V26.4C74.4 22.4 72.4 20.4 69.1 20.4C65.4 20.4 63.2 22.8 63.2 27.1V42H54V13.5Z" fill="#D9261C"/>
+          <rect x="91" y="4" width="9.2" height="38" fill="#F4F3EF"/>
+          <circle cx="107.5" cy="27.8" r="14.7" fill="#F4F3EF"/>
+          <circle cx="107.5" cy="27.8" r="7.5" fill="#111111"/>
+          <circle class="bo-dot" cx="110.2" cy="25.1" r="3.3" fill="#D9261C" style="transform:translate(var(--dot-tx,0px),var(--dot-ty,0px));transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)"/>
+          <circle cx="143.5" cy="27.8" r="14.7" fill="#F4F3EF"/>
+          <circle cx="143.5" cy="27.8" r="7.5" fill="#111111"/>
+          <circle class="bo-dot" cx="146.2" cy="25.1" r="3.3" fill="#D9261C" style="transform:translate(var(--dot-tx,0px),var(--dot-ty,0px));transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)"/>
+        </symbol>
 
-      <!-- Symbol: 1:1 square bo mark -->
-      <symbol id="bo-icon" viewBox="0 0 120 120">
-        <rect width="120" height="120" rx="16" fill="#181818" />
-        <!-- b -->
-        <path d="M24 24h10v72h-10z" fill="#F4F3EF" />
-        <path d="M34 60c0-12 9.5-20 21-20s21 8 21 20-9.5 20-21 20-21-8-21-20zm30 0c0-7-4.5-11-9-11s-9 4-9 11 4.5 11 9 11 9-4 9-11z" fill="#F4F3EF" />
-        <circle class="bo-dot" cx="60" cy="54" r="4.5" fill="#D9261C" />
-        <!-- o -->
-        <path d="M72 60c0-12 9.5-20 21-20s21 8 21 20-9.5 20-21 20-21-8-21-20zm30 0c0-7-4.5-11-9-11s-9 4-9 11 4.5 11 9 11 9-4 9-11z" fill="#F4F3EF" />
-        <circle class="bo-dot" cx="98" cy="54" r="4.5" fill="#D9261C" />
-      </symbol>
+        <!-- Standalone 1:1 'bo' Icon Mark (Top-Right Flat 2D Dots) -->
+        <symbol id="bo-icon" viewBox="0 0 120 120">
+          <rect width="120" height="120" rx="16" fill="#181818"/>
+          <rect x="20" y="22" width="12" height="68" fill="#F4F3EF"/>
+          <circle cx="44" cy="68" r="23" fill="#F4F3EF"/>
+          <circle cx="44" cy="68" r="11.5" fill="#181818"/>
+          <circle class="bo-dot" cx="48.2" cy="63.8" r="5" fill="#D9261C"/>
+          <circle cx="88" cy="68" r="23" fill="#F4F3EF"/>
+          <circle cx="88" cy="68" r="11.5" fill="#181818"/>
+          <circle class="bo-dot" cx="92.2" cy="63.8" r="5" fill="#D9261C"/>
+        </symbol>
+      </defs>
     </svg>
 
     {/* Sticky Floating Swiss Island Navbar */}
+    {!hideHeaderFooter && (
     <header class="fixed top-3 left-0 right-0 z-40 px-3 sm:px-6 pointer-events-none">
       <nav
         class="max-w-5xl mx-auto bg-[#111111]/95 backdrop-blur-md border border-[rgba(244,243,239,0.16)] rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-2xl pointer-events-auto"
         aria-label="Main Navigation"
       >
         {/* Left: Kinbo Logo */}
-        <a href="/" class="flex items-center gap-2 logo-hover-target touch-target" aria-label="kinbo home">
-          <svg class="h-6 w-[120px]" viewBox="0 0 170 46" aria-hidden="true">
+        <a href="/" class="kinbo-logo logo-hover-target touch-target" aria-label="kinbo home">
+          <svg viewBox="0 0 170 46" role="img" aria-label="kinbo">
             <use href="#kinbo-logo-dark" />
           </svg>
         </a>
@@ -256,6 +289,7 @@ const jsonLdGraph = {
         </div>
       </div>
     </header>
+    )}
 
     {/* Main Content Area */}
     <main id="main-content" class="min-h-screen">
@@ -263,16 +297,18 @@ const jsonLdGraph = {
     </main>
 
     {/* 5-Column Swiss Footer */}
-    <footer class="bg-[#111111] text-[#F4F3EF] border-t border-[rgba(244,243,239,0.14)] pt-16 pb-28 md:pb-16 mt-20">
+    {!hideHeaderFooter && (
+      <>
+      <footer class="bg-[#111111] text-[#F4F3EF] border-t border-[rgba(244,243,239,0.14)] pt-16 pb-28 md:pb-16 mt-20">
       <div class="max-w-6xl mx-auto px-5 sm:px-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 pb-12 border-b border-[rgba(244,243,239,0.1)]">
           {/* Col 1: Brand & Status Pill */}
           <div class="lg:col-span-1 space-y-4">
-            <div class="logo-hover-target inline-block">
-              <svg class="w-12 h-12" viewBox="0 0 120 120" aria-label="kinbo icon">
+            <a href="/" class="bo-badge logo-hover-target inline-block touch-target" aria-label="kinbo home">
+              <svg class="w-12 h-12" viewBox="0 0 120 120" role="img" aria-label="kinbo bo mark">
                 <use href="#bo-icon" />
               </svg>
-            </div>
+            </a>
             <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-[#181818] border border-[rgba(244,243,239,0.14)] rounded-full">
               <span class="w-2 h-2 rounded-full bg-[#34D399] animate-pulse"></span>
               <span class="font-mono text-[12px] text-[rgba(244,243,239,0.85)]">Engineers Online</span>
@@ -371,6 +407,8 @@ const jsonLdGraph = {
         <span class="font-mono text-xs">→</span>
       </a>
     </div>
+      </>
+    )}
 
     {/* Direct-to-Engineer Modal Island */}
     <DirectEngineerModal client:idle whatsappNumber={whatsappNumber} />

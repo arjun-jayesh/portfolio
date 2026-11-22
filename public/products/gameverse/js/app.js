@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════
-   KINBO GAMEVERSE — Main Application Logic & Router
+   KINBO GAMEVERSE - Main Application Logic & Router
    ══════════════════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -1179,7 +1179,7 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
                     {/* Background Media Upload */}
                     <div class="space-y-2">
                         <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">
-                            Hero {bgType === 'video' ? 'Video' : bgType === 'gif' ? 'GIF' : 'Image'} — Drag & Drop
+                            Hero {bgType === 'video' ? 'Video' : bgType === 'gif' ? 'GIF' : 'Image'} - Drag & Drop
                         </label>
                         <DragDropZone
                             accept={bgType === 'video' ? 'video/*' : bgType === 'gif' ? '.gif,image/gif' : 'image/*'}

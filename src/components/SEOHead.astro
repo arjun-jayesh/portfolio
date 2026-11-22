@@ -1,6 +1,6 @@
 ---
 /**
- * SEOHead.astro — Centralized SEO head component
+ * SEOHead.astro - Centralized SEO head component
  * Generates all meta tags, OpenGraph, Twitter Cards, and canonical URL.
  * 
  * Usage:
@@ -36,7 +36,7 @@ const {
   article,
 } = Astro.props;
 
-const pageTitle = title ? `${title} — ${SITE_NAME}` : SITE_NAME;
+const pageTitle = title ? `${title} - ${SITE_NAME}` : SITE_NAME;
 const canonicalURL = canonicalPath ? `${SITE_URL}${canonicalPath}` : SITE_URL;
 ---
 

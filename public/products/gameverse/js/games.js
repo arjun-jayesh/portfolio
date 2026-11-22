@@ -1,11 +1,11 @@
 /* ══════════════════════════════════════════════════════════════
-   KINBO GAMEVERSE — Game Implementations (1-25)
+   KINBO GAMEVERSE - Game Implementations (1-25)
    ══════════════════════════════════════════════════════════════ */
 
 const GameRegistry = {};
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 1: NeonBlitz — Arcade Shooter
+   GAME 1: NeonBlitz - Arcade Shooter
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[1] = class NeonBlitz {
   init(canvas, ctx, engine) {
@@ -152,7 +152,7 @@ GameRegistry[1] = class NeonBlitz {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 2: HexCipher — Puzzle (Colour Matching Grid)
+   GAME 2: HexCipher - Puzzle (Colour Matching Grid)
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[2] = class HexCipher {
   init(canvas, ctx, engine) {
@@ -312,7 +312,7 @@ GameRegistry[2] = class HexCipher {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 3: GravityRacer — Top-down Racing
+   GAME 3: GravityRacer - Top-down Racing
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[3] = class GravityRacer {
   init(canvas, ctx, engine) {
@@ -433,7 +433,7 @@ GameRegistry[3] = class GravityRacer {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 4: PixelFarm — Farming Simulation
+   GAME 4: PixelFarm - Farming Simulation
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[4] = class PixelFarm {
   init(canvas, ctx, engine) {
@@ -591,7 +591,7 @@ GameRegistry[4] = class PixelFarm {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 5: ShadowHopper — Platformer
+   GAME 5: ShadowHopper - Platformer
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[5] = class ShadowHopper {
   init(canvas, ctx, engine) {
@@ -739,7 +739,7 @@ GameRegistry[5] = class ShadowHopper {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 6: BeatForge — Rhythm (Falling Notes)
+   GAME 6: BeatForge - Rhythm (Falling Notes)
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[6] = class BeatForge {
   init(canvas, ctx, engine) {
@@ -862,7 +862,7 @@ GameRegistry[6] = class BeatForge {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 7: CrystalMaze — Mirror Light Puzzle
+   GAME 7: CrystalMaze - Mirror Light Puzzle
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[7] = class CrystalMaze {
   init(canvas, ctx, engine) {
@@ -989,7 +989,7 @@ GameRegistry[7] = class CrystalMaze {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 8: TowerTide — Tower Defense
+   GAME 8: TowerTide - Tower Defense
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[8] = class TowerTide {
   init(canvas, ctx, engine) {
@@ -1206,7 +1206,7 @@ GameRegistry[8] = class TowerTide {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 9: WordWeave — Word Finding
+   GAME 9: WordWeave - Word Finding
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[9] = class WordWeave {
   init(canvas, ctx, engine) {
@@ -1319,7 +1319,7 @@ GameRegistry[9] = class WordWeave {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 10: QuantumDrift — Dual Particle Experimental
+   GAME 10: QuantumDrift - Dual Particle Experimental
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[10] = class QuantumDrift {
   init(canvas, ctx, engine) {
@@ -1458,7 +1458,7 @@ GameRegistry[10] = class QuantumDrift {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 11: MathBlaster3D — Math Shooter
+   GAME 11: MathBlaster3D - Math Shooter
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[11] = class MathBlaster3D {
   init(canvas, ctx, engine) {
@@ -1564,7 +1564,7 @@ GameRegistry[11] = class MathBlaster3D {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 12: EcoBalance — Ecosystem Simulation
+   GAME 12: EcoBalance - Ecosystem Simulation
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[12] = class EcoBalance {
   init(canvas, ctx, engine) {
@@ -1697,7 +1697,7 @@ GameRegistry[12] = class EcoBalance {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 13: RuneChaser — Top-down Adventure
+   GAME 13: RuneChaser - Top-down Adventure
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[13] = class RuneChaser {
   init(canvas, ctx, engine) {
@@ -1854,7 +1854,7 @@ GameRegistry[13] = class RuneChaser {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 14: NeuralNet — Node Connection Logic Puzzle
+   GAME 14: NeuralNet - Node Connection Logic Puzzle
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[14] = class NeuralNet {
   init(canvas, ctx, engine) {
@@ -1973,7 +1973,7 @@ GameRegistry[14] = class NeuralNet {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 15: GalacticGardener — Idle Clicker
+   GAME 15: GalacticGardener - Idle Clicker
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[15] = class GalacticGardener {
   init(canvas, ctx, engine) {
@@ -2099,7 +2099,7 @@ GameRegistry[15] = class GalacticGardener {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 16: FusionChef — Order Matching Simulation
+   GAME 16: FusionChef - Order Matching Simulation
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[16] = class FusionChef {
   init(canvas, ctx, engine) {
@@ -2232,7 +2232,7 @@ GameRegistry[16] = class FusionChef {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 17: StellarSurf — Balance Sports
+   GAME 17: StellarSurf - Balance Sports
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[17] = class StellarSurf {
   init(canvas, ctx, engine) {
@@ -2361,7 +2361,7 @@ GameRegistry[17] = class StellarSurf {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 18: ChromaShift — Color Matching Arcade
+   GAME 18: ChromaShift - Color Matching Arcade
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[18] = class ChromaShift {
   init(canvas, ctx, engine) {
@@ -2472,7 +2472,7 @@ GameRegistry[18] = class ChromaShift {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 19: FrostFortress — Resource Survival
+   GAME 19: FrostFortress - Resource Survival
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[19] = class FrostFortress {
   init(canvas, ctx, engine) {
@@ -2598,7 +2598,7 @@ GameRegistry[19] = class FrostFortress {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 20: MemoryMatrix — Sequence Memory
+   GAME 20: MemoryMatrix - Sequence Memory
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[20] = class MemoryMatrix {
   init(canvas, ctx, engine) {
@@ -2706,7 +2706,7 @@ GameRegistry[20] = class MemoryMatrix {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 21: Sokobot — Push Puzzle
+   GAME 21: Sokobot - Push Puzzle
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[21] = class Sokobot {
   init(canvas, ctx, engine) {
@@ -2813,7 +2813,7 @@ GameRegistry[21] = class Sokobot {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 22: AquaFlow — Pipe Connection Puzzle
+   GAME 22: AquaFlow - Pipe Connection Puzzle
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[22] = class AquaFlow {
   init(canvas, ctx, engine) {
@@ -2924,7 +2924,7 @@ GameRegistry[22] = class AquaFlow {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 23: SpeedScript — Typing Challenge
+   GAME 23: SpeedScript - Typing Challenge
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[23] = class SpeedScript {
   init(canvas, ctx, engine) {
@@ -3019,7 +3019,7 @@ GameRegistry[23] = class SpeedScript {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 24: DungeonDice — Dice Combat Strategy
+   GAME 24: DungeonDice - Dice Combat Strategy
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[24] = class DungeonDice {
   init(canvas, ctx, engine) {
@@ -3181,7 +3181,7 @@ GameRegistry[24] = class DungeonDice {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GAME 25: NightMarket — Idle Market Stall
+   GAME 25: NightMarket - Idle Market Stall
    ═══════════════════════════════════════════════════════════════ */
 GameRegistry[25] = class NightMarket {
   init(canvas, ctx, engine) {

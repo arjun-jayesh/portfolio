@@ -2,10 +2,8 @@ export const prerender = false;
 
 import { supabaseAdmin } from '../../../lib/supabase';
 import { hmacSignHex, timingSafeEqualHex } from '../../../lib/auth';
-
-const getEnv = (key: string) => {
-    return import.meta.env[key] || (typeof process !== 'undefined' ? process.env[key] : '');
-};
+import { PaymentVerifySchema } from '../../../lib/schemas';
+import { getEnv } from '../../../lib/env';
 
 export async function POST({ request }: { request: Request }) {
     try {
@@ -18,22 +16,17 @@ export async function POST({ request }: { request: Request }) {
             });
         }
 
-        const body = await request.json();
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, service_name, customer } = body;
+        const rawBody = await request.json().catch(() => ({}));
+        const parsed = PaymentVerifySchema.safeParse(rawBody);
 
-        if (
-            typeof razorpay_order_id !== 'string' ||
-            typeof razorpay_payment_id !== 'string' ||
-            typeof razorpay_signature !== 'string' ||
-            !razorpay_order_id ||
-            !razorpay_payment_id ||
-            !razorpay_signature
-        ) {
-            return new Response(JSON.stringify({ error: 'Missing payment verification fields' }), {
+        if (!parsed.success) {
+            return new Response(JSON.stringify({ error: 'Missing or invalid payment verification fields' }), {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
+
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, service_name, customer } = parsed.data;
 
         const payload = `${razorpay_order_id}|${razorpay_payment_id}`;
         const expectedSignature = await hmacSignHex(keySecret, payload);

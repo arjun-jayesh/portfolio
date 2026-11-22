@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════
-   KINBO GAMEVERSE — Shared Game Engine
+   KINBO GAMEVERSE - Shared Game Engine
    ══════════════════════════════════════════════════════════════ */
 
 class GameEngine {

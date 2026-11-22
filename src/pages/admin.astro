@@ -5,49 +5,64 @@ import AdminInterface from "../components/AdminInterface";
 import {
   createAdminSessionToken,
   verifyAdminSessionToken,
-  hmacSignHex,
-  timingSafeEqualHex,
+  verifyPassword,
+  checkLoginLockout,
+  recordLoginFailure,
+  resetLoginLockout,
+  createCsrfToken,
 } from "../lib/auth";
 
-const adminPassword =
-  import.meta.env.ADMIN_PASSWORD ||
-  (typeof process !== "undefined" ? process.env.ADMIN_PASSWORD : "") ||
-  "local";
+const clientIp =
+  Astro.request.headers.get("cf-connecting-ip") ||
+  Astro.request.headers.get("x-real-ip") ||
+  Astro.request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+  "unknown";
 
 const existingToken = Astro.cookies.get("admin_session")?.value;
 let isAuthenticated = await verifyAdminSessionToken(existingToken);
 let error = "";
+let csrfToken = existingToken ? await createCsrfToken(existingToken) : "";
 
 if (Astro.request.method === "POST") {
-  const data = await Astro.request.formData();
-  const submittedPassword = String(data.get("password") ?? "");
-
-  // Constant-time password comparison via HMAC digest
-  const [submittedHash, expectedHash] = await Promise.all([
-    hmacSignHex("kinbo_login_cmp", submittedPassword),
-    hmacSignHex("kinbo_login_cmp", adminPassword),
-  ]);
-
-  if (timingSafeEqualHex(submittedHash, expectedHash)) {
-    const signedToken = await createAdminSessionToken();
-    Astro.cookies.set("admin_session", signedToken, {
-      path: "/",
-      httpOnly: true,
-      secure: import.meta.env.PROD,
-      sameSite: "strict",
-      maxAge: 60 * 60 * 24,
-    });
-    isAuthenticated = true;
+  const lockout = checkLoginLockout(clientIp);
+  if (lockout.isLocked) {
+    const mins = Math.ceil(lockout.remainingMs / 60000);
+    error = `Too many failed attempts. Login locked for ${mins} minute(s).`;
   } else {
-    error = "Invalid connection key.";
+    const data = await Astro.request.formData();
+    const submittedPassword = String(data.get("password") ?? "");
+
+    const isMatch = await verifyPassword(submittedPassword);
+
+    if (isMatch) {
+      resetLoginLockout(clientIp);
+      const signedToken = await createAdminSessionToken();
+      Astro.cookies.set("admin_session", signedToken, {
+        path: "/",
+        httpOnly: true,
+        secure: import.meta.env.PROD,
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24,
+      });
+      isAuthenticated = true;
+      csrfToken = await createCsrfToken(signedToken);
+    } else {
+      recordLoginFailure(clientIp);
+      const updated = checkLoginLockout(clientIp);
+      if (updated.isLocked) {
+        error = "Maximum attempts exceeded. IP locked out for 15 minutes.";
+      } else {
+        error = "Invalid connection key.";
+      }
+    }
   }
 }
 ---
 
-<Layout title="Command Center — KINBO Admin Portal" hideHeaderFooter={true}>
+<Layout title="Command Center - KINBO Admin Portal" hideHeaderFooter={true}>
   {isAuthenticated ? (
     <div class="pt-16 pb-24 px-4 sm:px-8 max-w-7xl mx-auto">
-      <AdminInterface client:only="preact" />
+      <AdminInterface client:only="preact" csrfToken={csrfToken} />
     </div>
   ) : (
     <div class="min-h-screen flex items-center justify-center p-4 bg-[#050505]">
@@ -63,7 +78,7 @@ if (Astro.request.method === "POST") {
         </p>
 
         {error && (
-          <div class="mb-4 p-3 bg-[#D9261C]/15 border border-[#D9261C] text-[#FF5A52] font-mono text-xs rounded-[4px] text-center">
+          <div class="mb-4 p-3 bg-[#D9261C]/15 border border-[#D9261C] text-[#FF5A52] font-mono text-xs rounded-[4px] text-center" role="alert">
             {error}
           </div>
         )}
@@ -87,7 +102,7 @@ if (Astro.request.method === "POST") {
           <div class="pt-2">
             <button
               type="submit"
-              class="w-full touch-target bg-[#D9261C] hover:bg-[#B81D14] text-white font-mono text-xs font-semibold uppercase tracking-wider rounded-[4px] px-4 py-3 transition-colors"
+              class="w-full touch-target bg-[#D9261C] hover:bg-[#B81D14] text-white font-mono text-xs font-semibold uppercase tracking-wider rounded-[4px] px-4 py-3 transition-colors cursor-pointer"
             >
               [ Establish Authenticated Session ]
             </button>

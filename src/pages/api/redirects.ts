@@ -1,17 +1,12 @@
 import { supabaseAdmin } from '../../lib/supabase';
+import { RedirectSchema, isSafeExternalUrl } from '../../lib/schemas';
+import { getEnv } from '../../lib/env';
 import dns from 'node:dns/promises';
 
 export const prerender = false;
 
-const FQDN_REGEX = /^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.[A-Za-z0-9-]{1,63})+$/;
-
 function isValidHttpUrl(rawUrl: string): boolean {
-    try {
-        const parsed = new URL(rawUrl);
-        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
-    } catch {
-        return false;
-    }
+    return isSafeExternalUrl(rawUrl);
 }
 
 export async function GET() {
@@ -49,34 +44,21 @@ export async function POST({ request }: { request: Request }) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-        const { id, fqdn: rawFqdn, target_url: rawTargetUrl } = await request.json();
+        const body = await request.json().catch(() => ({}));
+        const parsed = RedirectSchema.safeParse(body);
 
-        const fqdn = typeof rawFqdn === 'string' ? rawFqdn.trim().toLowerCase() : '';
-        const target_url = typeof rawTargetUrl === 'string' ? rawTargetUrl.trim() : '';
-
-        if (!fqdn || !target_url) {
-            return new Response(JSON.stringify({ error: 'Missing fqdn or target_url' }), {
+        if (!parsed.success) {
+            const firstErr = parsed.error.issues[0]?.message || 'Invalid redirect request payload';
+            return new Response(JSON.stringify({ error: firstErr, details: parsed.error.issues }), {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
 
-        if (!FQDN_REGEX.test(fqdn)) {
-            return new Response(JSON.stringify({ error: 'Invalid FQDN hostname format' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-
-        if (!isValidHttpUrl(target_url)) {
-            return new Response(JSON.stringify({ error: 'target_url must be a valid http:// or https:// URL' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
+        const { id, fqdn, target_url } = parsed.data;
 
         // ─── DNS VALIDATION ───
-        const expectedIp = '18.133.72.105';
+        const expectedIp = getEnv('REDIRECT_PROXY_IP') || '18.133.72.105';
         let resolvedIps: string[] = [];
         let dnsDiagnostics: any = null;
 

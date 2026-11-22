@@ -2,11 +2,32 @@
 import Layout from "../../layouts/Layout.astro";
 export const prerender = false;
 
-const pageTitle = "QueueZero™ (Q0) | Clinical Triage & Queue Orchestration — KINBO";
-const pageDescription = "QueueZero™ transforms waiting-room idle time into structured pre-consultation clinical intelligence — enabling physicians to focus entirely on clinical judgment.";
+const pageTitle = "QueueZero™ (Q0) | Clinical Triage & Queue Orchestration - KINBO";
+const pageDescription = "QueueZero™ transforms waiting-room idle time into structured pre-consultation clinical intelligence - enabling physicians to focus entirely on clinical judgment.";
 ---
 
 <Layout title={pageTitle} description={pageDescription} schemaType="Service">
+  {/* SoftwareApplication Schema */}
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "QueueZero™ (Q0)",
+    "applicationCategory": "HealthApplication, BusinessApplication",
+    "operatingSystem": "Web, Cloud, Hospital Local Intranet",
+    "description": pageDescription,
+    "url": "https://kinbosoft.com/products/queuezero",
+    "author": {
+      "@type": "Organization",
+      "name": "KINBO TECHNOLOGIES PRIVATE LIMITED",
+      "url": "https://kinbosoft.com"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR",
+      "description": "Institutional technical pilot deployment"
+    }
+  })} />
   <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
     {/* Breadcrumbs */}
     <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-4 flex items-center gap-2">
@@ -26,7 +47,7 @@ const pageDescription = "QueueZero™ transforms waiting-room idle time into str
         Recover 10–15 Minutes From Every Consultation.
       </h1>
       <p class="text-base sm:text-xl text-[rgba(244,243,239,0.85)] mt-4 max-w-2xl leading-relaxed">
-        QueueZero™ transforms outpatient waiting-room dead time into structured pre-consultation clinical intelligence — structuring EHR intake before the patient enters the consultation bay.
+        QueueZero™ transforms outpatient waiting-room dead time into structured pre-consultation clinical intelligence - structuring EHR intake before the patient enters the consultation bay.
       </p>
 
       <div class="mt-8 flex flex-wrap items-center gap-4">

@@ -14,7 +14,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const { data: projects } = await supabase.from('showcase_projects').select('*').order('order_index', { ascending: true });
 ---
 
-<Layout title="Showcase & Platforms — Kinbo Technologies" description="A premium gallery of websites, web applications, mobile apps, and AI systems built by Kinbo Technologies.">
+<Layout title="Showcase & Platforms - Kinbo Technologies" description="A premium gallery of websites, web applications, mobile apps, and AI systems built by Kinbo Technologies.">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
 
   <div class="ks-page">

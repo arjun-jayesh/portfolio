@@ -113,7 +113,7 @@ export default function RatesEstimator({ whatsappNumber = '919074811984' }: { wh
     window.dispatchEvent(
       new CustomEvent('open-engineer-modal', {
         detail: {
-          goal: `Scope Estimate: ${currentCategory.title} — ${currentTier.name} (${formatPrice(totalPrice)}) [${isPriority ? 'Priority +15%' : 'Standard'}]`,
+          goal: `Scope Estimate: ${currentCategory.title} - ${currentTier.name} (${formatPrice(totalPrice)}) [${isPriority ? 'Priority +15%' : 'Standard'}]`,
           stack: currentTier.desc
         }
       })
@@ -121,7 +121,7 @@ export default function RatesEstimator({ whatsappNumber = '919074811984' }: { wh
   };
 
   const waUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-    `Hello kinbo Engineer, I would like an estimate for: ${currentCategory.title} — ${currentTier.name} (${formatPrice(totalPrice)}). Staging milestones: 30% Spec / 40% Build / 30% Handover.`
+    `Hello kinbo Engineer, I would like an estimate for: ${currentCategory.title} - ${currentTier.name} (${formatPrice(totalPrice)}). Staging milestones: 30% Spec / 40% Build / 30% Handover.`
   )}`;
 
   return (
@@ -272,7 +272,7 @@ export default function RatesEstimator({ whatsappNumber = '919074811984' }: { wh
               >
                 {currentCategory.items.map((item, idx) => (
                   <option key={item.name} value={idx}>
-                    {item.name} — {formatPrice(currency === 'INR' ? item.inr : item.usd)}
+                    {item.name} - {formatPrice(currency === 'INR' ? item.inr : item.usd)}
                   </option>
                 ))}
               </select>

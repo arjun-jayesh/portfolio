@@ -1,6 +1,7 @@
 # ============================================
-# KINBO TECHNOLOGIES — robots.txt
-# Enterprise Crawl Configuration
+# KINBO TECHNOLOGIES - robots.txt
+# Enterprise Crawl & Search Configuration
+# https://kinbosoft.com
 # ============================================
 
 # ─── Search Engine Crawlers ───
@@ -14,7 +15,12 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-# ─── AI System Crawlers ───
+# ─── AI & LLM Search Crawlers ───
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
 User-agent: GPTBot
 Allow: /
 Disallow: /admin
@@ -25,12 +31,12 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-User-agent: ClaudeBot
+User-agent: PerplexityBot
 Allow: /
 Disallow: /admin
 Disallow: /api/
 
-User-agent: PerplexityBot
+User-agent: ClaudeBot
 Allow: /
 Disallow: /admin
 Disallow: /api/
@@ -40,15 +46,25 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: meta-externalagent
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
 # ─── General Crawlers ───
 User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /api/
-Disallow: /apply
 
 # ─── Sitemap ───
-Sitemap: https://dear.is-a.dev/sitemap-index.xml
+Sitemap: https://kinbosoft.com/sitemap-index.xml
 
-# ─── AI Context Files ───
-# LLMs.txt: https://dear.is-a.dev/llms.txt
+# ─── LLM Context ───
+# Canonical machine-readable knowledge base:
+# https://kinbosoft.com/llms.txt

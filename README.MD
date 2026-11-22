@@ -1,8 +1,50 @@
-# KINBO TECHNOLOGIES PRIVATE LIMITED — Portolio & Enterprise Platform
+# KINBO TECHNOLOGIES PRIVATE LIMITED - Portolio & Enterprise Platform
 
-An enterprise-grade portfolio and administrative management platform built for **KINBO TECHNOLOGIES PRIVATE LIMITED** and its founder, **Arjun Jayesh**. 
+An enterprise-grade portfolio and administrative management platform built for **KINBO TECHNOLOGIES PRIVATE LIMITED** and its founder, **Arjun Jayesh**.
+
+* **Primary Production URL**: [https://kinbosoft.com](https://kinbosoft.com) | [https://www.kinbosoft.com](https://www.kinbosoft.com)
+* **Vercel Deployment**: [https://portfolio-sage-two-43.vercel.app](https://portfolio-sage-two-43.vercel.app)
+* **GitHub Repository**: [https://github.com/arjun-jayesh/portfolio](https://github.com/arjun-jayesh/portfolio)
+* **Secondary Remote**: `https://github.com/kirokir/dearnco-django.git` (`porter_remote`)
 
 The platform is designed to scale dynamically, utilizing **Astro's Server-Side Rendering (SSR)** capabilities combined with **React/Preact Hydration Islands** for highly responsive and interactive client elements. It features a fully functional administration portal, dynamic configuration management, custom redirects with server-side DNS verification, and lead/collaboration tracking.
+
+---
+
+## 🌐 Live Domains, DNS & Email Infrastructure
+
+### 1. Domain Registration & Routing (Dynadot)
+The domain `kinbosoft.com` is registered via **Dynadot** and pointed to **Vercel** with full automatic SSL (HTTPS):
+
+| Type | Host / Name | Target / Value | Priority | Service / Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **A** | `@` (Root) | `216.198.79.1` | - | Vercel Edge Server IP |
+| **CNAME** | `www` | `0cd7ae920e2e4a88.vercel-dns-017.com` | - | Vercel Production CNAME |
+| **TXT** | `@` (Root) | `google-site-verification=Y0hkMztYMbH0c2SuCEtpy0OH0-GDzl1YOg3EHOfIYRc` | - | Google Search Console Ownership |
+| **TXT** | `@` (Root) | `zoho-verification=zb98624039.zmverify.zoho.in` | - | Zoho Mail Domain Ownership Verification |
+| **MX** | `@` (Root) | `mx.zoho.in` | `10` | Zoho Primary Mail Exchange Server |
+| **MX** | `@` (Root) | `mx2.zoho.in` | `20` | Zoho Secondary Mail Exchange Server |
+| **MX** | `@` (Root) | `mx3.zoho.in` | `50` | Zoho Tertiary Mail Exchange Server |
+| **TXT** | `@` (Root) | `v=spf1 include:zoho.in ~all` | - | SPF Anti-Spoofing & Deliverability |
+
+---
+
+## 🔑 Platform Credentials & Environment Keys
+
+All keys must be mirrored in Vercel / Render **Project Settings > Environment Variables**:
+
+| Service | Key / Identifier | Secret / Value | Notes |
+| :--- | :--- | :--- | :--- |
+| **Supabase URL** | `PUBLIC_SUPABASE_URL` | `[CONFIGURED_IN_ENV]` | PostgreSQL database & auth |
+| **Supabase Public** | `PUBLIC_SUPABASE_ANON_KEY` | `[CONFIGURED_IN_ENV]` | Safe for SSR & client reads |
+| **Supabase Admin** | `SUPABASE_SERVICE_ROLE_KEY` | `[CONFIGURED_IN_ENV]` | Server-only admin writes |
+| **Cloudinary** | `PUBLIC_CLOUDINARY_CLOUD_NAME` | `[CONFIGURED_IN_ENV]` | Signed media upload endpoint |
+| **Razorpay Live** | `RAZORPAY_KEY_ID` / `PUBLIC_RAZORPAY_KEY` | `[CONFIGURED_IN_ENV]` | Live payment processing |
+| **Razorpay Secret** | `RAZORPAY_KEY_SECRET` | `[CONFIGURED_IN_ENV]` | Server HMAC payment verification |
+| **Google OAuth** | `GOOGLE_CLIENT_ID` | `[CONFIGURED_IN_ENV]` | Google APIs & Playground |
+| **Google Secret** | `GOOGLE_CLIENT_SECRET` | `[CONFIGURED_IN_ENV]` | OAuth 2.0 Client Secret |
+| **Admin Panel** | `/admin` | `[CONFIGURED_IN_ENV]` | Master administrative access key |
+| **Community** | WhatsApp Community Link | `https://chat.whatsapp.com/JsJ9FFIIxTc0IvmtkynB3s` | Client and developer portal |
 
 ---
 
@@ -353,16 +395,19 @@ node verify_api.mjs
 
 ## 🚀 Build & Deployment Guidelines
 
-### 1. Building Production Bundle
-To compile a production build of the Astro application:
-```sh
-npm run build
-```
-This generates assets optimized for standalone server runs inside the `.astro` output configuration.
+The project uses a dual-adapter configuration in `astro.config.mjs` (`isVercel ? vercel() : node({ mode: 'standalone' })`) enabling zero-config deployment to both Vercel Serverless and Standalone Node containers:
 
-### 2. Production Deployment (Standalone Node)
-Start the built server instance in your host environment:
-```sh
-node ./dist/server/entry.mjs
-```
-The server will bind to the specified configuration values declared in the `HOST` and `PORT` environment parameters.
+### 1. Vercel Deployment (Production Default)
+* The repository automatically deploys on push to Vercel via the `@astrojs/vercel` adapter.
+* Set the environment variable `VERCEL=1` (set automatically by Vercel).
+* Configure environment variables in **Vercel > Project Settings > Environment Variables**:
+  * `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+  * `SITE=https://kinbosoft.com`
+  * `ADMIN_PASSWORD` (production secret)
+  * `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `PUBLIC_RAZORPAY_KEY`
+
+### 2. Render Deployment (Standalone Node Container)
+* Configured in [render.yaml](render.yaml) (`arjun-portfolio` service).
+* Build Command: `npm install && npm run build`
+* Start Command: `node dist/server/entry.mjs`
+* Port: `10000` / `4321` with `HOST=0.0.0.0`

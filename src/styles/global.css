@@ -131,7 +131,7 @@ textarea:focus-visible {
   top: 1rem;
 }
 
-/* ── Brand SVG Sprite Utility ── */
+/* ── Brand SVG Sprite & Kinbo Logo ── */
 .svg-sprite {
   position: absolute;
   width: 0;
@@ -140,8 +140,42 @@ textarea:focus-visible {
   pointer-events: none;
 }
 
+.kinbo-logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 4px;
+  --dot-tx: 0px;
+  --dot-ty: 0px;
+}
+
+.kinbo-logo svg {
+  height: 26px;
+  width: auto;
+  display: block;
+}
+
+.bo-badge {
+  display: inline-block;
+  --dot-tx: 0px;
+  --dot-ty: 0px;
+}
+
+.bo-dot {
+  transform: translate(var(--dot-tx, 0px), var(--dot-ty, 0px));
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @media (hover: hover) {
-  .logo-hover-target:hover .bo-dot {
+  .kinbo-logo:hover,
+  .logo-hover-target:hover,
+  .bo-badge:hover {
+    --dot-tx: -3.2px;
+    --dot-ty: 2px;
+  }
+  .logo-hover-target:hover .bo-dot,
+  .kinbo-logo:hover .bo-dot,
+  .bo-badge:hover .bo-dot {
     transform: translate(-3.2px, 2px);
     transition: transform 0.24s var(--ease-damped);
   }
@@ -149,6 +183,8 @@ textarea:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .logo-hover-target:hover .bo-dot,
+  .kinbo-logo:hover .bo-dot,
+  .bo-badge:hover .bo-dot,
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
