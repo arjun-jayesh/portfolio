@@ -2,12 +2,21 @@
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
 import EmployeeApplicationForm from "../components/forms/EmployeeApplicationForm";
-import "../styles/forms.css";
 ---
 
-<Layout title="Apply to Kinbo" description="Submit your application to join Kinbo Technologies.">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
-  <div class="ks-form-page">
+<Layout
+  title="Careers & Engineering Fellowship — KINBO | 01 SIGNAL"
+  description="Apply for systems software engineering, research fellowships, and full-stack positions at KINBO TECHNOLOGIES."
+  schemaType="ContactPage"
+>
+  <div class="max-w-4xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">CAREERS</span>
+    </div>
+
     <EmployeeApplicationForm client:load />
   </div>
 </Layout>

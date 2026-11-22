@@ -287,25 +287,3 @@ if (supabaseAdmin) {
     .sub-bottom { padding: 32px 16px; flex-direction: column; align-items: flex-start; }
   }
 </style>
-
-<script>
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  gsap.registerPlugin(ScrollTrigger);
-
-  function initConsultancy() {
-    gsap.fromTo(".hero-anim", 
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
-    );
-    gsap.from(".svc-card", {
-      opacity: 0, y: 20, duration: 0.5, stagger: 0.1, ease: "power2.out",
-      scrollTrigger: { trigger: ".service-grid", start: "top 85%" }
-    });
-    gsap.from(".sub-bottom", {
-      opacity: 0, y: 20, duration: 0.5, ease: "power2.out",
-      scrollTrigger: { trigger: ".sub-bottom", start: "top 95%" }
-    });
-  }
-  document.addEventListener("astro:page-load", initConsultancy);
-</script>

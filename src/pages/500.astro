@@ -1,0 +1,46 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+
+interface Props {
+  error?: unknown;
+}
+
+const { error } = Astro.props;
+Astro.response.status = 500;
+Astro.response.statusText = "Internal Server Error";
+
+const errorMessage = error instanceof Error ? error.message : "Internal runtime execution fault.";
+---
+
+<Layout
+  title="500 — Internal Server Fault // KINBO"
+  description="An internal server runtime exception occurred during request execution."
+>
+  <div class="max-w-4xl mx-auto px-5 sm:px-8 py-36 min-h-[75vh] flex flex-col justify-center">
+    <div class="font-mono text-xs text-[#FF5A52] uppercase mb-2">
+      SYS.RUNTIME // FAULT_CODE_500 // INTERNAL_SERVER_FAULT
+    </div>
+
+    <h1 class="text-6xl sm:text-8xl font-bold tracking-tight text-white mb-3">
+      500
+    </h1>
+
+    <p class="text-xl sm:text-2xl font-medium text-[rgba(244,243,239,0.7)] mb-4">
+      Internal Server Runtime Exception.
+    </p>
+
+    <div class="p-4 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[4px] font-mono text-xs text-[rgba(244,243,239,0.75)] max-w-xl mb-8">
+      DIAGNOSTIC: {errorMessage}
+    </div>
+
+    <div>
+      <a
+        href="/"
+        class="touch-target px-5 py-2.5 bg-[#D9261C] hover:bg-[#B81D14] text-white font-mono text-xs rounded-[4px] transition-colors"
+      >
+        [ Return to Home Index ]
+      </a>
+    </div>
+  </div>
+</Layout>

@@ -1,308 +1,3455 @@
 ---
-export const prerender = false;
-import Layout from "../layouts/Layout.astro";
-import { supabaseAdmin } from "../lib/supabase";
+import { supabase } from '../lib/supabase';
+import Analytics from '@vercel/analytics/astro';
 
-let enterpriseAssets = {
-    hero_video_url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-circuit-board-1113-large.mp4",
-    logo_url: "",
-    locations: "INDIA | CHINA | GCC",
-    company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED"
-};
+let whatsappNumber = "919846547132";
+let whatsappMessage = "Hi kinbo, I would like to talk directly to an engineer about a software project.";
+let companyName = "KINBO TECHNOLOGIES PRIVATE LIMITED";
 
-if (supabaseAdmin) {
-    try {
-        const { data, error } = await supabaseAdmin
-            .from('site_config')
-            .select('data')
-            .eq('key', 'enterprise_assets')
-            .single();
-        
-        if (error && error.code !== 'PGRST116') {
-            console.error('Homepage Data Fetch Error:', error);
-        } else if (data?.data) {
-            enterpriseAssets = { ...enterpriseAssets, ...data.data };
-        }
-    } catch (e) {
-        console.error('Homepage SSR Crash Caught:', e);
-        // Fallback already defined in enterpriseAssets variable
+if (supabase) {
+  try {
+    const { data: entData } = await supabase
+      .from("site_config")
+      .select("data")
+      .eq("key", "enterprise_assets")
+      .maybeSingle();
+    if (entData?.data) {
+      if (entData.data.whatsapp_number) {
+        whatsappNumber = String(entData.data.whatsapp_number).replace(/[^0-9]/g, '');
+      }
+      if (entData.data.whatsapp_message) {
+        whatsappMessage = entData.data.whatsapp_message;
+      }
+      if (entData.data.company_name) {
+        companyName = entData.data.company_name;
+      }
     }
-} else {
-    console.warn('Supabase client not available on homepage SSR');
+  } catch (e) {
+    console.error("SSR site_config fetch error in index.astro:", e);
+  }
 }
+
+const defaultWaUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kinbo — Custom Software Engineering, Direct to Engineer</title>
+  <meta name="description" content="State-of-the-art apps, websites, ERPs, and AI systems built in Research-Build-Refine stages with lifelong support. Transparent rates from ₹7,000. Talk directly to an engineer.">
+  <link rel="canonical" href="https://kinbosoft.com/">
 
-<Layout title="Home" description="KINBO TECHNOLOGIES PRIVATE LIMITED builds intelligent everyday applications that combine practical technology with user-focused design. Enterprise software, AI systems, healthcare technology, and research infrastructure.">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
-  
-  <!-- Organization + WebSite JSON-LD -->
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify([
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "KINBO TECHNOLOGIES PRIVATE LIMITED",
-      "alternateName": "Kinbo Technologies",
-      "url": "https://portfolio-sage-two-43.vercel.app",
-      "logo": enterpriseAssets.logo_url || "https://portfolio-sage-two-43.vercel.app/favicon.svg",
-      "description": "KINBO TECHNOLOGIES builds intelligent everyday applications combining practical technology with user-focused design. Specializing in enterprise software, AI systems, healthcare technology, and research infrastructure.",
-      "founder": {
-        "@type": "Person",
-        "name": "Arjun Jayesh",
-        "jobTitle": "Founder & Systems Architect",
-        "url": "https://portfolio-sage-two-43.vercel.app/founder"
-      },
-      "foundingDate": "2024",
-      "areaServed": ["India", "China", "GCC"],
-      "knowsAbout": ["Artificial Intelligence", "Healthcare Technology", "Enterprise Software", "Computer Vision", "RAG Systems", "Clinical Workflow Optimization", "Research Infrastructure"],
-      "sameAs": ["https://dear.is-a.dev/", "https://dearnco.is-a.dev/"]
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "KINBO TECHNOLOGIES",
-      "url": "https://portfolio-sage-two-43.vercel.app",
-      "publisher": {
+  <!-- CSP-Safe Typography: Standard preconnect + display=swap stylesheet (zero inline onload) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <!-- Structured Data: Organization, WebSite, Service, and FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
         "@type": "Organization",
-        "name": "KINBO TECHNOLOGIES PRIVATE LIMITED"
-      }
-    }
-  ])} />
-  
-  <div class="ks-page">
-    <!-- Startup Animation Overlay -->
-    <div id="startup-overlay" class="fixed inset-0 z-[100] bg-charcoal hidden flex-col items-center justify-center overflow-hidden">
-    <div class="relative">
-      <div id="startup-logo" class="w-24 h-24 bg-teal/10 rounded-2xl border border-teal/20 flex items-center justify-center mb-8 scale-0 overflow-hidden">
-        {enterpriseAssets.logo_url ? (
-            <img src={enterpriseAssets.logo_url} alt="Logo" class="w-full h-full object-contain" />
-        ) : (
-            <span class="text-teal font-poppins text-4xl font-bold">K</span>
-        )}
-      </div>
-      <div id="startup-bar" class="absolute -bottom-4 left-0 w-0 h-px bg-teal shadow-[0_0_10px_rgba(42,157,143,0.8)]"></div>
-    </div>
-    <div id="startup-text" class="font-mono text-[10px] text-teal uppercase tracking-[0.5em] opacity-0 translate-y-4">
-      Initializing Kinbo Systems
-    </div>
-  </div>
-
-  <!-- Hero Section with Video Parallax -->
-  <section class="relative min-h-screen flex items-center justify-start overflow-hidden" id="hero">
-    <!-- Parallax Background Container -->
-    <div class="absolute inset-0 z-0 scale-110" id="hero-video-container"
-         data-parallax={enterpriseAssets.hero_parallax_intensity ?? 20}>
-      <div class="absolute inset-0 bg-charcoal-dark z-10 pointer-events-none"
-           style={`opacity: ${enterpriseAssets.hero_bg_darkness ?? 0.3};`}></div>
-      {(!enterpriseAssets.hero_bg_type || enterpriseAssets.hero_bg_type === 'video') && enterpriseAssets.hero_video_url?.match(/\.(mp4|webm|mov|ogg)$/i) ? (
-        <video 
-          autoplay 
-          muted 
-          loop 
-          playsinline 
-          class="w-full h-full object-cover"
-          style={`filter: blur(${enterpriseAssets.hero_bg_blur ?? 0}px); opacity: ${enterpriseAssets.hero_bg_opacity ?? 1};`}
-        >
-          <source src={enterpriseAssets.hero_video_url} type="video/mp4" />
-        </video>
-      ) : (
-        <img 
-          src={enterpriseAssets.hero_video_url}
-          alt="Hero Background"
-          class="w-full h-full object-cover"
-          style={`filter: blur(${enterpriseAssets.hero_bg_blur ?? 0}px); opacity: ${enterpriseAssets.hero_bg_opacity ?? 1};`}
-        />
-      )}
-    </div>
-
-    <div class="relative z-20 max-w-7xl mx-auto px-6 lg:px-12 w-full text-left">
-      <div class="max-w-4xl">
-        <span class="font-mono text-[10px] md:text-xs text-teal uppercase tracking-[0.2em] md:tracking-[0.5em] block mb-4 md:mb-6 hero-anim opacity-0 translate-y-8 break-words">
-          {enterpriseAssets.company_name}
-        </span>
-        <h1 class="hero-title-syne text-offwhite mb-6 md:mb-8 hero-anim opacity-0 translate-y-8 break-words" style="font-size: clamp(1.5rem, 5vw, 4.5rem); line-height: 1.1;">
-          Intelligent technology<br/>
-          <span class="text-teal">for real outcomes.</span>
-        </h1>
-        <p class="font-lora text-base sm:text-lg md:text-xl text-offwhite/90 max-w-2xl leading-relaxed mb-10 hero-anim opacity-0 translate-y-8">
-          We focus on usable technology that improves outcomes rather than adding complexity. Intelligent everyday apps that combine practical technology with user-focused design.
-        </p>
-        <div class="flex flex-wrap gap-4 justify-start hero-anim opacity-0 translate-y-8 relative z-50 pointer-events-auto">
-          <a href="/showcase" data-astro-reload class="px-8 py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest text-sm rounded-full hover:shadow-[0_0_30px_rgba(42,157,143,0.4)] transition-all relative z-50 pointer-events-auto">
-            Explore Products
-          </a>
-          <a href="/about" data-astro-reload class="px-8 py-4 border-2 border-teal/50 text-teal font-poppins font-bold uppercase tracking-widest text-sm rounded-full hover:bg-teal/10 hover:border-teal transition-all relative z-50 pointer-events-auto">
-            Our Philosophy
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-10 left-6 lg:left-12 flex flex-col items-start gap-3 text-muted z-20 hero-anim opacity-0">
-      <div class="w-12 h-px bg-gradient-to-r from-teal to-transparent opacity-80"></div>
-      <span class="font-mono text-[9px] tracking-[0.3em] uppercase opacity-50">Scroll</span>
-    </div>
-  </section>
-
-  <!-- Products Preview Section (Simplified version for quick loading) -->
-  <section class="section-padding max-w-7xl mx-auto px-6" id="products-preview">
-    <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
-      <div class="reveal p-10 rounded-3xl border border-[var(--ks-border)] bg-[rgba(255,255,255,0.01)] hover:border-teal/30 hover:bg-teal/[0.01] transition-all group overflow-hidden relative">
-        <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-            <svg class="w-32 h-32 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        </div>
-        <h3 class="card-title-syne text-2xl text-offwhite mb-4">Glowup</h3>
-        <p class="font-lora text-muted mb-8 text-sm leading-relaxed">Understanding skin health through image intelligence and structured progress tracking.</p>
-        <a href="/products#glowup" class="text-teal font-mono text-xs uppercase tracking-widest hover:underline">View Product →</a>
-      </div>
-
-      <div class="reveal p-10 rounded-3xl border border-[var(--ks-border)] bg-[rgba(255,255,255,0.01)] hover:border-teal/30 hover:bg-teal/[0.01] transition-all group overflow-hidden relative">
-        <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-            <svg class="w-32 h-32 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-        </div>
-        <h3 class="card-title-syne text-2xl text-offwhite mb-4">Relic</h3>
-        <p class="font-lora text-muted mb-8 text-sm leading-relaxed">A digital multivendor marketplace empowering creators and students to reach global customers.</p>
-        <a href="/products#relic" class="text-teal font-mono text-xs uppercase tracking-widest hover:underline">View Product →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Enterprise Values Banner -->
-  <section class="py-24 bg-charcoal-dark/30 border-y border-charcoal-light/10 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-    <div class="flex flex-wrap justify-center gap-x-16 gap-y-12 items-center opacity-45">
-        <div class="flex flex-col items-center gap-2">
-            <span class="value-title-syne text-lg">PRACTICAL</span>
-            <span class="font-mono text-[9px] tracking-widest text-teal">INNOVATION</span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-            <span class="value-title-syne text-lg">USER</span>
-            <span class="font-mono text-[9px] tracking-widest text-teal">TRANSPARENCY</span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-            <span class="value-title-syne text-lg">CREATOR</span>
-            <span class="font-mono text-[9px] tracking-widest text-teal">EMPOWERMENT</span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-            <span class="value-title-syne text-lg">RESPONSIBLE</span>
-            <span class="font-mono text-[9px] tracking-widest text-teal">TECHNOLOGY</span>
-        </div>
-    </div>
-    </div>
-  </section>
-
-  </div>
-</Layout>
-
-<style>
-  .ks-page {
-    --ks-bg: #0a0a0c;
-    --ks-surface: #0f1117;
-    --ks-border: rgba(255, 255, 255, 0.07);
-    --ks-text-primary: #f0f0ec;
-    --ks-text-muted: rgba(240, 240, 236, 0.40);
-    --ks-teal: #2dd4bf;
-    background: var(--ks-bg);
-    min-height: 100vh;
-    color: var(--ks-text-primary);
-  }
-  .hero-title-syne {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    letter-spacing: -2px;
-    text-transform: uppercase;
-  }
-  .card-title-syne {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    text-transform: uppercase;
-  }
-  .value-title-syne {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.3px;
-    text-transform: uppercase;
-    color: var(--ks-text-primary);
-  }
-</style>
-
-<script>
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  gsap.registerPlugin(ScrollTrigger);
-
-  function initHome() {
-    const overlay = document.getElementById("startup-overlay");
-    const hasLoaded = sessionStorage.getItem("site_loaded");
-
-    if (hasLoaded && overlay) {
-      overlay.classList.add("hidden");
-      overlay.classList.remove("flex");
-      // Immediate hero entry if skip animation
-      gsap.set(".hero-anim", { opacity: 1, y: 0 });
-    } else if (overlay) {
-      overlay.classList.remove("hidden");
-      overlay.classList.add("flex");
-      // ─── Startup Timeline ───
-      const startupTl = gsap.timeline();
-      
-      startupTl
-        .to("#startup-logo", { scale: 1, duration: 1, ease: "back.out(1.7)" })
-        .to("#startup-bar", { width: "100%", duration: 1.5, ease: "power2.inOut" }, "-=0.5")
-        .to("#startup-text", { opacity: 1, y: 0, duration: 0.5 }, "-=1")
-        .to("#startup-overlay", { 
-            y: "-100%", 
-            duration: 1, 
-            ease: "power4.inOut", 
-            delay: 0.5,
-            onComplete: () => {
-                sessionStorage.setItem("site_loaded", "true");
-                overlay.classList.add("hidden");
-                overlay.classList.remove("flex");
-                // Hero entrance
-                gsap.to(".hero-anim", {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    stagger: 0.2,
-                    ease: "power3.out"
-                });
+        "@id": "https://kinbosoft.com/#organization",
+        "name": "kinbo",
+        "url": "https://kinbosoft.com/",
+        "description": "Custom software engineering company building apps, websites, ERPs, AI systems, and custom software with direct-to-engineer communication from day one.",
+        "areaServed": "Worldwide"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://kinbosoft.com/#website",
+        "url": "https://kinbosoft.com/",
+        "name": "kinbo",
+        "publisher": { "@id": "https://kinbosoft.com/#organization" }
+      },
+      {
+        "@type": "Service",
+        "@id": "https://kinbosoft.com/#services",
+        "name": "Custom Software Engineering Services",
+        "provider": { "@id": "https://kinbosoft.com/#organization" },
+        "serviceType": [
+          "Mobile App Development (Flutter, Kotlin)",
+          "Websites & E-Commerce Platforms",
+          "Education & Business ERP Systems",
+          "AI Integration & Model Training",
+          "Custom Python, Rust & Computer Vision Systems"
+        ],
+        "offers": {
+          "@type": "AggregateOffer",
+          "priceCurrency": "INR",
+          "lowPrice": "3000",
+          "highPrice": "91000"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://kinbosoft.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Who do I actually speak with when I contact kinbo?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You speak directly with the engineer architecting and building your system from day one. kinbo has no sales team or middlemen, and engineers reply within 4 business hours."
             }
-        });
+          },
+          {
+            "@type": "Question",
+            "name": "How do the 30 / 40 / 30 milestone payments work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "30% initiates the Research phase and locks the technical specification, 40% is billed only after you verify the working Build on a live staging link, and the final 30% settles upon Refine handover and full source-code transfer."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What does lifelong support* actually cover?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Lifelong support covers free critical bug fixes on our delivered scope, ongoing architectural consultations, and optional transparent AMC tiers for new features or server operations—with zero vendor lock-in."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why are domain, hosting, and third-party APIs billed separately?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Domains, cloud servers, and API keys are registered directly in your name from day one so you maintain 100% ownership and pay real provider rates with zero agency markup."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do you take on custom Python, Rust, Computer Vision, or AI Training projects?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. AI integrations start at ₹3,000 and custom AI model training starts at ₹23,000. Custom Python pipelines, Rust backends, computer vision, and analytics dashboards are scoped directly with an engineer."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style is:global>
+    /* =========================================================================
+       KINBO PRODUCTION STATIC CSS — SWISS MODERNIST + ISLANDS (ZERO CDN)
+       WCAG 2.2 AA Contrast Lock:
+         - #D9261C: Large marks (>=24px), buttons with #FFFFFF text (5.06:1), borders
+         - #FF5A52: Small labels/text (12px-14px) on dark #111111 (6.1:1)
+         - #B81D14: Small labels/text (12px-14px) on light #F4F3EF (5.9:1)
+       ========================================================================= */
+    :root {
+      --void: #050505;
+      --carbon: #111111;
+      --dark-surface: #181818;
+      --ground: #F4F3EF;
+      --surface: #FFFFFF;
+      --surface-muted: #ECEAE4;
+      --signal: #D9261C;
+      --signal-light-bg: #B81D14;
+      --signal-dark-bg: #FF5A52;
+      --ink-light: #F4F3EF;
+      --ink-light-muted: rgba(244, 243, 239, 0.78);
+      --ink-dark: #111111;
+      --ink-dark-muted: rgba(17, 17, 17, 0.72);
+      --rule-light: rgba(17, 17, 17, 0.14);
+      --rule-dark: rgba(244, 243, 239, 0.16);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --ease-damped: cubic-bezier(0.16, 1, 0.3, 1);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --container: 1280px;
     }
 
-    // ─── Parallax Hero with dynamic intensity ───
-    const parallaxContainer = document.getElementById("hero-video-container");
-    const parallaxIntensity = parallaxContainer?.dataset?.parallax
-        ? parseInt(parallaxContainer.dataset.parallax)
-        : 20;
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
-    gsap.to("#hero-video-container", {
-      yPercent: parallaxIntensity,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "#hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 88px;
+      scroll-padding-bottom: 84px;
+      font-size: 16px;
+      background-color: var(--ground);
+      color: var(--ink-dark);
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      line-height: 1.6;
+      background-color: var(--ground);
+      color: var(--ink-dark);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Screen-Reader Only Utility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Hidden SVG Sprite */
+    .svg-sprite {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    /* Skip Link for Keyboard Users */
+    .skip-link {
+      position: fixed;
+      top: -100px;
+      left: 16px;
+      z-index: 100;
+      background: var(--carbon);
+      color: var(--ink-light);
+      padding: 12px 18px;
+      border: 2px solid var(--signal-dark-bg);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+    .skip-link:focus {
+      top: 16px;
+    }
+
+    /* High-Visibility WCAG 2.2 Focus Outlines */
+    :focus-visible {
+      outline: 2px solid var(--signal-light-bg);
+      outline-offset: 2px;
+    }
+    .theme-dark :focus-visible,
+    .nav-header :focus-visible,
+    .mobile-bar :focus-visible {
+      outline-color: var(--signal-dark-bg);
+    }
+
+    /* Layout Primitives */
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: 16px;
+    }
+    @media (min-width: 640px) {
+      .container { padding-inline: 28px; }
+    }
+    @media (min-width: 1024px) {
+      .container { padding-inline: 40px; }
+    }
+
+    .section-pad {
+      padding-block: 80px;
+    }
+    @media (min-width: 1024px) {
+      .section-pad { padding-block: 112px; }
+    }
+
+    .mono-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem; /* 12px strict minimum */
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+    .mono-accent-light { color: var(--signal-light-bg); }
+    .mono-accent-dark  { color: var(--signal-dark-bg); }
+    .tabular { font-variant-numeric: tabular-nums; }
+
+    .display-title {
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.06;
+    }
+
+    /* Buttons (WCAG 2.5.8 >= 44px touch targets) */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      min-width: 44px;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color 0.22s var(--ease-damped), color 0.22s var(--ease-damped), border-color 0.22s var(--ease-damped), transform 0.16s var(--ease-damped);
+    }
+    .btn:active { transform: translateY(1px); }
+
+    .btn-light {
+      background-color: var(--ground);
+      color: var(--carbon);
+    }
+    .btn-carbon {
+      background-color: var(--carbon);
+      color: var(--ground);
+    }
+    .btn-signal {
+      background-color: var(--signal);
+      color: #FFFFFF;
+    }
+    .btn-outline-dark {
+      background-color: transparent;
+      color: var(--ink-light);
+      border-color: rgba(244, 243, 239, 0.32);
+    }
+    .btn-outline-light {
+      background-color: transparent;
+      color: var(--carbon);
+      border-color: rgba(17, 17, 17, 0.3);
+    }
+
+    @media (hover: hover) {
+      .btn-light:hover,
+      .btn-carbon:hover {
+        background-color: var(--signal);
+        color: #FFFFFF;
       }
-    });
+      .btn-signal:hover {
+        background-color: #B81D14;
+      }
+      .btn-outline-dark:hover {
+        border-color: var(--ink-light);
+        background-color: rgba(244, 243, 239, 0.08);
+      }
+      .btn-outline-light:hover {
+        border-color: var(--carbon);
+        background-color: var(--carbon);
+        color: var(--ground);
+      }
+    }
 
-    // ─── Reveal Animations ───
-    gsap.utils.toArray(".reveal").forEach((el: any) => {
-      gsap.from(el, {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        scrollTrigger: {
-          trigger: el,
-          start: "top 85%"
+    /* Kinbo Logo Hover Shift (Hover-Capable Devices Only) */
+    .kinbo-logo {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding-inline: 4px;
+      --dot-tx: 0px;
+      --dot-ty: 0px;
+    }
+    .kinbo-logo svg {
+      height: 26px;
+      width: auto;
+      display: block;
+    }
+    @media (hover: hover) {
+      .kinbo-logo:hover {
+        --dot-tx: -3.2px;
+        --dot-ty: 2px;
+      }
+    }
+
+    /* =========================================================================
+       FLOATING SWISS ISLAND NAVBAR
+       ========================================================================= */
+    .nav-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      padding: 12px 16px 0;
+      pointer-events: none;
+    }
+    .nav-island {
+      pointer-events: auto;
+      max-width: var(--container);
+      margin-inline: auto;
+      min-height: 60px;
+      padding: 6px 16px;
+      background-color: rgba(17, 17, 17, 0.92);
+      border: 1px solid var(--rule-dark);
+      border-radius: var(--radius-md);
+      box-shadow: 0 16px 40px -16px rgba(0, 0, 0, 0.55);
+      color: var(--ink-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background-color 0.25s var(--ease-damped), border-color 0.25s var(--ease-damped);
+    }
+    .nav-island.is-scrolled {
+      background-color: var(--carbon);
+      border-color: rgba(244, 243, 239, 0.24);
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding-inline: 14px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--ink-light-muted);
+      border-radius: var(--radius-sm);
+      transition: color 0.2s var(--ease-damped);
+    }
+    @media (hover: hover) {
+      .nav-links a:hover { color: var(--ink-light); }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-cta-desktop {
+      display: none;
+      padding: 10px 18px;
+      font-size: 0.875rem;
+    }
+    .menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--ink-light);
+      cursor: pointer;
+    }
+    @media (min-width: 768px) {
+      .nav-links { display: flex; }
+      .nav-cta-desktop { display: inline-flex; }
+      .menu-toggle { display: none; }
+    }
+
+    .mobile-drawer {
+      pointer-events: auto;
+      max-width: var(--container);
+      margin: 8px auto 0;
+      background-color: var(--carbon);
+      border: 1px solid rgba(244, 243, 239, 0.22);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      color: var(--ink-light);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.6);
+    }
+    .mobile-drawer[hidden] { display: none; }
+    .mobile-drawer nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mobile-drawer a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--rule-dark);
+      font-weight: 500;
+    }
+    .mobile-drawer .btn {
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    /* =========================================================================
+       HERO — ORBITAL SUNRISE CANVAS (#050505)
+       ========================================================================= */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      background-color: var(--void);
+      color: var(--ink-light);
+      overflow-x: clip; /* Decorative canvas clip only — never on body */
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 112px 16px 120px;
+      text-align: center;
+    }
+    .hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+      margin-top: -48px;
+    }
+    .hero-title {
+      font-size: clamp(2.75rem, 7vw, 5.25rem);
+      color: var(--ink-light);
+    }
+    .hero-subtext {
+      margin: 20px auto 0;
+      font-size: clamp(1.125rem, 2.2vw, 1.375rem);
+      color: rgba(244, 243, 239, 0.88);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+    .hero-actions {
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+    }
+    .hero-actions .btn {
+      width: 100%;
+    }
+    @media (min-width: 540px) {
+      .hero-actions .btn { width: auto; }
+    }
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      color: rgba(244, 243, 239, 0.65);
+    }
+    .hero-scroll-hint .line {
+      width: 24px;
+      height: 1px;
+      background: rgba(244, 243, 239, 0.45);
+    }
+    @media (min-width: 640px) {
+      .hero-scroll-hint { display: flex; }
+    }
+
+    /* =========================================================================
+       ARCHITECTURAL PHOTOGRAPHY & SCRIMS
+       ========================================================================= */
+    .arch-fallback {
+      background-color: var(--carbon);
+      background-image:
+        linear-gradient(to right, rgba(244, 243, 239, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(244, 243, 239, 0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .photo-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%) contrast(1.08) brightness(0.72);
+      transition: transform 0.85s var(--ease-damped), filter 0.55s var(--ease-damped);
+    }
+    .photo-bg.is-hidden {
+      opacity: 0;
+    }
+    .scrim-spread {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(8, 8, 8, 0.52) 0%, rgba(8, 8, 8, 0.68) 45%, rgba(8, 8, 8, 0.92) 100%);
+      pointer-events: none;
+    }
+    .scrim-card {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(8, 8, 8, 0.22) 0%, rgba(8, 8, 8, 0.48) 50%, rgba(8, 8, 8, 0.93) 100%);
+      pointer-events: none;
+    }
+
+    /* =========================================================================
+       SECTION 01 — DIRECT-TO-ENGINEER FULL-BLEED IMAGE SPREAD + ANSWER-FIRST
+       ========================================================================= */
+    .spread-direct {
+      position: relative;
+      min-height: 82svh;
+      color: var(--ink-light);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--rule-dark);
+    }
+    .spread-direct-inner {
+      position: relative;
+      z-index: 2;
+      padding-block: 72px 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    @media (min-width: 1024px) {
+      .spread-direct-inner { padding-block: 96px 72px; }
+    }
+    .spread-headline {
+      font-size: clamp(2.125rem, 5vw, 4rem);
+      max-width: 960px;
+      color: var(--ink-light);
+    }
+    .answer-island {
+      background-color: rgba(17, 17, 17, 0.88);
+      border: 1px solid var(--rule-dark);
+      border-left: 3px solid var(--signal);
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
+      max-width: 780px;
+    }
+    .answer-island p {
+      margin: 8px 0 0;
+      font-size: 1rem;
+      line-height: 1.65;
+      color: rgba(244, 243, 239, 0.9);
+    }
+    .spread-strip {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid var(--rule-dark);
+      background-color: rgba(5, 5, 5, 0.72);
+    }
+    .spread-strip-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      padding-block: 22px;
+    }
+    @media (min-width: 768px) {
+      .spread-strip-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    }
+    .strip-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-light);
+    }
+    .strip-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--signal-dark-bg);
+      flex-shrink: 0;
+    }
+
+    /* =========================================================================
+       SECTION HEADER SHARED
+       ========================================================================= */
+    .sec-head {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    @media (min-width: 1024px) {
+      .sec-head {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+    }
+    .sec-title {
+      font-size: clamp(2rem, 4.2vw, 3.125rem);
+      margin-top: 8px;
+    }
+    .sec-lead {
+      margin: 0;
+      max-width: 420px;
+      color: var(--ink-dark-muted);
+      font-size: 1rem;
+    }
+
+    /* =========================================================================
+       SECTION 02 — 5-COLUMN INTERACTIVE SERVICES EXPLORER
+       ========================================================================= */
+    .island-light {
+      background-color: var(--surface);
+      border: 1px solid var(--rule-light);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .services-cols {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-bottom: 1px solid var(--rule-light);
+    }
+    @media (min-width: 640px) {
+      .services-cols { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .services-cols { grid-template-columns: repeat(5, 1fr); }
+    }
+    .svc-col {
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--rule-light);
+      background-color: var(--surface);
+    }
+    @media (min-width: 640px) {
+      .svc-col { border-right: 1px solid var(--rule-light); }
+    }
+    @media (min-width: 1024px) {
+      .svc-col { border-bottom: 0; }
+      .svc-col:last-child { border-right: 0; }
+    }
+    .svc-col h3 {
+      margin: 6px 0 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .svc-tracks {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .svc-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      background-color: var(--surface);
+      border: 1px solid var(--rule-light);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--carbon);
+      cursor: pointer;
+      transition: background-color 0.2s var(--ease-damped), color 0.2s var(--ease-damped), border-color 0.2s var(--ease-damped);
+    }
+    .svc-trigger .arrow {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      transition: transform 0.2s var(--ease-damped);
+    }
+    .svc-trigger.is-active {
+      background-color: var(--carbon);
+      color: var(--ink-light);
+      border-color: var(--carbon);
+    }
+    .svc-trigger.is-active .arrow {
+      color: var(--signal-dark-bg);
+      transform: translateX(3px);
+    }
+    @media (hover: hover) {
+      .svc-trigger:not(.is-active):hover {
+        border-color: var(--carbon);
+      }
+    }
+
+    .svc-subpanel {
+      background-color: #F9F8F5;
+      padding: 28px 20px;
+    }
+    @media (min-width: 1024px) {
+      .svc-subpanel { padding: 36px 32px; }
+    }
+    .svc-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+    @media (min-width: 640px) {
+      .svc-cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .svc-cards-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .svc-item-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      min-height: 76px;
+      padding: 16px;
+      background-color: var(--surface);
+      border: 1px solid var(--rule-light);
+      border-radius: 6px;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.2s var(--ease-damped), transform 0.2s var(--ease-damped);
+    }
+    @media (hover: hover) {
+      .svc-item-btn:hover {
+        border-color: var(--carbon);
+        transform: translateY(-1px);
+      }
+    }
+    .svc-thumb {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      border-radius: var(--radius-sm);
+      background-color: var(--carbon);
+      border: 1px solid rgba(17, 17, 17, 0.14);
+    }
+    .svc-item-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--carbon);
+    }
+    .svc-item-desc {
+      margin: 2px 0 0;
+      font-size: 0.875rem;
+      color: var(--ink-dark-muted);
+      line-height: 1.4;
+    }
+
+    /* =========================================================================
+       SECTION 03 — CROSS-DISCIPLINE EDITORIAL BENTO (IMAGE-ON-TEXT)
+       ========================================================================= */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 768px) {
+      .bento-grid { grid-template-columns: repeat(12, 1fr); }
+      .bento-wide { grid-column: span 7; }
+      .bento-narrow { grid-column: span 5; }
+    }
+    .bento-card {
+      position: relative;
+      min-height: 360px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--ink-light);
+    }
+    @media (min-width: 1024px) {
+      .bento-card { min-height: 410px; padding: 40px; }
+    }
+    @media (hover: hover) {
+      .bento-card:hover .photo-bg {
+        transform: scale(1.04);
+        filter: grayscale(85%) contrast(1.12) brightness(0.8);
+      }
+    }
+    .bento-body {
+      position: relative;
+      z-index: 2;
+      max-width: 460px;
+    }
+    .bento-body h3 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+    }
+    .bento-body p {
+      margin: 10px 0 0;
+      font-size: 0.9375rem;
+      color: rgba(244, 243, 239, 0.85);
+    }
+
+    /* =========================================================================
+       SECTION 04 — PROCESS & LIFELONG SUPPORT* SPREAD (DARK #111111)
+       ========================================================================= */
+    .process-section {
+      background-color: var(--carbon);
+      color: var(--ink-light);
+      border-top: 1px solid var(--rule-dark);
+      border-bottom: 1px solid var(--rule-dark);
+    }
+    .process-split {
+      max-width: 1440px;
+      margin-inline: auto;
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 1024px) {
+      .process-split { grid-template-columns: 5fr 7fr; }
+    }
+    .process-photo-col {
+      position: relative;
+      min-height: 360px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 28px;
+    }
+    @media (min-width: 1024px) {
+      .process-photo-col { min-height: 680px; padding: 56px 48px; }
+    }
+    .process-stages-col {
+      padding: 48px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    @media (min-width: 1024px) {
+      .process-stages-col { padding: 64px 64px; }
+    }
+    .stage-item {
+      padding-block: 28px;
+      border-bottom: 1px solid var(--rule-dark);
+    }
+    .stage-item:first-child { padding-top: 0; }
+    .stage-item:last-child { border-bottom: 0; padding-bottom: 0; }
+    .stage-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .stage-item h3 {
+      margin: 0;
+      font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+    .stage-item p {
+      margin: 8px 0 0;
+      color: var(--ink-light-muted);
+      max-width: 560px;
+    }
+    .support-box {
+      border-left: 3px solid var(--signal);
+      background-color: var(--dark-surface);
+      padding: 20px 24px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    .support-box p {
+      margin: 6px 0 0;
+      font-size: 0.9375rem;
+      color: var(--ink-light-muted);
+    }
+
+    /* =========================================================================
+       SECTION 05 — TRANSPARENT RATE CARDS & 3-CLICK SCOPE ESTIMATOR
+       ========================================================================= */
+    .currency-toggle {
+      display: inline-flex;
+      background-color: var(--surface);
+      border: 1px solid var(--rule-light);
+      border-radius: 6px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .curr-btn {
+      min-height: 44px;
+      min-width: 78px;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--ink-dark-muted);
+      cursor: pointer;
+    }
+    .curr-btn.is-active {
+      background-color: var(--carbon);
+      color: var(--ink-light);
+    }
+
+    .rates-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (min-width: 1024px) {
+      .rates-grid { grid-template-columns: 7fr 5fr; }
+    }
+
+    .rate-tabs {
+      display: flex;
+      overflow-x: auto;
+      gap: 6px;
+      padding: 10px;
+      background-color: #F9F8F5;
+      border-bottom: 1px solid var(--rule-light);
+    }
+    .rate-tab {
+      min-height: 44px;
+      padding: 10px 14px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      color: var(--ink-dark-muted);
+      cursor: pointer;
+    }
+    .rate-tab.is-active {
+      background-color: var(--carbon);
+      color: var(--ink-light);
+    }
+    .rate-panel {
+      padding: 28px 24px;
+    }
+    @media (min-width: 640px) {
+      .rate-panel { padding: 32px; }
+    }
+    .rate-panel-head {
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--rule-light);
+    }
+    .rate-panel-head h3 {
+      margin: 0;
+      font-size: 1.375rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .rate-panel-head p {
+      margin: 4px 0 0;
+      font-size: 0.9375rem;
+      color: var(--ink-dark-muted);
+    }
+    .rate-list {
+      margin-top: 4px;
+    }
+    .rate-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      min-height: 68px;
+      padding: 16px 8px;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--rule-light);
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.2s var(--ease-damped), padding-left 0.22s var(--ease-damped);
+    }
+    .rate-row:last-child { border-bottom: 0; }
+    @media (hover: hover) {
+      .rate-row:hover {
+        background-color: var(--ground);
+        padding-left: 14px;
+      }
+    }
+    .rate-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--carbon);
+    }
+    .rate-desc {
+      margin-top: 2px;
+      font-size: 0.875rem;
+      color: var(--ink-dark-muted);
+    }
+    .rate-price-col {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .rate-price {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--carbon);
+    }
+    .rate-price.is-accent { color: var(--signal-light-bg); }
+    .rate-subtag {
+      margin-top: 2px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-dark-muted);
+    }
+    .rate-footnote {
+      padding: 16px 24px;
+      background-color: #F9F8F5;
+      border-top: 1px solid var(--rule-light);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-dark-muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* 3-Click Scope Estimator Island */
+    .estimator-island {
+      background-color: var(--carbon);
+      color: var(--ink-light);
+      border: 1px solid var(--carbon);
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    @media (min-width: 640px) {
+      .estimator-island { padding: 32px; }
+    }
+    .est-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--rule-dark);
+    }
+    .est-field label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink-light-muted);
+    }
+    .est-select {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      background-color: var(--dark-surface);
+      border: 1px solid rgba(244, 243, 239, 0.24);
+      border-radius: var(--radius-sm);
+      color: var(--ink-light);
+      font-size: 0.9375rem;
+      cursor: pointer;
+    }
+    .pace-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .pace-btn {
+      min-height: 44px;
+      padding: 10px 12px;
+      background-color: var(--dark-surface);
+      border: 1px solid rgba(244, 243, 239, 0.22);
+      border-radius: var(--radius-sm);
+      color: var(--ink-light-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .pace-btn.is-active {
+      background-color: var(--ground);
+      color: var(--carbon);
+      border-color: var(--ground);
+      font-weight: 600;
+    }
+    .est-output {
+      padding-top: 20px;
+      border-top: 1px solid var(--rule-dark);
+    }
+    .est-total {
+      font-family: var(--font-mono);
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-top: 4px;
+      color: var(--ink-light);
+    }
+    .milestone-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .milestone-grid[hidden] { display: none; }
+    .milestone-box {
+      background-color: var(--dark-surface);
+      border: 1px solid var(--rule-dark);
+      border-radius: var(--radius-sm);
+      padding: 10px 6px;
+      text-align: center;
+    }
+    .milestone-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-light-muted);
+    }
+    .milestone-val {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .milestone-val.is-final { color: var(--signal-dark-bg); }
+    .est-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* =========================================================================
+       SECTION 06 — TECHNICAL FAQ ACCORDION
+       ========================================================================= */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    @media (min-width: 1024px) {
+      .faq-grid { grid-template-columns: 4fr 8fr; }
+    }
+    .faq-list {
+      padding: 8px 24px;
+    }
+    @media (min-width: 640px) {
+      .faq-list { padding: 12px 32px; }
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--rule-light);
+    }
+    .faq-item:last-child { border-bottom: 0; }
+    .faq-trigger {
+      width: 100%;
+      min-height: 56px;
+      padding: 18px 0;
+      background: transparent;
+      border: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      text-align: left;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--carbon);
+      cursor: pointer;
+    }
+    .faq-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      min-height: 28px;
+      font-family: var(--font-mono);
+      font-size: 1.375rem;
+      line-height: 1;
+      transition: transform 0.28s var(--ease-damped);
+    }
+    .faq-item[data-open="true"] .faq-icon {
+      transform: rotate(45deg);
+    }
+    .faq-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.32s var(--ease-damped);
+    }
+    .faq-item[data-open="true"] .faq-panel {
+      grid-template-rows: 1fr;
+    }
+    .faq-panel-inner {
+      overflow: hidden;
+    }
+    .faq-panel-inner p {
+      margin: 0 0 20px;
+      color: var(--ink-dark-muted);
+      font-size: 0.9375rem;
+      line-height: 1.65;
+    }
+
+    /* =========================================================================
+       SECTION 07 — CLOSING IMAGE SPREAD & 5-COLUMN SWISS FOOTER
+       ========================================================================= */
+    .closing-spread {
+      position: relative;
+      min-height: 60svh;
+      color: var(--ink-light);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .closing-inner {
+      position: relative;
+      z-index: 2;
+      padding-block: 88px;
+    }
+    .closing-logo svg {
+      height: 44px;
+      width: auto;
+      display: block;
+      margin-bottom: 28px;
+    }
+    .closing-actions {
+      margin-top: 36px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .site-footer {
+      background-color: var(--carbon);
+      color: var(--ink-light);
+      border-top: 1px solid var(--rule-dark);
+      padding-bottom: 84px; /* Clearance for sticky mobile bar */
+    }
+    @media (min-width: 768px) {
+      .site-footer { padding-bottom: 0; }
+    }
+    .footer-grid {
+      padding-block: 56px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 36px 24px;
+    }
+    @media (min-width: 1024px) {
+      .footer-grid { grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; }
+    }
+    .footer-brand-col {
+      grid-column: span 2;
+    }
+    @media (min-width: 1024px) {
+      .footer-brand-col { grid-column: span 1; }
+    }
+    .bo-badge svg {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--rule-dark);
+      display: block;
+    }
+    .status-pill {
+      margin-top: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-light-muted);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--signal-dark-bg);
+    }
+    .footer-col h3 {
+      margin: 0 0 14px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(244, 243, 239, 0.6);
+    }
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .footer-col a,
+    .footer-col button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      font-size: 0.875rem;
+      color: var(--ink-light-muted);
+      background: transparent;
+      border: 0;
+      padding: 4px 0;
+      cursor: pointer;
+    }
+    @media (hover: hover) {
+      .footer-col a:hover,
+      .footer-col button:hover {
+        color: var(--ink-light);
+      }
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--rule-dark);
+      padding-block: 20px;
+    }
+    .footer-bottom-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: rgba(244, 243, 239, 0.6);
+    }
+
+    /* =========================================================================
+       STICKY MOBILE BOTTOM ISLAND (< 768px)
+       ========================================================================= */
+    .mobile-bar {
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      z-index: 45;
+      background-color: var(--carbon);
+      border: 1px solid rgba(244, 243, 239, 0.24);
+      border-radius: var(--radius-md);
+      padding: 6px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.6);
+    }
+    .mobile-bar a {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .mobile-bar .mb-est {
+      background-color: var(--dark-surface);
+      color: var(--ink-light);
+      border: 1px solid var(--rule-dark);
+    }
+    .mobile-bar .mb-wa {
+      background-color: var(--signal);
+      color: #FFFFFF;
+    }
+    @media (min-width: 768px) {
+      .mobile-bar { display: none; }
+    }
+
+    /* =========================================================================
+       DIRECT-TO-ENGINEER MODAL (WITH FULL FOCUS TRAP)
+       ========================================================================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background-color: rgba(5, 5, 5, 0.82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s var(--ease-damped);
+    }
+    .modal-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-panel {
+      width: 100%;
+      max-width: 500px;
+      max-height: 92svh;
+      overflow-y: auto;
+      background-color: var(--ground);
+      color: var(--carbon);
+      border: 1px solid var(--carbon);
+      border-radius: var(--radius-md);
+      transform: translateY(14px);
+      transition: transform 0.28s var(--ease-damped);
+    }
+    .modal-backdrop.is-open .modal-panel {
+      transform: translateY(0);
+    }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 24px;
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--rule-light);
+    }
+    .modal-head h3 {
+      margin: 4px 0 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .modal-close {
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid var(--rule-light);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 1.375rem;
+      line-height: 1;
+      color: var(--carbon);
+      cursor: pointer;
+    }
+    .modal-body {
+      padding: 24px;
+    }
+    .form-field {
+      margin-bottom: 16px;
+    }
+    .form-field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink-dark-muted);
+    }
+    .form-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      background-color: var(--surface);
+      border: 1px solid rgba(17, 17, 17, 0.24);
+      border-radius: var(--radius-sm);
+      font-size: 0.9375rem;
+      color: var(--carbon);
+    }
+    .form-error {
+      margin: 0 0 14px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--signal-light-bg);
+    }
+    .form-error[hidden] { display: none; }
+    .modal-foot-row {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-dark-muted);
+    }
+    .modal-wa-link {
+      color: var(--signal-light-bg);
+      font-weight: 600;
+      text-transform: uppercase;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .modal-confirm {
+      padding: 36px 24px;
+      text-align: center;
+    }
+    .modal-confirm[hidden],
+    .modal-body[hidden] { display: none; }
+    .confirm-check {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background-color: var(--signal);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .confirm-actions {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* Reduced Motion Compliance */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .kinbo-logo:hover {
+        --dot-tx: 0px;
+        --dot-ty: 0px;
+      }
+    }
+  
+    /* =========================================================================
+       ACTIVE ENGINEERING DEPLOYMENTS SPECIFICATION LEDGER
+       ========================================================================= */
+    .spread-deployments {
+      padding: clamp(3.5rem, 6vw, 6rem) 0;
+      background-color: var(--carbon);
+      border-top: 1px solid var(--rule-dark);
+      border-bottom: 1px solid var(--rule-dark);
+    }
+    .deployments-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 840px) {
+      .deployments-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .deployment-card {
+      background-color: var(--dark-surface);
+      border: 1px solid var(--rule-dark);
+      border-radius: var(--radius-sm);
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.2s var(--ease-damped);
+    }
+    .deployment-card:hover {
+      border-color: var(--signal);
+    }
+    .deployment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--rule-dark);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .deployment-title {
+      font-size: clamp(1.5rem, 2.4vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      color: var(--ink-light);
+      margin-bottom: 6px;
+      transition: color 0.2s ease;
+    }
+    .deployment-card:hover .deployment-title {
+      color: var(--signal-dark-bg);
+    }
+    .deployment-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink-light-muted);
+      margin-bottom: 24px;
+    }
+    .deployment-footer {
+      border-top: 1px solid var(--rule-dark);
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* =========================================================================
+       INSTITUTIONAL VALUES STRIP
+       ========================================================================= */
+    .values-strip {
+      padding: 3.5rem 0;
+      background-color: var(--void);
+      border-top: 1px solid var(--rule-dark);
+      border-bottom: 1px solid var(--rule-dark);
+    }
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 960px) {
+      .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 520px) {
+      .values-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .value-item {
+      border-left: 2px solid var(--signal);
+      padding-left: 18px;
+    }
+    .value-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink-light);
+      margin-top: 6px;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+    .value-desc {
+      font-size: 12px;
+      color: var(--ink-light-muted);
+      margin: 0;
+    }
+
+  </style>
+  <Analytics />
+</head>
+<body data-wa-number={whatsappNumber} data-wa-message={whatsappMessage}>
+
+  <!-- Skip to Main Content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- =========================================================================
+       DEDUPLICATED INLINE SVG SYMBOL SPRITE (Referenced via <use>)
+       Flat 2D circular dots inside 'b' and 'o' aligned toward the TOP-RIGHT.
+       ========================================================================= -->
+  <svg class="svg-sprite" aria-hidden="true">
+    <defs>
+      <!-- Light-ground wordmark ('bo' in Carbon Black) -->
+      <symbol id="kinbo-logo-light" viewBox="0 0 170 46">
+        <path d="M0 4H9.2V24.2L22.2 12.5H33.6L19.6 24.8L34.4 42H22.8L12.6 29.8L9.2 32.8V42H0V4Z" fill="#D9261C"/>
+        <rect x="38.5" y="4" width="9.2" height="6.8" fill="#D9261C"/>
+        <rect x="38.5" y="13.5" width="9.2" height="28.5" fill="#D9261C"/>
+        <path d="M54 13.5H63V17.4C64.9 14.5 68.1 12.8 72.1 12.8C79.4 12.8 83.6 17.3 83.6 25.1V42H74.4V26.4C74.4 22.4 72.4 20.4 69.1 20.4C65.4 20.4 63.2 22.8 63.2 27.1V42H54V13.5Z" fill="#D9261C"/>
+        <rect x="91" y="4" width="9.2" height="38" fill="#111111"/>
+        <circle cx="107.5" cy="27.8" r="14.7" fill="#111111"/>
+        <circle cx="107.5" cy="27.8" r="7.5" fill="#F4F3EF"/>
+        <circle cx="110.2" cy="25.1" r="3.3" fill="#111111" style="transform:translate(var(--dot-tx,0px),var(--dot-ty,0px));transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)"/>
+        <circle cx="143.5" cy="27.8" r="14.7" fill="#111111"/>
+        <circle cx="143.5" cy="27.8" r="7.5" fill="#F4F3EF"/>
+        <circle cx="146.2" cy="25.1" r="3.3" fill="#111111" style="transform:translate(var(--dot-tx,0px),var(--dot-ty,0px));transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)"/>
+      </symbol>
+
+      <!-- Dark-ground wordmark ('bo' in Off-White) -->
+      <symbol id="kinbo-logo-dark" viewBox="0 0 170 46">
+        <path d="M0 4H9.2V24.2L22.2 12.5H33.6L19.6 24.8L34.4 42H22.8L12.6 29.8L9.2 32.8V42H0V4Z" fill="#D9261C"/>
+        <rect x="38.5" y="4" width="9.2" height="6.8" fill="#D9261C"/>
+        <rect x="38.5" y="13.5" width="9.2" height="28.5" fill="#D9261C"/>
+        <path d="M54 13.5H63V17.4C64.9 14.5 68.1 12.8 72.1 12.8C79.4 12.8 83.6 17.3 83.6 25.1V42H74.4V26.4C74.4 22.4 72.4 20.4 69.1 20.4C65.4 20.4 63.2 22.8 63.2 27.1V42H54V13.5Z" fill="#D9261C"/>
+        <rect x="91" y="4" width="9.2" height="38" fill="#F4F3EF"/>
+        <circle cx="107.5" cy="27.8" r="14.7" fill="#F4F3EF"/>
+        <circle cx="107.5" cy="27.8" r="7.5" fill="#111111"/>
+        <circle cx="110.2" cy="25.1" r="3.3" fill="#F4F3EF" style="transform:translate(var(--dot-tx,0px),var(--dot-ty,0px));transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)"/>
+        <circle cx="143.5" cy="27.8" r="14.7" fill="#F4F3EF"/>
+        <circle cx="143.5" cy="27.8" r="7.5" fill="#111111"/>
+        <circle cx="146.2" cy="25.1" r="3.3" fill="#F4F3EF" style="transform:translate(var(--dot-tx,0px),var(--dot-ty,0px));transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)"/>
+      </symbol>
+
+      <!-- Standalone 1:1 'bo' Icon Mark (Top-Right Flat 2D Dots) -->
+      <symbol id="bo-icon" viewBox="0 0 120 120">
+        <rect width="120" height="120" rx="16" fill="#181818"/>
+        <rect x="20" y="22" width="12" height="68" fill="#F4F3EF"/>
+        <circle cx="44" cy="68" r="23" fill="#F4F3EF"/>
+        <circle cx="44" cy="68" r="11.5" fill="#181818"/>
+        <circle cx="48.2" cy="63.8" r="5" fill="#D9261C"/>
+        <circle cx="88" cy="68" r="23" fill="#F4F3EF"/>
+        <circle cx="88" cy="68" r="11.5" fill="#181818"/>
+        <circle cx="92.2" cy="63.8" r="5" fill="#D9261C"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- =========================================================================
+       STICKY FLOATING SWISS ISLAND NAVBAR
+       ========================================================================= -->
+  <header class="nav-header">
+    <div id="navIsland" class="nav-island">
+      <a href="#top" class="kinbo-logo" aria-label="kinbo home">
+        <svg viewBox="0 0 170 46" role="img" aria-label="kinbo"><use href="#kinbo-logo-dark"></use></svg>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="/products">Products</a>
+        <a href="#services">Services</a>
+        <a href="/works">Showcase</a>
+        <a href="/blog">Journal</a>
+        <a href="#rates">Rates</a>
+        <a href="/founder">Founder</a>
+        <a href="/chat">Console</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="btn btn-light nav-cta-desktop" data-open-brief data-prefill="Direct Engineer Discussion">
+          Talk to an Engineer
+        </button>
+
+        <button id="mobileMenuBtn" type="button" class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileDrawer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="square" d="M3 7h18M3 17h18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileDrawer" class="mobile-drawer" hidden>
+      <nav aria-label="Mobile navigation">
+        <div style="padding: 6px 8px; border-bottom: 1px solid var(--rule-dark); margin-bottom: 4px;">
+          <span class="mono-label mono-accent-dark">NAVIGATION INDEX // DESTINATIONS</span>
+        </div>
+        <a href="/products" class="mobile-link"><span>01 // Products & Deployments</span><span class="mono-label">&rarr;</span></a>
+        <a href="#services" class="mobile-link"><span>02 // Capabilities & Services</span><span class="mono-label">&rarr;</span></a>
+        <a href="/works" class="mobile-link"><span>03 // Showcase & Client Works</span><span class="mono-label">&rarr;</span></a>
+        <a href="#deployments" class="mobile-link"><span>04 // Active Deployments Spec</span><span class="mono-label">&rarr;</span></a>
+        <a href="#disciplines" class="mobile-link"><span>05 // Engineering Disciplines</span><span class="mono-label">&rarr;</span></a>
+        <a href="#process" class="mobile-link"><span>06 // Research & Build Process</span><span class="mono-label">&rarr;</span></a>
+        <a href="#rates" class="mobile-link"><span>07 // Transparent Rates & Estimator</span><span class="mono-label">&rarr;</span></a>
+        <a href="/blog" class="mobile-link"><span>08 // Engineering Journal</span><span class="mono-label">&rarr;</span></a>
+        <a href="#faq" class="mobile-link"><span>09 // Architecture FAQ</span><span class="mono-label">&rarr;</span></a>
+        <a href="/about" class="mobile-link"><span>10 // Institutional About</span><span class="mono-label">&rarr;</span></a>
+        <a href="/founder" class="mobile-link"><span>11 // Founder Dossier: Arjun Jayesh</span><span class="mono-label">&rarr;</span></a>
+        <a href="/chat" class="mobile-link"><span>12 // Interactive Terminal Console</span><span class="mono-label">&rarr;</span></a>
+        <a href="/ideas" class="mobile-link"><span>13 // Submit Project RFP</span><span class="mono-label">&rarr;</span></a>
+        <a href="/apply" class="mobile-link"><span>14 // Careers & Applications</span><span class="mono-label">&rarr;</span></a>
+        <button type="button" class="btn btn-light mobile-link" data-open-brief data-prefill="Mobile Menu Navigation">
+          Talk Directly to an Engineer &rarr;
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- =======================================================================
+         HERO — ORBITAL SUNRISE CANVAS (#050505)
+         ======================================================================= -->
+    <section id="top" class="hero theme-dark" aria-label="Hero">
+      <canvas id="orbitalCanvas" class="hero-canvas" aria-hidden="true"></canvas>
+
+      <div class="hero-content">
+        <h1 class="display-title hero-title">
+          You deserve the best.<span class="sr-only"> — Custom Software Engineering by kinbo</span>
+        </h1>
+        <p class="hero-subtext">We at kinbo care about you.</p>
+
+        <div class="hero-actions">
+          <a href="#services" class="btn btn-outline-dark">Explore Services</a>
+          <button type="button" class="btn btn-light" data-open-brief data-prefill="Direct Engineer Consultation">
+            Talk to an Engineer
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-scroll-hint mono-label" aria-hidden="true">
+        <span>01</span>
+        <span class="line"></span>
+        <span>SCROLL</span>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 01 — DIRECT-TO-ENGINEER FULL-BLEED IMAGE SPREAD + ANSWER-FIRST
+         ======================================================================= -->
+    <section id="direct" class="spread-direct arch-fallback theme-dark" aria-labelledby="direct-heading">
+      <img
+        src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1800&q=80"
+        alt="Minimalist concrete and glass engineering studio interior"
+        width="1800"
+        height="1125"
+        loading="lazy"
+        decoding="async"
+        class="photo-bg js-fallback-img"
+      >
+      <div class="scrim-spread" aria-hidden="true"></div>
+
+      <div class="container spread-direct-inner">
+        <div>
+          <span class="mono-label mono-accent-dark">01 / ZERO SALES TEAM</span>
+          <h2 id="direct-heading" class="display-title spread-headline" style="margin-top:12px;">
+            We don&rsquo;t have a sales team. You talk directly to the engineer from day one.
+          </h2>
+        </div>
+
+        <!-- Answer-First 60-Word Factual Summary Island -->
+        <div class="answer-island">
+          <span class="mono-label mono-accent-dark">FACTUAL SUMMARY</span>
+          <p>
+            kinbo builds state-of-the-art mobile apps, websites, ERPs, AI integrations, and custom Python or Rust systems for organizations from education to industry. Transparent rates start at ₹7,000, delivered in disciplined Research&ndash;Build&ndash;Refine stages with 100% Day-1 source-code ownership, milestone payments, and lifelong support*—priced so your dreams never stop.
+          </p>
+        </div>
+      </div>
+
+      <div class="spread-strip">
+        <div class="container spread-strip-grid">
+          <div class="strip-item"><span class="strip-dot" aria-hidden="true"></span><span>100% Day-1 Source-Code Ownership</span></div>
+          <div class="strip-item"><span class="strip-dot" aria-hidden="true"></span><span>30 / 40 / 30 Milestone Payment Gates</span></div>
+          <div class="strip-item"><span class="strip-dot" aria-hidden="true"></span><span>Direct Engineer Reply &lt; 4 Business Hours</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 02 — 5-COLUMN INTERACTIVE SERVICES EXPLORER
+         ======================================================================= -->
+    <section id="services" class="section-pad" aria-labelledby="services-heading">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <span class="mono-label mono-accent-light">02 / SERVICES</span>
+            <h2 id="services-heading" class="display-title sec-title">
+              Explore our range of software services.
+            </h2>
+          </div>
+          <p class="sec-lead">
+            Select <strong>Technology</strong> or <strong>Disciplines</strong> under any of the 5 columns. Click any stack card to brief an engineer directly.
+          </p>
+        </div>
+
+        <div class="island-light">
+          <div class="services-cols">
+            <!-- Col 1: Apps -->
+            <div class="svc-col">
+              <div>
+                <span class="mono-label mono-accent-light">01 /</span>
+                <h3>Apps</h3>
+              </div>
+              <div class="svc-tracks">
+                <button type="button" class="svc-trigger" data-cat="apps" data-track="tech" aria-pressed="true">
+                  <span>Technology</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+                <button type="button" class="svc-trigger" data-cat="apps" data-track="disciplines" aria-pressed="false">
+                  <span>Disciplines</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Col 2: Websites -->
+            <div class="svc-col">
+              <div>
+                <span class="mono-label mono-accent-light">02 /</span>
+                <h3>Websites</h3>
+              </div>
+              <div class="svc-tracks">
+                <button type="button" class="svc-trigger" data-cat="websites" data-track="tech" aria-pressed="false">
+                  <span>Technology</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+                <button type="button" class="svc-trigger" data-cat="websites" data-track="disciplines" aria-pressed="false">
+                  <span>Disciplines</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Col 3: ERP -->
+            <div class="svc-col">
+              <div>
+                <span class="mono-label mono-accent-light">03 /</span>
+                <h3>ERP</h3>
+              </div>
+              <div class="svc-tracks">
+                <button type="button" class="svc-trigger" data-cat="erp" data-track="tech" aria-pressed="false">
+                  <span>Technology</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+                <button type="button" class="svc-trigger" data-cat="erp" data-track="disciplines" aria-pressed="false">
+                  <span>Disciplines</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Col 4: AI & Automation -->
+            <div class="svc-col">
+              <div>
+                <span class="mono-label mono-accent-light">04 /</span>
+                <h3>AI &amp; Automation</h3>
+              </div>
+              <div class="svc-tracks">
+                <button type="button" class="svc-trigger" data-cat="ai" data-track="tech" aria-pressed="false">
+                  <span>Technology</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+                <button type="button" class="svc-trigger" data-cat="ai" data-track="disciplines" aria-pressed="false">
+                  <span>Disciplines</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Col 5: Custom Systems -->
+            <div class="svc-col">
+              <div>
+                <span class="mono-label mono-accent-light">05 /</span>
+                <h3>Custom Systems</h3>
+              </div>
+              <div class="svc-tracks">
+                <button type="button" class="svc-trigger" data-cat="custom" data-track="tech" aria-pressed="false">
+                  <span>Technology</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+                <button type="button" class="svc-trigger" data-cat="custom" data-track="disciplines" aria-pressed="false">
+                  <span>Disciplines</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Sub-Panel (Populated via JS, Accessible Live Region) -->
+          <div id="serviceSubPanel" class="svc-subpanel" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 02B — ACTIVE ENGINEERING DEPLOYMENTS SPECIFICATION LEDGER
+         ======================================================================= -->
+    <section id="deployments" class="spread-deployments theme-dark" aria-labelledby="deployments-heading">
+      <div class="container">
+        <div class="spread-head" style="margin-bottom: 2.5rem; border-bottom: 1px solid var(--rule-dark); padding-bottom: 1.5rem;">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; width: 100%;">
+            <div>
+              <span class="mono-label mono-accent-dark">02B // ACTIVE PLATFORMS</span>
+              <h2 id="deployments-heading" class="display-title" style="font-size: clamp(1.8rem, 3.2vw, 2.75rem); margin-top: 0.5rem;">
+                Active Engineering Deployments
+              </h2>
+            </div>
+            <a href="/products" class="btn btn-outline-dark" style="font-size: 11px;">
+              View All Platforms &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="deployments-grid">
+          <!-- QueueZero (Q0) -->
+          <article class="deployment-card">
+            <div>
+              <div class="deployment-header">
+                <span class="mono-label mono-accent-dark">FLAGSHIP // CLINICAL INFRASTRUCTURE</span>
+                <span class="mono-label" style="color: #34D399;">DEPLOYMENT: READY</span>
+              </div>
+              <h3 class="deployment-title">
+                QueueZero (Q0)
+              </h3>
+              <div class="mono-label" style="margin-bottom: 1rem; color: var(--ink-light-muted);">
+                Deterministic Patient Triage & OPD Orchestration
+              </div>
+              <p class="deployment-desc">
+                Clinical infrastructure platform reducing patient wait-times and optimizing hospital consultation workflows across multispecialty departments.
+              </p>
+            </div>
+            <div class="deployment-footer">
+              <span class="mono-label">ZONE: CLINICAL / HOSPITAL</span>
+              <a href="/products/queuezero" class="btn btn-outline-dark" style="padding: 6px 14px; font-size: 11px;">
+                Inspect Architecture &rarr;
+              </a>
+            </div>
+          </article>
+
+          <!-- Glowup Vision AI -->
+          <article class="deployment-card">
+            <div>
+              <div class="deployment-header">
+                <span class="mono-label mono-accent-dark">PLATFORM // COMPUTER VISION</span>
+                <span class="mono-label" style="color: #34D399;">STATUS: ACTIVE</span>
+              </div>
+              <h3 class="deployment-title">
+                Glowup Vision AI
+              </h3>
+              <div class="mono-label" style="margin-bottom: 1rem; color: var(--ink-light-muted);">
+                Dermatological Intelligence & Scoring
+              </div>
+              <p class="deployment-desc">
+                Image intelligence algorithms providing objective skin condition scoring, longitudinal progress tracking, and lifestyle correlation metrics.
+              </p>
+            </div>
+            <div class="deployment-footer">
+              <span class="mono-label">ZONE: APPLIED VISION</span>
+              <a href="/products" class="btn btn-outline-dark" style="padding: 6px 14px; font-size: 11px;">
+                Inspect System &rarr;
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 03 — CROSS-DISCIPLINE EDITORIAL IMAGE-ON-TEXT BENTO
+         ======================================================================= -->
+    <section id="disciplines" class="section-pad" style="padding-top:0;" aria-labelledby="disciplines-heading">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <span class="mono-label mono-accent-light">03 / CROSS-DISCIPLINE</span>
+            <h2 id="disciplines-heading" class="display-title sec-title">
+              From education to industry.
+            </h2>
+          </div>
+          <p class="sec-lead">
+            Engineered for real physical operations—reliable under load, clear to use, and built to outlast trends.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Bento 1: Education & Institutions -->
+          <article class="bento-card bento-wide arch-fallback">
+            <img
+              src="https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1400&q=80"
+              alt="Modernist university campus architecture"
+              width="1400"
+              height="933"
+              loading="lazy"
+              decoding="async"
+              class="photo-bg js-fallback-img"
+            >
+            <div class="scrim-card" aria-hidden="true"></div>
+            <span class="mono-label mono-accent-dark" style="position:relative;z-index:2;">01 / EDUCATION &amp; INSTITUTIONS</span>
+            <div class="bento-body">
+              <h3>Schools, Colleges &amp; Portals</h3>
+              <p>Institutional ERPs, fee ledgers, attendance, and student workflows engineered for daily reliability.</p>
+            </div>
+          </article>
+
+          <!-- Bento 2: Brands & E-Commerce -->
+          <article class="bento-card bento-narrow arch-fallback">
+            <img
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80"
+              alt="Minimalist architectural retail space"
+              width="1200"
+              height="800"
+              loading="lazy"
+              decoding="async"
+              class="photo-bg js-fallback-img"
+            >
+            <div class="scrim-card" aria-hidden="true"></div>
+            <span class="mono-label mono-accent-dark" style="position:relative;z-index:2;">02 / BRANDS &amp; E-COMMERCE</span>
+            <div class="bento-body">
+              <h3>Fast Storefronts &amp; CMS</h3>
+              <p>SEO-first brand sites, custom admin roles, and full-scale commerce paired with Flutter apps.</p>
+            </div>
+          </article>
+
+          <!-- Bento 3: Industrial Operations -->
+          <article class="bento-card bento-narrow arch-fallback">
+            <img
+              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80"
+              alt="Industrial automation and engineering facility"
+              width="1200"
+              height="800"
+              loading="lazy"
+              decoding="async"
+              class="photo-bg js-fallback-img"
+            >
+            <div class="scrim-card" aria-hidden="true"></div>
+            <span class="mono-label mono-accent-dark" style="position:relative;z-index:2;">03 / INDUSTRIAL OPERATIONS</span>
+            <div class="bento-body">
+              <h3>ERPs &amp; Field Reliability</h3>
+              <p>Inventory, billing, logistics, and real-time analytics dashboards built for zero downtime.</p>
+            </div>
+          </article>
+
+          <!-- Bento 4: Custom AI & R&D -->
+          <article class="bento-card bento-wide arch-fallback">
+            <img
+              src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80"
+              alt="Precision hardware and systems engineering circuitry"
+              width="1400"
+              height="933"
+              loading="lazy"
+              decoding="async"
+              class="photo-bg js-fallback-img"
+            >
+            <div class="scrim-card" aria-hidden="true"></div>
+            <span class="mono-label mono-accent-dark" style="position:relative;z-index:2;">04 / CUSTOM AI &amp; R&amp;D</span>
+            <div class="bento-body">
+              <h3>Python, Rust &amp; Computer Vision</h3>
+              <p>Custom model training, memory-safe Rust services, and computer vision pipelines tailored to your constraints.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 04 — PROCESS & LIFELONG SUPPORT* SPREAD (DARK #111111)
+         ======================================================================= -->
+    <section id="process" class="process-section theme-dark" aria-labelledby="process-heading">
+      <div class="process-split">
+        <div class="process-photo-col arch-fallback">
+          <img
+            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1400&q=80"
+            alt="Swiss modernist high-contrast architectural tower"
+            width="1400"
+            height="1750"
+            loading="lazy"
+            decoding="async"
+            class="photo-bg js-fallback-img"
+          >
+          <div class="scrim-card" aria-hidden="true"></div>
+          <span class="mono-label mono-accent-dark" style="position:relative;z-index:2;">04 / PROCESS</span>
+          <div style="position:relative;z-index:2;">
+            <h2 id="process-heading" class="display-title" style="font-size:clamp(2rem,4vw,3rem);color:#F4F3EF;">
+              Not just another software company.
+            </h2>
+          </div>
+        </div>
+
+        <div class="process-stages-col">
+          <div>
+            <div class="stage-item">
+              <div class="stage-meta">
+                <span class="mono-label mono-accent-dark">01 / RESEARCH</span>
+                <span class="mono-label" style="color:rgba(244,243,239,0.65);">30% MILESTONE</span>
+              </div>
+              <h3>Architecture, constraints &amp; fixed specification.</h3>
+              <p>We map your exact workflows, database schema, security boundaries, and total cost before writing a single line of code.</p>
+            </div>
+
+            <div class="stage-item">
+              <div class="stage-meta">
+                <span class="mono-label mono-accent-dark">02 / BUILD</span>
+                <span class="mono-label" style="color:rgba(244,243,239,0.65);">40% MILESTONE</span>
+              </div>
+              <h3>Inspectable code with live staging links.</h3>
+              <p>Weekly live staging URLs let you verify real working software directly with your engineer—never static slide decks.</p>
+            </div>
+
+            <div class="stage-item">
+              <div class="stage-meta">
+                <span class="mono-label mono-accent-dark">03 / REFINE</span>
+                <span class="mono-label" style="color:rgba(244,243,239,0.65);">30% MILESTONE</span>
+              </div>
+              <h3>Load testing, full handover &amp; lifelong support*.</h3>
+              <p>Performance hardening, walkthrough documentation, 100% Git repository transfer in your name, and permanent technical backing.</p>
+            </div>
+          </div>
+
+          <div id="lifelong-support" class="support-box">
+            <span class="mono-label mono-accent-dark">*LIFELONG SUPPORT — HONEST BREAKDOWN</span>
+            <p>
+              Covers free critical bug fixes on delivered scope and ongoing architectural consultations whenever you scale. Optional, transparently priced Annual Maintenance Contracts (AMC) are available if you want dedicated ongoing feature sprints or managed server operations—zero lock-in.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <!-- =======================================================================
+         SECTION 04B — INSTITUTIONAL ETHOS & DETERMINISM VALUES STRIP
+         ======================================================================= -->
+    <section class="values-strip theme-dark" aria-label="Institutional Values">
+      <div class="container">
+        <div class="values-grid">
+          <div class="value-item">
+            <span class="mono-label mono-accent-dark">01 // ETHOS</span>
+            <div class="value-title">Practical Innovation</div>
+            <p class="value-desc">Engineered for measurable outcomes.</p>
+          </div>
+          <div class="value-item">
+            <span class="mono-label mono-accent-dark">02 // DETERMINISM</span>
+            <div class="value-title">Constraint-Bound</div>
+            <p class="value-desc">Zero runtime ambiguity.</p>
+          </div>
+          <div class="value-item">
+            <span class="mono-label mono-accent-dark">03 // TRANSPARENCY</span>
+            <div class="value-title">Clear Data Flow</div>
+            <p class="value-desc">Auditable client data ownership.</p>
+          </div>
+          <div class="value-item">
+            <span class="mono-label mono-accent-dark">04 // RESILIENCE</span>
+            <div class="value-title">Continuous Uptime</div>
+            <p class="value-desc">Self-healing infrastructure.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 05 — TRANSPARENT RATE CARDS & 3-CLICK SCOPE ESTIMATOR
+         ======================================================================= -->
+    <section id="rates" class="section-pad" aria-labelledby="rates-heading">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <span class="mono-label mono-accent-light">05 / TRANSPARENT RATES</span>
+            <h2 id="rates-heading" class="display-title sec-title">
+              Clear math. Zero guesswork.
+            </h2>
+          </div>
+
+          <div class="currency-toggle" role="group" aria-label="Select display currency">
+            <button type="button" class="curr-btn is-active" data-currency="INR" aria-pressed="true">INR (₹)</button>
+            <button type="button" class="curr-btn" data-currency="USD" aria-pressed="false">USD ($)</button>
+          </div>
+        </div>
+
+        <div class="rates-grid">
+          <!-- Left: 5-Tab Swiss Rate Card Island -->
+          <div class="island-light">
+            <div class="rate-tabs" role="tablist" aria-label="Software rate card categories">
+              <button type="button" role="tab" class="rate-tab" data-rate-tab="portfolio" aria-selected="false">Portfolio</button>
+              <button type="button" role="tab" class="rate-tab is-active" data-rate-tab="brand" aria-selected="true">Brand &amp; E-Com</button>
+              <button type="button" role="tab" class="rate-tab" data-rate-tab="apps" aria-selected="false">Apps &amp; Combos</button>
+              <button type="button" role="tab" class="rate-tab" data-rate-tab="erp" aria-selected="false">ERP</button>
+              <button type="button" role="tab" class="rate-tab" data-rate-tab="ai" aria-selected="false">AI &amp; Custom</button>
+            </div>
+
+            <div id="rateTabPanel" class="rate-panel" role="tabpanel"></div>
+
+            <div class="rate-footnote">
+              <span>Day-1 100% source-code ownership included.</span>
+              <span>Hosting, domains &amp; third-party APIs billed separately in your name.</span>
+            </div>
+          </div>
+
+          <!-- Right: Compact 3-Click Scope Estimator -->
+          <aside id="estimator" class="estimator-island theme-dark" aria-label="3-Click Scope Estimator">
+            <div class="est-head">
+              <span class="mono-label">3-CLICK SCOPE ESTIMATOR</span>
+              <span class="mono-label mono-accent-dark">LIVE MATH</span>
+            </div>
+
+            <div class="est-field">
+              <label for="estCatSelect" class="mono-label">01 / CATEGORY</label>
+              <select id="estCatSelect" class="est-select">
+                <option value="portfolio">Portfolio Websites</option>
+                <option value="brand" selected>Brand &amp; E-Commerce</option>
+                <option value="apps">Mobile Apps &amp; Combos</option>
+                <option value="erp">ERP Systems</option>
+                <option value="ai">AI, Data &amp; Custom Systems</option>
+              </select>
+            </div>
+
+            <div class="est-field">
+              <label for="estTierSelect" class="mono-label">02 / TIER</label>
+              <select id="estTierSelect" class="est-select"></select>
+            </div>
+
+            <div class="est-field">
+              <span class="mono-label" style="display:block;margin-bottom:8px;color:rgba(244,243,239,0.78);">03 / TIMELINE</span>
+              <div class="pace-group" role="group" aria-label="Select project timeline">
+                <button type="button" class="pace-btn is-active" data-pace="standard" aria-pressed="true">Standard (Base)</button>
+                <button type="button" class="pace-btn" data-pace="priority" aria-pressed="false">Priority (+15%)</button>
+              </div>
+            </div>
+
+            <div class="est-output">
+              <span class="mono-label" style="color:rgba(244,243,239,0.7);">APPROXIMATE ESTIMATE</span>
+              <div id="estPriceOut" class="est-total tabular">₹25,000</div>
+
+              <div id="estMilestoneGrid" class="milestone-grid">
+                <div class="milestone-box">
+                  <div class="milestone-label">30% SPEC</div>
+                  <div id="estM1" class="milestone-val tabular">₹7,500</div>
+                </div>
+                <div class="milestone-box">
+                  <div class="milestone-label">40% BUILD</div>
+                  <div id="estM2" class="milestone-val tabular">₹10,000</div>
+                </div>
+                <div class="milestone-box">
+                  <div class="milestone-label">30% HANDOVER</div>
+                  <div id="estM3" class="milestone-val is-final tabular">₹7,500</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="est-actions">
+              <button type="button" id="estBriefBtn" class="btn btn-light">Discuss with Engineer</button>
+              <a id="estWaBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark">
+                WhatsApp Engineer &rarr;
+              </a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 06 — TECHNICAL FAQ ACCORDION
+         ======================================================================= -->
+    <section id="faq" class="section-pad" style="padding-top:0;" aria-labelledby="faq-heading">
+      <div class="container faq-grid">
+        <div>
+          <span class="mono-label mono-accent-light">06 / TECHNICAL FAQ</span>
+          <h2 id="faq-heading" class="display-title sec-title">
+            Straight answers.
+          </h2>
+        </div>
+
+        <div class="island-light faq-list">
+          <div class="faq-item" data-open="true">
+            <button type="button" class="faq-trigger" aria-expanded="true">
+              <span>Who do I actually speak with when I contact kinbo?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-panel">
+              <div class="faq-panel-inner">
+                <p>You speak directly with the engineer architecting and building your system from day one. We have zero sales reps—expect clear, honest technical answers within 4 business hours.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item" data-open="false">
+            <button type="button" class="faq-trigger" aria-expanded="false">
+              <span>How do the 30 / 40 / 30 milestone payments work?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-panel">
+              <div class="faq-panel-inner">
+                <p>30% initiates Research and locks your technical specification, 40% is paid only after you test the live staging build, and the final 30% settles at launch with complete Git source-code transfer.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item" data-open="false">
+            <button type="button" class="faq-trigger" aria-expanded="false">
+              <span>What does lifelong support* actually include?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-panel">
+              <div class="faq-panel-inner">
+                <p>Free critical bug fixes on our delivered scope and ongoing architectural guidance as your users grow. For new feature development or managed server ops, we offer optional, clearly scoped AMC tiers.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item" data-open="false">
+            <button type="button" class="faq-trigger" aria-expanded="false">
+              <span>Why are hosting, domains, and third-party APIs billed separately?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-panel">
+              <div class="faq-panel-inner">
+                <p>So every domain, cloud server, and API account is registered strictly under your name from day one. You pay real provider pricing with zero agency markup and zero vendor lock-in.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item" data-open="false">
+            <button type="button" class="faq-trigger" aria-expanded="false">
+              <span>Do you handle custom Python, Rust, Computer Vision, or AI Training?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-panel">
+              <div class="faq-panel-inner">
+                <p>Yes. AI integrations start at ₹3,000 and custom AI model training starts at ₹23,000. Custom Python pipelines, Rust backends, computer vision, and analytics dashboards are scoped directly with an engineer.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 07 — CLOSING FULL-BLEED IMAGE SPREAD
+         ======================================================================= -->
+    <section class="closing-spread arch-fallback theme-dark" aria-labelledby="closing-heading">
+      <img
+        src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1800&q=80"
+        alt="Minimalist architectural horizon interior"
+        width="1800"
+        height="1125"
+        loading="lazy"
+        decoding="async"
+        class="photo-bg js-fallback-img"
+      >
+      <div class="scrim-spread" aria-hidden="true"></div>
+
+      <div class="container closing-inner">
+        <div class="closing-logo">
+          <svg viewBox="0 0 170 46" role="img" aria-label="kinbo"><use href="#kinbo-logo-dark"></use></svg>
+        </div>
+
+        <h2 id="closing-heading" class="display-title spread-headline">
+          Built to stand tomorrow&rsquo;s tests.
+        </h2>
+
+        <div class="closing-actions">
+          <button type="button" class="btn btn-light" data-open-brief data-prefill="Direct Engineer Brief">
+            Talk to an Engineer
+          </button>
+          <a id="closingWaLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark">
+            WhatsApp Engineer &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       5-COLUMN SWISS FOOTER
+       ========================================================================= -->
+  <footer class="site-footer theme-dark">
+    <div class="container footer-grid">
+      <!-- Col 1: Standalone 'bo' Mark -->
+      <div class="footer-brand-col">
+        <div class="bo-badge">
+          <svg viewBox="0 0 120 120" role="img" aria-label="kinbo bo mark"><use href="#bo-icon"></use></svg>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Engineers Online &middot; Direct Access</span>
+        </div>
+      </div>
+
+      <!-- Col 2: Navigation -->
+      <div class="footer-col">
+        <h3>Navigation</h3>
+        <ul>
+          <li><a href="#direct">Direct to Engineer</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#disciplines">Disciplines</a></li>
+          <li><a href="#process">Process</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Capabilities -->
+      <div class="footer-col">
+        <h3>Capabilities</h3>
+        <ul>
+          <li><a href="#services" data-jump-cat="apps">Mobile Apps</a></li>
+          <li><a href="#services" data-jump-cat="websites">Websites &amp; E-Com</a></li>
+          <li><a href="#services" data-jump-cat="erp">ERP Systems</a></li>
+          <li><a href="#services" data-jump-cat="ai">AI &amp; Custom R&amp;D</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Engineering Desk -->
+      <div class="footer-col">
+        <h3>Engineering Desk</h3>
+        <ul>
+          <li><button type="button" data-open-brief data-prefill="Engineering Brief">Talk to an Engineer</button></li>
+          <li><a href="#rates">Transparent Rates</a></li>
+          <li><a href="#estimator">Scope Estimator</a></li>
+          <li><a href="#faq">Technical FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 5: Legal & Terms -->
+      <div class="footer-col">
+        <h3>Legal &amp; Terms</h3>
+        <ul>
+          <li><a href="#lifelong-support">Lifelong Support*</a></li>
+          <li><a href="#rates">Ownership &amp; Hosting</a></li>
+          <li><a href="#faq">Privacy &amp; Data</a></li>
+          <li><a href="#faq">Terms of Delivery</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <span>&copy; 2026 kinbo</span>
+        <span>01 SIGNAL &middot; KINBOSOFT.COM</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       STICKY MOBILE BOTTOM ISLAND (< 768px, min-height 44px)
+       ========================================================================= -->
+  <div class="mobile-bar" role="region" aria-label="Quick actions">
+    <a href="#estimator" class="mb-est">Estimate</a>
+    <a id="mobileBarWa" href="#" target="_blank" rel="noopener noreferrer" class="mb-wa">WhatsApp Engineer</a>
+  </div>
+
+  <!-- =========================================================================
+       DIRECT-TO-ENGINEER MODAL (3-Field Form + Full Keyboard Focus Trap)
+       ========================================================================= -->
+  <div id="briefBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="briefModalTitle" hidden>
+    <div id="briefModal" class="modal-panel">
+      <div class="modal-head">
+        <div>
+          <span class="mono-label mono-accent-light">ZERO SALES TEAM // DIRECT ACCESS</span>
+          <h3 id="briefModalTitle">Talk to an Engineer</h3>
+        </div>
+        <button id="briefCloseBtn" type="button" class="modal-close" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div id="briefFormWrap" class="modal-body">
+        <form id="projectBriefForm" novalidate>
+          <div style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+            <input type="text" name="_hp_company" id="bfCompany" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="form-field">
+            <label for="bfName" class="mono-label">1. Your Name *</label>
+            <input id="bfName" name="name" type="text" required autocomplete="name" placeholder="Your full name" class="form-input">
+          </div>
+
+          <div class="form-field">
+            <label for="bfContact" class="mono-label">2. Phone or Email *</label>
+            <input id="bfContact" name="contact" type="text" required autocomplete="tel" placeholder="+91 98XXX XXXXX or you@company.com" class="form-input">
+          </div>
+
+          <div class="form-field">
+            <label for="bfGoal" class="mono-label">3. 1-Line Project Goal *</label>
+            <textarea id="bfGoal" name="goal" rows="3" required autocomplete="off" placeholder="What are you building? (e.g., Flutter app, Education ERP, custom Rust API)" class="form-input"></textarea>
+          </div>
+
+          <p id="bfError" class="form-error" role="alert" hidden></p>
+
+          <button type="submit" class="btn btn-carbon" style="width:100%;">Send Directly to Engineer</button>
+
+          <div class="modal-foot-row">
+            <span>Reply &lt; 4 business hrs</span>
+            <a id="modalWaDirect" href="#" target="_blank" rel="noopener noreferrer" class="modal-wa-link">
+              Or WhatsApp Engineer &rarr;
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <div id="briefConfirmWrap" class="modal-confirm" hidden>
+        <div class="confirm-check" aria-hidden="true">&#10003;</div>
+        <h4 style="margin:0;font-size:1.375rem;font-weight:700;">Sent directly to an engineer.</h4>
+        <p id="briefConfirmMsg" style="margin:10px auto 0;max-width:360px;color:rgba(17,17,17,0.75);"></p>
+        <div class="confirm-actions">
+          <button type="button" id="briefDoneBtn" class="btn btn-carbon">Done</button>
+          <a id="confirmWaBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light">
+            Open WhatsApp &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PRODUCTION VANILLA JS (ZERO EXTERNAL LIBS, ZERO INLINE HANDLERS)
+       ========================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* -----------------------------------------------------------------------
+         CONFIGURATION — REPLACE WITH YOUR LIVE BUSINESS WHATSAPP NUMBER
+         ----------------------------------------------------------------------- */
+      const CONFIG = {
+        WA_NUMBER: document.body.dataset.waNumber || '919846547132',
+        USD_RATE: 84,
+      };
+
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const canHover = window.matchMedia('(hover: hover)').matches;
+      let currentCurrency = 'INR';
+
+      function buildWaUrl(message) {
+        return `https://wa.me/${CONFIG.WA_NUMBER}?text=${encodeURIComponent(message)}`;
+      }
+
+      function formatMoney(inrAmount, prefix = '') {
+        if (currentCurrency === 'INR') {
+          return `${prefix}₹${Math.round(inrAmount).toLocaleString('en-IN')}`;
+        }
+        const usd = Math.max(10, Math.round(inrAmount / CONFIG.USD_RATE / 5) * 5);
+        return `${prefix}$${usd.toLocaleString('en-US')}`;
+      }
+
+      /* Wire Static WhatsApp Links Cleanly */
+      const defaultWaMsg = document.body.dataset.waMessage || 'Hi kinbo, I would like to talk directly to an engineer about a software project.';
+      document.getElementById('closingWaLink').href = buildWaUrl(defaultWaMsg);
+      document.getElementById('mobileBarWa').href = buildWaUrl(defaultWaMsg);
+
+      /* -----------------------------------------------------------------------
+         1. CSP-SAFE IMAGE FALLBACK HANDLERS (ZERO INLINE onerror)
+         ----------------------------------------------------------------------- */
+      document.querySelectorAll('.js-fallback-img').forEach((img) => {
+        const hideImg = () => img.classList.add('is-hidden');
+        img.addEventListener('error', hideImg);
+        if (img.complete && img.naturalWidth === 0) hideImg();
+      });
+
+      /* -----------------------------------------------------------------------
+         2. CPU-DISCIPLINED ORBITAL SUNRISE HERO CANVAS
+            Pauses automatically via IntersectionObserver & visibilitychange.
+            Renders 1 crisp static frame when prefers-reduced-motion is active.
+         ----------------------------------------------------------------------- */
+      const heroSection = document.getElementById('top');
+      const canvas = document.getElementById('orbitalCanvas');
+      const ctx = canvas ? canvas.getContext('2d') : null;
+      let W = 0, H = 0, t = 0;
+      let stars = [], cityLights = [];
+      let mouseY = 0, targetMouseY = 0;
+      let rafId = null;
+      let heroVisible = true;
+
+      function seedOrbitalScene() {
+        stars = [];
+        const starCount = Math.min(110, Math.floor((W * H) / 11500));
+        for (let i = 0; i < starCount; i++) {
+          stars.push({
+            x: Math.random() * W,
+            y: Math.random() * H * 0.66,
+            r: Math.random() * 1.1 + 0.25,
+            a: Math.random() * 0.45 + 0.12,
+            p: Math.random() * Math.PI * 2,
+          });
+        }
+
+        cityLights = [];
+        const clusters = [
+          { ang: -0.22, depth: 0.045 },
+          { ang: -0.13, depth: 0.072 },
+          { ang: -0.05, depth: 0.032 },
+          { ang:  0.04, depth: 0.052 },
+          { ang:  0.12, depth: 0.040 },
+          { ang:  0.20, depth: 0.068 },
+          { ang:  0.00, depth: 0.092 },
+        ];
+        clusters.forEach((c) => {
+          const n = 14 + Math.floor(Math.random() * 12);
+          for (let j = 0; j < n; j++) {
+            cityLights.push({
+              ang: c.ang + (Math.random() - 0.5) * 0.085,
+              depth: Math.max(0.012, c.depth + (Math.random() - 0.5) * 0.045),
+              r: Math.random() * 1.4 + 0.35,
+              a: Math.random() * 0.65 + 0.25,
+              p: Math.random() * Math.PI * 2,
+            });
+          }
+        });
+      }
+
+      function resizeCanvas() {
+        if (!canvas || !ctx) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const rect = canvas.getBoundingClientRect();
+        W = Math.max(1, rect.width);
+        H = Math.max(1, rect.height);
+        canvas.width = Math.floor(W * dpr);
+        canvas.height = Math.floor(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        seedOrbitalScene();
+        drawOrbitalFrame();
+      }
+
+      function drawOrbitalFrame() {
+        if (!ctx || W === 0 || H === 0) return;
+        mouseY += (targetMouseY - mouseY) * 0.06;
+        const breath = prefersReduced ? 1 : 1 + Math.sin(t * 0.72) * 0.055;
+
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, W, H);
+
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          const alpha = prefersReduced ? s.a : s.a * (0.7 + 0.3 * Math.sin(t * 1.6 + s.p));
+          ctx.fillStyle = `rgba(244, 243, 239, ${alpha.toFixed(3)})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y + mouseY * 0.15, s.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        const cx = W * 0.5;
+        const R = Math.max(W * 1.12, H * 1.35);
+        const crestY = H * 0.74 + mouseY * 0.45;
+        const cy = crestY + R;
+
+        ctx.save();
+        const outerGlow = ctx.createRadialGradient(cx, crestY, R * 0.01, cx, crestY, Math.max(W * 0.62, 340) * breath);
+        outerGlow.addColorStop(0.00, 'rgba(255, 253, 245, 0.94)');
+        outerGlow.addColorStop(0.11, 'rgba(255, 198, 92, 0.72)');
+        outerGlow.addColorStop(0.28, 'rgba(255, 132, 36, 0.42)');
+        outerGlow.addColorStop(0.54, 'rgba(217, 38, 28, 0.24)');
+        outerGlow.addColorStop(0.82, 'rgba(120, 18, 12, 0.06)');
+        outerGlow.addColorStop(1.00, 'rgba(5, 5, 5, 0)');
+        ctx.fillStyle = outerGlow;
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, R + 6, Math.PI * 1.25, Math.PI * 1.75);
+        ctx.strokeStyle = 'rgba(217, 38, 28, 0.36)';
+        ctx.lineWidth = 28 * breath;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, R + 2, Math.PI * 1.26, Math.PI * 1.74);
+        ctx.strokeStyle = 'rgba(255, 158, 44, 0.60)';
+        ctx.lineWidth = 10 * breath;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, Math.PI * 1.27, Math.PI * 1.73);
+        ctx.strokeStyle = 'rgba(255, 245, 214, 0.94)';
+        ctx.lineWidth = 2.4;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, R - 1, 0, Math.PI * 2);
+        ctx.fillStyle = '#050505';
+        ctx.fill();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, R - 1.5, 0, Math.PI * 2);
+        ctx.clip();
+
+        const innerBleed = ctx.createRadialGradient(cx, crestY - 12, 10, cx, crestY + 40, Math.max(W * 0.42, 240));
+        innerBleed.addColorStop(0, 'rgba(255, 158, 44, 0.28)');
+        innerBleed.addColorStop(0.45, 'rgba(217, 38, 28, 0.12)');
+        innerBleed.addColorStop(1, 'rgba(5, 5, 5, 0)');
+        ctx.fillStyle = innerBleed;
+        ctx.fillRect(0, crestY - 20, W, H - crestY + 40);
+
+        for (let i = 0; i < cityLights.length; i++) {
+          const cl = cityLights[i];
+          const rad = R * (1 - cl.depth);
+          const lx = cx + Math.sin(cl.ang) * rad;
+          const ly = cy - Math.cos(cl.ang) * rad;
+          if (ly > H + 10 || ly < crestY + 4) continue;
+          const fade = Math.max(0, 1 - (ly - crestY) / (H - crestY + 12));
+          const tw = cl.a * fade * (prefersReduced ? 0.85 : 0.72 + 0.28 * Math.sin(t * 2.1 + cl.p));
+          if (tw <= 0.02) continue;
+          if (cl.r > 1.15) {
+            ctx.fillStyle = `rgba(255, 178, 84, ${(tw * 0.28).toFixed(3)})`;
+            ctx.beginPath();
+            ctx.arc(lx, ly, cl.r * 3.1, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.fillStyle = `rgba(255, 226, 160, ${tw.toFixed(3)})`;
+          ctx.beginPath();
+          ctx.arc(lx, ly, cl.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+
+        ctx.globalCompositeOperation = 'screen';
+        const flareW = Math.min(W * 0.68, 680) * breath;
+        const flareGrad = ctx.createLinearGradient(cx - flareW / 2, crestY, cx + flareW / 2, crestY);
+        flareGrad.addColorStop(0.00, 'rgba(217, 38, 28, 0)');
+        flareGrad.addColorStop(0.24, 'rgba(255, 158, 44, 0.22)');
+        flareGrad.addColorStop(0.45, 'rgba(255, 232, 185, 0.72)');
+        flareGrad.addColorStop(0.50, 'rgba(255, 253, 245, 0.98)');
+        flareGrad.addColorStop(0.55, 'rgba(255, 232, 185, 0.72)');
+        flareGrad.addColorStop(0.76, 'rgba(255, 158, 44, 0.22)');
+        flareGrad.addColorStop(1.00, 'rgba(217, 38, 28, 0)');
+        ctx.fillStyle = flareGrad;
+        ctx.fillRect(cx - flareW / 2, crestY - 2.2, flareW, 4.4);
+
+        const coreR = Math.min(W * 0.085, 58) * breath;
+        const coreGrad = ctx.createRadialGradient(cx, crestY, 0, cx, crestY, coreR);
+        coreGrad.addColorStop(0.00, 'rgba(255, 253, 245, 1)');
+        coreGrad.addColorStop(0.26, 'rgba(255, 244, 210, 0.92)');
+        coreGrad.addColorStop(0.55, 'rgba(255, 168, 52, 0.45)');
+        coreGrad.addColorStop(1.00, 'rgba(217, 38, 28, 0)');
+        ctx.fillStyle = coreGrad;
+        ctx.beginPath();
+        ctx.arc(cx, crestY, coreR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        const bottomFade = ctx.createLinearGradient(0, H * 0.86, 0, H);
+        bottomFade.addColorStop(0, 'rgba(5, 5, 5, 0)');
+        bottomFade.addColorStop(1, 'rgba(5, 5, 5, 0.95)');
+        ctx.fillStyle = bottomFade;
+        ctx.fillRect(0, H * 0.86, W, H * 0.14);
+      }
+
+      function animateOrbital() {
+        if (prefersReduced || !heroVisible || document.hidden) {
+          rafId = null;
+          return;
+        }
+        t += 0.012;
+        drawOrbitalFrame();
+        rafId = requestAnimationFrame(animateOrbital);
+      }
+
+      function syncCanvasLoop() {
+        if (prefersReduced) return;
+        if (heroVisible && !document.hidden) {
+          if (rafId === null) rafId = requestAnimationFrame(animateOrbital);
+        } else if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      }
+
+      if ('IntersectionObserver' in window && heroSection) {
+        const heroObs = new IntersectionObserver((entries) => {
+          heroVisible = entries[0].isIntersecting;
+          syncCanvasLoop();
+        }, { threshold: 0.01 });
+        heroObs.observe(heroSection);
+      }
+
+      document.addEventListener('visibilitychange', syncCanvasLoop);
+      window.addEventListener('resize', resizeCanvas);
+      if (!prefersReduced && canHover) {
+        window.addEventListener('mousemove', (e) => {
+          if (!heroVisible) return;
+          targetMouseY = (e.clientY / Math.max(1, window.innerHeight) - 0.5) * 12;
+        }, { passive: true });
+      }
+
+      resizeCanvas();
+      syncCanvasLoop();
+
+      /* -----------------------------------------------------------------------
+         3. NAVBAR SCROLL STATE & ACCESSIBLE MOBILE DRAWER
+         ----------------------------------------------------------------------- */
+      const navIsland = document.getElementById('navIsland');
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+
+      window.addEventListener('scroll', () => {
+        navIsland.classList.toggle('is-scrolled', window.scrollY > 40);
+      }, { passive: true });
+
+      function setDrawerOpen(open) {
+        mobileDrawer.hidden = !open;
+        mobileMenuBtn.setAttribute('aria-expanded', String(open));
+      }
+
+      mobileMenuBtn.addEventListener('click', () => {
+        setDrawerOpen(mobileDrawer.hidden);
+      });
+
+      document.querySelectorAll('.mobile-link').forEach((el) => {
+        el.addEventListener('click', () => setDrawerOpen(false));
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !mobileDrawer.hidden) {
+          setDrawerOpen(false);
+          mobileMenuBtn.focus();
         }
       });
-    });
-  }
 
-  // Handle first load and navigation
-  document.addEventListener("astro:page-load", initHome);
-</script>
+      /* -----------------------------------------------------------------------
+         4. 5-COLUMN INTERACTIVE SERVICES EXPLORER
+         ----------------------------------------------------------------------- */
+      function techSvg(kind) {
+        const shapes = {
+          flutter: '<polygon points="38,14 52,14 30,36 23,29" fill="#F4F3EF"/><polygon points="38,32 52,32 39,45 52,54 38,54 25,41" fill="#D9261C"/>',
+          kotlin: '<polygon points="18,16 54,16 36,34 54,52 18,52" fill="#F4F3EF"/><polygon points="18,16 36,34 18,52" fill="#D9261C"/>',
+          next: '<rect x="16" y="16" width="40" height="36" fill="none" stroke="#F4F3EF" stroke-width="1.8"/><path d="M25 44V24L47 44V24" fill="none" stroke="#D9261C" stroke-width="2.4"/>',
+          fastapi: '<polygon points="39,14 22,38 35,38 32,54 50,30 37,30" fill="#D9261C"/>',
+          db: '<ellipse cx="36" cy="22" rx="16" ry="6" fill="none" stroke="#F4F3EF" stroke-width="1.8"/><path d="M20 22V46C20 50 52 50 52 46V22" fill="none" stroke="#F4F3EF" stroke-width="1.8"/><path d="M20 34C20 38 52 38 52 34" fill="none" stroke="#D9261C" stroke-width="1.8"/>',
+          py: '<rect x="20" y="18" width="16" height="16" rx="3" fill="#F4F3EF"/><rect x="36" y="34" width="16" height="16" rx="3" fill="#D9261C"/>',
+          rust: '<circle cx="36" cy="34" r="16" fill="none" stroke="#F4F3EF" stroke-width="2.4" stroke-dasharray="6 3"/><circle cx="36" cy="34" r="6" fill="#D9261C"/>',
+          cv: '<rect x="16" y="18" width="40" height="32" fill="none" stroke="#F4F3EF" stroke-width="1.6"/><circle cx="36" cy="34" r="8" fill="none" stroke="#D9261C" stroke-width="2"/><circle cx="36" cy="34" r="2.5" fill="#F4F3EF"/>',
+          llm: '<circle cx="22" cy="24" r="4" fill="#F4F3EF"/><circle cx="22" cy="44" r="4" fill="#F4F3EF"/><circle cx="50" cy="34" r="5" fill="#D9261C"/><line x1="26" y1="24" x2="45" y2="34" stroke="#F4F3EF" stroke-width="1.5"/><line x1="26" y1="44" x2="45" y2="34" stroke="#F4F3EF" stroke-width="1.5"/>',
+          dash: '<rect x="18" y="36" width="8" height="14" fill="#F4F3EF"/><rect x="32" y="26" width="8" height="24" fill="#D9261C"/><rect x="46" y="18" width="8" height="32" fill="#F4F3EF"/>',
+        };
+        return `<svg viewBox="0 0 72 68" class="svc-thumb" aria-hidden="true"><rect width="72" height="68" fill="#111111"/>${shapes[kind] || shapes.dash}</svg>`;
+      }
+
+      const disciplinesList = [
+        { title: 'Education', desc: 'Schools, colleges, study tools & institutional ERPs.' },
+        { title: 'Healthcare', desc: 'Clinics, patient records, scheduling & diagnostics.' },
+        { title: 'Retail & E-Commerce', desc: 'Storefronts, inventory, POS & order workflows.' },
+        { title: 'Manufacturing & Logistics', desc: 'Shop-floor ERPs, fleet telemetry & CV inspection.' },
+      ];
+
+      const servicesData = {
+        apps: {
+          label: '01 / APPS',
+          tech: [
+            { title: 'Flutter', desc: 'Cross-platform iOS & Android.', icon: 'flutter', prefill: 'Flutter App (~₹31,000)' },
+            { title: 'Kotlin', desc: 'Native Android architecture.', icon: 'kotlin', prefill: 'Kotlin Native App (~₹39,000)' },
+            { title: 'PostgreSQL / SQLite', desc: 'Offline-first mobile storage.', icon: 'db', prefill: 'Offline-First Mobile App' },
+            { title: 'FastAPI Backend', desc: 'Low-latency mobile APIs.', icon: 'fastapi', prefill: 'Mobile App + FastAPI Backend' },
+          ],
+        },
+        websites: {
+          label: '02 / WEBSITES',
+          tech: [
+            { title: 'React / Next.js', desc: 'SEO-first web platforms.', icon: 'next', prefill: 'React / Next.js Brand Website' },
+            { title: 'Custom CMS & Roles', desc: 'Admin panels & editorial roles.', icon: 'dash', prefill: 'Custom Roles, CMS & SEO (~₹39,000)' },
+            { title: 'PostgreSQL', desc: 'High-integrity commerce DB.', icon: 'db', prefill: 'Industry-Grade E-Commerce (~₹59,000)' },
+            { title: 'FastAPI / Python', desc: 'Clean backend & analytics.', icon: 'fastapi', prefill: 'Portfolio with Backend (~₹12,000)' },
+          ],
+        },
+        erp: {
+          label: '03 / ERP',
+          tech: [
+            { title: 'PostgreSQL', desc: 'ACID financial & ledger core.', icon: 'db', prefill: 'Business ERP (From ₹39,000)' },
+            { title: 'Python / FastAPI', desc: 'Modular ERP microservices.', icon: 'py', prefill: 'Education ERP (From ₹35,000)' },
+            { title: 'React / Next.js', desc: 'Role-based staff & admin UI.', icon: 'next', prefill: 'Custom Role-Based ERP' },
+            { title: 'Live Dashboards', desc: 'Real-time operational reporting.', icon: 'dash', prefill: 'ERP + Analytics Dashboard' },
+          ],
+        },
+        ai: {
+          label: '04 / AI & AUTOMATION',
+          tech: [
+            { title: 'LLM / AI Integration', desc: 'Chatbots, RAG & workflows.', icon: 'llm', prefill: 'AI Integration (From ₹3,000)' },
+            { title: 'Custom AI Training', desc: 'Model fine-tuning & evaluation.', icon: 'py', prefill: 'AI Model Training (From ₹23,000)' },
+            { title: 'OpenCV / Vision', desc: 'Real-time inspection & OCR.', icon: 'cv', prefill: 'Computer Vision Pipeline' },
+            { title: 'FastAPI Inference', desc: 'Production model serving.', icon: 'fastapi', prefill: 'AI Inference & Automation API' },
+          ],
+        },
+        custom: {
+          label: '05 / CUSTOM SYSTEMS',
+          tech: [
+            { title: 'Python', desc: 'Data pipelines & scientific systems.', icon: 'py', prefill: 'Custom Python Engineering' },
+            { title: 'Rust', desc: 'Memory-safe core infrastructure.', icon: 'rust', prefill: 'Custom Rust Backend / System' },
+            { title: 'OpenCV / Vision', desc: 'Camera analytics & automation.', icon: 'cv', prefill: 'Custom Computer Vision R&D' },
+            { title: 'Data Dashboards', desc: 'Bespoke BI & telemetry generation.', icon: 'dash', prefill: 'Custom Data Analytics Dashboard' },
+          ],
+        },
+      };
+
+      const serviceSubPanel = document.getElementById('serviceSubPanel');
+      const svcTriggers = document.querySelectorAll('.svc-trigger');
+      let svcHoverTimer = null;
+
+      function renderServicePanel(catKey, trackKey) {
+        const entry = servicesData[catKey];
+        svcTriggers.forEach((btn) => {
+          const active = btn.dataset.cat === catKey && btn.dataset.track === trackKey;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-pressed', String(active));
+        });
+
+        if (trackKey === 'tech') {
+          serviceSubPanel.innerHTML = `
+            <span class="mono-label mono-accent-light">${entry.label} &mdash; TECHNOLOGY</span>
+            <div class="svc-cards-grid">
+              ${entry.tech.map((item) => `
+                <button type="button" class="svc-item-btn" data-prefill="${item.prefill}">
+                  ${techSvg(item.icon)}
+                  <div>
+                    <div class="svc-item-title">${item.title}</div>
+                    <p class="svc-item-desc">${item.desc}</p>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          `;
+        } else {
+          serviceSubPanel.innerHTML = `
+            <span class="mono-label mono-accent-light">${entry.label} &mdash; DISCIPLINES</span>
+            <div class="svc-cards-grid">
+              ${disciplinesList.map((d) => `
+                <button type="button" class="svc-item-btn" data-prefill="${entry.label} for ${d.title}">
+                  <div>
+                    <div class="svc-item-title">${d.title}</div>
+                    <p class="svc-item-desc">${d.desc}</p>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        serviceSubPanel.querySelectorAll('.svc-item-btn').forEach((card) => {
+          card.addEventListener('click', () => openBriefModal(card.dataset.prefill, card));
+        });
+      }
+
+      svcTriggers.forEach((btn) => {
+        if (canHover) {
+          btn.addEventListener('mouseenter', () => {
+            clearTimeout(svcHoverTimer);
+            svcHoverTimer = setTimeout(() => renderServicePanel(btn.dataset.cat, btn.dataset.track), 65);
+          });
+          btn.addEventListener('mouseleave', () => clearTimeout(svcHoverTimer));
+        }
+        btn.addEventListener('click', () => {
+          clearTimeout(svcHoverTimer);
+          renderServicePanel(btn.dataset.cat, btn.dataset.track);
+        });
+      });
+
+      document.querySelectorAll('[data-jump-cat]').forEach((a) => {
+        a.addEventListener('click', () => renderServicePanel(a.dataset.jumpCat, 'tech'));
+      });
+
+      renderServicePanel('apps', 'tech');
+
+      /* -----------------------------------------------------------------------
+         5. 5-TAB RATE CARD ISLAND & 3-CLICK SCOPE ESTIMATOR (IN-PLACE OPTIONS)
+         ----------------------------------------------------------------------- */
+      const rateCatalog = {
+        portfolio: {
+          title: 'Portfolio Websites',
+          subtitle: '3 pages with copyright. Hosting billed separately.',
+          items: [
+            { name: 'Basic Static', desc: '3-page portfolio without backend.', inr: 7000, prefix: '' },
+            { name: 'Standard with Backend', desc: '3-page portfolio with backend handling.', inr: 12000, prefix: '' },
+            { name: 'Pro Suite', desc: 'Chatbot, CMS, analytics, custom listing & layout.', inr: 19000, prefix: '', accent: true },
+          ],
+        },
+        brand: {
+          title: 'Brand & E-Commerce',
+          subtitle: 'Built for speed, clean management, and real conversion.',
+          items: [
+            { name: 'Brand Starter Static', desc: 'Static brand website.', inr: 15000, prefix: '' },
+            { name: 'CMS & Admin', desc: 'Dynamic brand website with admin panel.', inr: 25000, prefix: '' },
+            { name: 'Custom Roles + CMS + SEO', desc: 'Role-based access, CMS & technical SEO.', inr: 39000, prefix: '' },
+            { name: 'Industry-Grade E-Com', desc: 'Full storefront, inventory, checkout & order suite.', inr: 59000, prefix: '', accent: true },
+          ],
+        },
+        apps: {
+          title: 'Mobile Apps & Combos',
+          subtitle: 'Flutter cross-platform, native Kotlin & bundled combos.',
+          items: [
+            { name: 'Flutter App', desc: 'Cross-platform iOS & Android app.', inr: 31000, prefix: '' },
+            { name: 'Kotlin Native App', desc: 'Native Android application.', inr: 39000, prefix: '' },
+            { name: 'App Combo', desc: 'Bundled multi-platform / web + app package.', inr: 69000, prefix: '' },
+            { name: 'Industry E-Com + Flutter Combo', desc: 'Full industry e-commerce + Flutter mobile app.', inr: 91000, prefix: '', accent: true },
+          ],
+        },
+        erp: {
+          title: 'ERP Systems',
+          subtitle: 'Modular, role-based software for institutions and businesses.',
+          items: [
+            { name: 'Education ERP', desc: 'Schools, colleges, fees, attendance & portals.', inr: 35000, prefix: 'From ' },
+            { name: 'Business ERP', desc: 'Operations, billing, inventory & staff workflows.', inr: 39000, prefix: 'From ' },
+          ],
+        },
+        ai: {
+          title: 'AI, Data & Custom Systems',
+          subtitle: 'Direct-to-engineer R&D, model training, analytics & systems.',
+          items: [
+            { name: 'AI Integration', desc: 'API, chatbot, or workflow integration.', inr: 3000, prefix: 'From ' },
+            { name: 'AI Model Training', desc: 'Custom model training & fine-tuning.', inr: 23000, prefix: 'From ', subtag: 'Contact Team', accent: true },
+            { name: 'Custom Data Analytics & Dashboards', desc: 'Bespoke BI & live telemetry generation.', inr: null, fallback: 'Contact Team' },
+            { name: 'Python, Rust, Computer Vision & Custom R&D', desc: 'Systems engineering, CV pipelines & custom R&D.', inr: null, fallback: 'Contact Team' },
+          ],
+        },
+      };
+
+      let activeRateTab = 'brand';
+      let estCat = 'brand';
+      let estTierIdx = 1;
+      let estPace = 'standard';
+
+      const rateTabs = document.querySelectorAll('[data-rate-tab]');
+      const rateTabPanel = document.getElementById('rateTabPanel');
+
+      function renderRateTab() {
+        const cat = rateCatalog[activeRateTab];
+        rateTabs.forEach((tab) => {
+          const active = tab.dataset.rateTab === activeRateTab;
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', String(active));
+        });
+
+        rateTabPanel.innerHTML = `
+          <div class="rate-panel-head">
+            <h3>${cat.title}</h3>
+            <p>${cat.subtitle}</p>
+          </div>
+          <div class="rate-list">
+            ${cat.items.map((item) => {
+              const priceText = item.inr ? formatMoney(item.inr, item.prefix || '') : item.fallback;
+              const prefill = `${cat.title} — ${item.name} (${priceText})`;
+              return `
+                <button type="button" class="rate-row" data-prefill="${prefill}">
+                  <div>
+                    <div class="rate-name">${item.name}</div>
+                    <div class="rate-desc">${item.desc}</div>
+                  </div>
+                  <div class="rate-price-col">
+                    <div class="rate-price tabular ${item.accent ? 'is-accent' : ''}">${priceText}</div>
+                    ${item.subtag ? `<div class="rate-subtag">${item.subtag}</div>` : ''}
+                  </div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+
+        rateTabPanel.querySelectorAll('.rate-row').forEach((row) => {
+          row.addEventListener('click', () => openBriefModal(row.dataset.prefill, row));
+        });
+      }
+
+      rateTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          activeRateTab = tab.dataset.rateTab;
+          renderRateTab();
+        });
+      });
+
+      /* 3-Click Scope Estimator: Updates <option> textContent IN PLACE on currency toggle */
+      const estCatSelect = document.getElementById('estCatSelect');
+      const estTierSelect = document.getElementById('estTierSelect');
+      const paceBtns = document.querySelectorAll('.pace-btn');
+      const estPriceOut = document.getElementById('estPriceOut');
+      const estMilestoneGrid = document.getElementById('estMilestoneGrid');
+      const estM1 = document.getElementById('estM1');
+      const estM2 = document.getElementById('estM2');
+      const estM3 = document.getElementById('estM3');
+      const estBriefBtn = document.getElementById('estBriefBtn');
+      const estWaBtn = document.getElementById('estWaBtn');
+
+      let currentEstSummary = '';
+
+      function rebuildEstTierOptions() {
+        const items = rateCatalog[estCat].items;
+        estTierSelect.textContent = '';
+        items.forEach((item, idx) => {
+          const opt = document.createElement('option');
+          opt.value = String(idx);
+          const p = item.inr ? formatMoney(item.inr, item.prefix || '') : item.fallback;
+          opt.textContent = `${item.name} — ${p}`;
+          estTierSelect.appendChild(opt);
+        });
+        if (estTierIdx >= items.length) estTierIdx = 0;
+        estTierSelect.value = String(estTierIdx);
+      }
+
+      function updateEstTierOptionLabelsInPlace() {
+        const items = rateCatalog[estCat].items;
+        const opts = estTierSelect.options;
+        for (let i = 0; i < opts.length && i < items.length; i++) {
+          const item = items[i];
+          const p = item.inr ? formatMoney(item.inr, item.prefix || '') : item.fallback;
+          opts[i].textContent = `${item.name} — ${p}`;
+        }
+      }
+
+      function updateEstOutput() {
+        const catObj = rateCatalog[estCat];
+        const tier = catObj.items[estTierIdx];
+
+        paceBtns.forEach((b) => {
+          const active = b.dataset.pace === estPace;
+          b.classList.toggle('is-active', active);
+          b.setAttribute('aria-pressed', String(active));
+        });
+
+        if (tier.inr) {
+          const mult = estPace === 'priority' ? 1.15 : 1;
+          const totalInr = Math.round((tier.inr * mult) / 100) * 100;
+          const formatted = formatMoney(totalInr, tier.prefix || '');
+          estPriceOut.textContent = formatted;
+          estMilestoneGrid.hidden = false;
+          estM1.textContent = formatMoney(totalInr * 0.30);
+          estM2.textContent = formatMoney(totalInr * 0.40);
+          estM3.textContent = formatMoney(totalInr * 0.30);
+          currentEstSummary = `${catObj.title} — ${tier.name} (${estPace === 'priority' ? 'Priority +15%' : 'Standard'}) | Est. ${formatted}`;
+        } else {
+          estPriceOut.textContent = 'Contact Team';
+          estMilestoneGrid.hidden = true;
+          currentEstSummary = `${catObj.title} — ${tier.name} (Custom Engineering Proposal)`;
+        }
+
+        estWaBtn.href = buildWaUrl(`Hi kinbo, I'd like to talk to an engineer about: ${currentEstSummary}`);
+      }
+
+      estCatSelect.addEventListener('change', (e) => {
+        estCat = e.target.value;
+        estTierIdx = 0;
+        rebuildEstTierOptions();
+        updateEstOutput();
+      });
+
+      estTierSelect.addEventListener('change', (e) => {
+        estTierIdx = Number(e.target.value);
+        updateEstOutput();
+      });
+
+      paceBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          estPace = btn.dataset.pace;
+          updateEstOutput();
+        });
+      });
+
+      estBriefBtn.addEventListener('click', () => openBriefModal(currentEstSummary, estBriefBtn));
+
+      /* Global Currency Toggle */
+      const currBtns = document.querySelectorAll('.curr-btn');
+      currBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          currentCurrency = btn.dataset.currency;
+          currBtns.forEach((b) => {
+            const active = b.dataset.currency === currentCurrency;
+            b.classList.toggle('is-active', active);
+            b.setAttribute('aria-pressed', String(active));
+          });
+          renderRateTab();
+          updateEstTierOptionLabelsInPlace(); /* Preserves focus & selection */
+          updateEstOutput();
+        });
+      });
+
+      renderRateTab();
+      rebuildEstTierOptions();
+      updateEstOutput();
+
+      /* -----------------------------------------------------------------------
+         6. ACCESSIBLE FAQ ACCORDION
+         ----------------------------------------------------------------------- */
+      document.querySelectorAll('.faq-trigger').forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          const item = trigger.closest('.faq-item');
+          const isOpen = item.getAttribute('data-open') === 'true';
+          item.setAttribute('data-open', String(!isOpen));
+          trigger.setAttribute('aria-expanded', String(!isOpen));
+        });
+      });
+
+      /* -----------------------------------------------------------------------
+         7. DIRECT-TO-ENGINEER MODAL WITH FULL FOCUS TRAP & FOCUS RESTORATION
+         ----------------------------------------------------------------------- */
+      const briefBackdrop = document.getElementById('briefBackdrop');
+      const briefModal = document.getElementById('briefModal');
+      const briefCloseBtn = document.getElementById('briefCloseBtn');
+      const briefFormWrap = document.getElementById('briefFormWrap');
+      const briefConfirmWrap = document.getElementById('briefConfirmWrap');
+      const projectBriefForm = document.getElementById('projectBriefForm');
+      const bfName = document.getElementById('bfName');
+      const bfContact = document.getElementById('bfContact');
+      const bfGoal = document.getElementById('bfGoal');
+      const bfError = document.getElementById('bfError');
+      const modalWaDirect = document.getElementById('modalWaDirect');
+      const briefConfirmMsg = document.getElementById('briefConfirmMsg');
+      const confirmWaBtn = document.getElementById('confirmWaBtn');
+      const briefDoneBtn = document.getElementById('briefDoneBtn');
+
+      let lastFocusedEl = null;
+
+      function syncModalWa() {
+        const g = bfGoal.value.trim() || 'a custom software project';
+        modalWaDirect.href = buildWaUrl(`Hi kinbo, I'd like to talk to an engineer about: ${g}`);
+      }
+      bfGoal.addEventListener('input', syncModalWa);
+
+      function getFocusableInModal() {
+        return Array.from(briefModal.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )).filter((el) => el.offsetParent !== null);
+      }
+
+      function openBriefModal(prefill = '', triggerEl = null) {
+        lastFocusedEl = triggerEl || document.activeElement;
+        briefFormWrap.hidden = false;
+        briefConfirmWrap.hidden = true;
+        bfError.hidden = true;
+        if (prefill) bfGoal.value = prefill;
+        syncModalWa();
+
+        briefBackdrop.hidden = false;
+        requestAnimationFrame(() => {
+          briefBackdrop.classList.add('is-open');
+          bfName.focus();
+        });
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeBriefModal() {
+        briefBackdrop.classList.remove('is-open');
+        document.body.style.overflow = '';
+        setTimeout(() => {
+          briefBackdrop.hidden = true;
+          if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
+            lastFocusedEl.focus();
+          }
+        }, 200);
+      }
+
+      document.querySelectorAll('[data-open-brief]').forEach((btn) => {
+        btn.addEventListener('click', () => openBriefModal(btn.dataset.prefill || '', btn));
+      });
+
+      projectBriefForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = bfName.value.trim();
+        const contact = bfContact.value.trim();
+        const goal = bfGoal.value.trim();
+        const hpInput = document.getElementById('bfCompany');
+        const hpVal = hpInput ? hpInput.value.trim() : '';
+
+        if (!name || !contact || !goal) {
+          bfError.textContent = 'Please fill all 3 fields so an engineer can respond accurately.';
+          bfError.hidden = false;
+          return;
+        }
+
+        const submitBtn = projectBriefForm.querySelector('button[type="submit"]');
+        const origBtnText = submitBtn ? submitBtn.textContent : '';
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Transmitting to Engineer...';
+        }
+
+        try {
+          const res = await fetch('/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              contact,
+              goal,
+              form_type: 'Direct-to-Engineer Brief',
+              source: 'homepage-brief-modal',
+              _hp_company: hpVal
+            })
+          });
+
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok && !data.success) {
+            throw new Error(data.error || 'Server error. Please retry or contact via WhatsApp.');
+          }
+
+          bfError.hidden = true;
+          briefConfirmMsg.textContent = `Thank you, ${name}. Your brief has been transmitted directly to our engineering team. An engineer will reply directly to ${contact} within 4 business hours.`;
+          confirmWaBtn.href = buildWaUrl(`Hi kinbo, I'm ${name} (${contact}). Project brief: ${goal}`);
+          briefFormWrap.hidden = true;
+          briefConfirmWrap.hidden = false;
+          projectBriefForm.reset();
+          briefDoneBtn.focus();
+        } catch (err) {
+          console.error('Lead submission error:', err);
+          bfError.textContent = err.message || 'Transmission failed. Please retry or message an engineer on WhatsApp directly.';
+          bfError.hidden = false;
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = origBtnText;
+          }
+        }
+      });
+
+      briefCloseBtn.addEventListener('click', closeBriefModal);
+      briefDoneBtn.addEventListener('click', closeBriefModal);
+      briefBackdrop.addEventListener('click', (e) => {
+        if (e.target === briefBackdrop) closeBriefModal();
+      });
+
+      /* Keyboard Focus Trap + Escape Handling */
+      document.addEventListener('keydown', (e) => {
+        if (briefBackdrop.hidden) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeBriefModal();
+          return;
+        }
+        if (e.key === 'Tab') {
+          const focusables = getFocusableInModal();
+          if (focusables.length === 0) return;
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

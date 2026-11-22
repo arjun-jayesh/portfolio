@@ -2,17 +2,35 @@
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
 import AdminInterface from "../components/AdminInterface";
+import {
+  createAdminSessionToken,
+  verifyAdminSessionToken,
+  hmacSignHex,
+  timingSafeEqualHex,
+} from "../lib/auth";
 
-const adminPassword = import.meta.env.ADMIN_PASSWORD || "local";
-let isAuthenticated = Astro.cookies.has("admin_session");
+const adminPassword =
+  import.meta.env.ADMIN_PASSWORD ||
+  (typeof process !== "undefined" ? process.env.ADMIN_PASSWORD : "") ||
+  "local";
+
+const existingToken = Astro.cookies.get("admin_session")?.value;
+let isAuthenticated = await verifyAdminSessionToken(existingToken);
 let error = "";
 
 if (Astro.request.method === "POST") {
   const data = await Astro.request.formData();
-  const password = data.get("password");
-  
-  if (password === adminPassword) {
-    Astro.cookies.set("admin_session", "true", {
+  const submittedPassword = String(data.get("password") ?? "");
+
+  // Constant-time password comparison via HMAC digest
+  const [submittedHash, expectedHash] = await Promise.all([
+    hmacSignHex("kinbo_login_cmp", submittedPassword),
+    hmacSignHex("kinbo_login_cmp", adminPassword),
+  ]);
+
+  if (timingSafeEqualHex(submittedHash, expectedHash)) {
+    const signedToken = await createAdminSessionToken();
+    Astro.cookies.set("admin_session", signedToken, {
       path: "/",
       httpOnly: true,
       secure: import.meta.env.PROD,
@@ -26,48 +44,56 @@ if (Astro.request.method === "POST") {
 }
 ---
 
-<Layout title="Admin Panel — Arjun Jayesh" hideHeaderFooter={true}>
-    {isAuthenticated ? (
+<Layout title="Command Center — KINBO Admin Portal" hideHeaderFooter={true}>
+  {isAuthenticated ? (
+    <div class="pt-16 pb-24 px-4 sm:px-8 max-w-7xl mx-auto">
       <AdminInterface client:only="preact" />
-    ) : (
-      <section class="section-padding mt-16 max-w-6xl mx-auto min-h-[600px]">
-        <div class="mb-12">
-          <h1 class="font-poppins text-4xl font-bold text-offwhite mb-4 uppercase tracking-[0.2em]">
-            <span class="text-teal">/</span> Command Center
-          </h1>
-          <p class="font-lora text-muted max-w-2xl">
-            Manage site settings, blog content, and system parameters from a secure administrative interface.
-          </p>
+    </div>
+  ) : (
+    <div class="min-h-screen flex items-center justify-center p-4 bg-[#050505]">
+      <div class="w-full max-w-md p-8 bg-[#111111] border border-[rgba(244,243,239,0.16)] rounded-[8px] shadow-2xl relative">
+        <div class="font-mono text-xs text-[#FF5A52] uppercase mb-1">
+          00 // ROOT AUTHENTICATION
         </div>
-        
-        <div class="max-w-md mx-auto mt-20 p-8 bg-charcoal-light/10 border border-charcoal-light/30 rounded-xl relative overflow-hidden">
-          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-teal to-transparent"></div>
-          <h2 class="font-poppins text-2xl font-semibold text-offwhite mb-6 text-center">Authentication Required</h2>
-        
+        <h1 class="text-2xl font-bold text-white tracking-tight mb-2">
+          Systems Command Center
+        </h1>
+        <p class="text-xs text-[rgba(244,243,239,0.7)] mb-6">
+          Authenticated administrative access for site configuration, redirects, and content registries.
+        </p>
+
         {error && (
-          <div class="mb-6 p-3 bg-red-500/10 border border-red-500/30 text-red-400 font-mono text-xs rounded text-center">
+          <div class="mb-4 p-3 bg-[#D9261C]/15 border border-[#D9261C] text-[#FF5A52] font-mono text-xs rounded-[4px] text-center">
             {error}
           </div>
         )}
 
-        <form method="POST" data-astro-reload class="flex flex-col gap-4">
+        <form method="POST" data-astro-reload class="space-y-4">
           <div>
-            <label for="password" class="block font-mono text-xs text-muted mb-2 uppercase tracking-widest">Master Key</label>
-            <input 
-              type="password" 
-              id="password" 
-              name="password" 
+            <label for="password" class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1.5">
+              Master Connection Key
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
               autocomplete="current-password"
-              class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-3 text-offwhite font-mono focus:outline-none focus:border-teal transition-colors"
-              placeholder="••••••••"
+              class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3.5 py-2.5 text-sm text-[#F4F3EF] font-mono focus:border-[#FF5A52] focus:outline-none"
+              placeholder="••••••••••••"
               required
             />
           </div>
-          <button type="submit" class="mt-4 w-full py-3 bg-teal/10 border border-teal/30 hover:bg-teal hover:text-charcoal text-teal font-mono tracking-widest uppercase transition-all duration-300 rounded font-bold">
-            [ Establish Connection ]
-          </button>
+
+          <div class="pt-2">
+            <button
+              type="submit"
+              class="w-full touch-target bg-[#D9261C] hover:bg-[#B81D14] text-white font-mono text-xs font-semibold uppercase tracking-wider rounded-[4px] px-4 py-3 transition-colors"
+            >
+              [ Establish Authenticated Session ]
+            </button>
+          </div>
         </form>
       </div>
-      </section>
-    )}
+    </div>
+  )}
 </Layout>

@@ -41,7 +41,7 @@ function ClicksImpressionsChart({ data }: { data: any[] }) {
     <div class="relative w-full h-full">
       <div class="flex justify-end gap-4 mb-4 text-[10px] font-mono tracking-wider">
         <div class="flex items-center gap-1.5">
-          <span class="w-3 h-1.5 rounded bg-teal inline-block"></span>
+          <span class="w-3 h-1.5 rounded bg-[#D9261C] inline-block"></span>
           <span class="text-offwhite/85">CLICKS</span>
         </div>
         <div class="flex items-center gap-1.5">
@@ -143,8 +143,8 @@ function ClicksImpressionsChart({ data }: { data: any[] }) {
           }}
         >
           <div class="text-muted border-b border-white/5 pb-1 font-bold">{points[hoverIdx].data.date}</div>
-          <div class="flex items-center gap-1.5 text-teal">
-            <span class="w-1.5 h-1.5 rounded-full bg-teal"></span>
+          <div class="flex items-center gap-1.5 text-[#FF5A52]">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#D9261C]"></span>
             <span class="font-bold">Clicks:</span>
             <span>{points[hoverIdx].data.clicks.toLocaleString()}</span>
           </div>
@@ -311,7 +311,7 @@ export default function SeoDashboard() {
 
   if (loading) {
     return (
-      <div class="flex items-center justify-center h-64 text-teal font-mono text-sm tracking-widest gap-3">
+      <div class="flex items-center justify-center h-64 text-[#FF5A52] font-mono text-sm tracking-widest gap-3">
         <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
         CONNECTING TO SEARCH CONSOLE...
       </div>
@@ -335,8 +335,8 @@ export default function SeoDashboard() {
     <div class="space-y-8 animate-fadeIn">
       <div class="flex justify-between items-end">
         <div>
-          <h2 class="font-poppins text-2xl font-bold text-offwhite uppercase tracking-wider">Search Console Analytics</h2>
-          <p class="font-mono text-[10px] text-teal mt-1 uppercase tracking-widest">Last 30 Days Performance</p>
+          <h2 class="font-sans text-2xl font-bold text-offwhite uppercase tracking-wider">Search Console Analytics</h2>
+          <p class="font-mono text-[10px] text-[#FF5A52] mt-1 uppercase tracking-widest">Last 30 Days Performance</p>
         </div>
         <div class="flex gap-2">
           <span class="bg-charcoal-light/30 px-3 py-1 rounded text-[10px] font-mono text-muted border border-charcoal-light/50">dear.is-a.dev</span>
@@ -354,14 +354,14 @@ export default function SeoDashboard() {
       {/* Main Charts */}
       <div class="grid md:grid-cols-2 gap-6">
         <div class="bg-charcoal-light/10 border border-charcoal-light/30 p-6 rounded-xl">
-          <h3 class="font-poppins text-xs font-bold text-offwhite uppercase tracking-widest mb-6">Clicks & Impressions</h3>
+          <h3 class="font-sans text-xs font-bold text-offwhite uppercase tracking-widest mb-6">Clicks & Impressions</h3>
           <div class="h-64 flex items-center justify-center">
             <ClicksImpressionsChart data={overviewData} />
           </div>
         </div>
 
         <div class="bg-charcoal-light/10 border border-charcoal-light/30 p-6 rounded-xl">
-          <h3 class="font-poppins text-xs font-bold text-offwhite uppercase tracking-widest mb-6">Average Position</h3>
+          <h3 class="font-sans text-xs font-bold text-offwhite uppercase tracking-widest mb-6">Average Position</h3>
           <div class="h-64 flex items-center justify-center">
             <AvgPositionChart data={overviewData} />
           </div>
@@ -369,11 +369,11 @@ export default function SeoDashboard() {
       </div>
 
       {/* AI Discoverability Panel */}
-      <div class="bg-gradient-to-br from-teal/10 to-charcoal-light/10 border border-teal/20 p-6 rounded-xl relative overflow-hidden">
+      <div class="bg-gradient-to-br from-[#D9261C]/10 to-charcoal-light/10 border border-[#D9261C]/20 p-6 rounded-xl relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-10">
            <svg class="w-32 h-32" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
         </div>
-        <h3 class="font-poppins text-sm font-bold text-teal uppercase tracking-widest mb-2 flex items-center gap-2">
+        <h3 class="font-sans text-sm font-bold text-[#FF5A52] uppercase tracking-widest mb-2 flex items-center gap-2">
            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
            AI Discoverability & SEO Insights
         </h3>
@@ -382,18 +382,18 @@ export default function SeoDashboard() {
         <div class="grid md:grid-cols-3 gap-4">
             <div class="bg-charcoal-dark/50 p-4 rounded-lg border border-charcoal-light/30">
                 <div class="text-[10px] text-muted font-mono uppercase tracking-widest mb-1">Entity Mentions</div>
-                <div class="text-lg text-offwhite font-poppins">High Coverage</div>
-                <div class="text-[10px] text-teal mt-2">"Kinbo Technologies" is well-recognized</div>
+                <div class="text-lg text-offwhite font-sans">High Coverage</div>
+                <div class="text-[10px] text-[#FF5A52] mt-2">"Kinbo Technologies" is well-recognized</div>
             </div>
             <div class="bg-charcoal-dark/50 p-4 rounded-lg border border-charcoal-light/30">
                 <div class="text-[10px] text-muted font-mono uppercase tracking-widest mb-1">Structured Data</div>
-                <div class="text-lg text-offwhite font-poppins">Optimized</div>
-                <div class="text-[10px] text-teal mt-2">JSON-LD active on main pages</div>
+                <div class="text-lg text-offwhite font-sans">Optimized</div>
+                <div class="text-[10px] text-[#FF5A52] mt-2">JSON-LD active on main pages</div>
             </div>
             <div class="bg-charcoal-dark/50 p-4 rounded-lg border border-charcoal-light/30">
                 <div class="text-[10px] text-muted font-mono uppercase tracking-widest mb-1">Semantic Clusters</div>
-                <div class="text-lg text-offwhite font-poppins">3 Growing</div>
-                <div class="text-[10px] text-teal mt-2">"Astro SSR", "Healthcare AI", "Showcase"</div>
+                <div class="text-lg text-offwhite font-sans">3 Growing</div>
+                <div class="text-[10px] text-[#FF5A52] mt-2">"Astro SSR", "Healthcare AI", "Showcase"</div>
             </div>
         </div>
       </div>
@@ -409,7 +409,7 @@ export default function SeoDashboard() {
 
 function KpiCard({ title, value, icon, color }: any) {
   const colors: Record<string, string> = {
-    teal: "text-teal bg-teal/10",
+    teal: "text-[#FF5A52] bg-[#D9261C]/10",
     blue: "text-blue-400 bg-blue-400/10",
     purple: "text-purple-400 bg-purple-400/10",
     yellow: "text-yellow-400 bg-yellow-400/10",
@@ -422,7 +422,7 @@ function KpiCard({ title, value, icon, color }: any) {
       </div>
       <div>
         <h4 class="font-mono text-[10px] text-muted uppercase tracking-widest">{title}</h4>
-        <div class="font-poppins text-2xl font-bold text-offwhite mt-1">{value}</div>
+        <div class="font-sans text-2xl font-bold text-offwhite mt-1">{value}</div>
       </div>
     </div>
   );
@@ -432,7 +432,7 @@ function DataTable({ title, data, type }: { title: string; data: any[]; type: st
   return (
     <div class="bg-charcoal-light/10 border border-charcoal-light/30 rounded-xl overflow-hidden flex flex-col">
       <div class="p-4 border-b border-charcoal-light/30 bg-charcoal-dark/30">
-        <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">{title}</h3>
+        <h3 class="font-sans text-sm font-bold text-offwhite uppercase tracking-widest">{title}</h3>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left">
@@ -451,7 +451,7 @@ function DataTable({ title, data, type }: { title: string; data: any[]; type: st
               return (
                 <tr key={i} class="border-b border-charcoal-light/10 hover:bg-white/5 transition-colors">
                   <td class="p-3 text-sm text-offwhite font-inter truncate max-w-[200px]" title={label}>{displayLabel}</td>
-                  <td class="p-3 text-sm text-teal font-mono text-right">{row.clicks}</td>
+                  <td class="p-3 text-sm text-[#FF5A52] font-mono text-right">{row.clicks}</td>
                   <td class="p-3 text-sm text-muted font-mono text-right">{row.impressions}</td>
                   <td class="p-3 text-sm text-yellow-400/80 font-mono text-right">{row.position.toFixed(1)}</td>
                 </tr>

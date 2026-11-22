@@ -1,172 +1,80 @@
 ---
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
+import BlogFilter, { type BlogPost } from "../components/BlogFilter";
 import { supabase } from "../lib/supabase";
-import BlogFilter from "../components/BlogFilter";
+import { getCollection } from "astro:content";
 
-let allPosts = [];
+let posts: BlogPost[] = [];
+
 if (supabase) {
-  const { data, error } = await supabase.from("posts").select("*").order("date", { ascending: false });
-  if (error) console.error("Supabase error fetching posts:", error);
-  allPosts = data || [];
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .order("date", { ascending: false });
+
+    if (!error && data && data.length > 0) {
+      posts = data.map((post) => ({
+        slug: post.slug,
+        title: post.title,
+        excerpt: post.excerpt,
+        category: post.category || "Software",
+        date: new Date(post.date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+      }));
+    }
+  } catch (err) {
+    console.error("Supabase blog fetch failed, falling back to MDX:", err);
+  }
 }
 
-const posts = allPosts.map((post) => ({
-  slug: post.slug,
-  title: post.title,
-  excerpt: post.excerpt,
-  category: post.category,
-  date: new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }),
-}));
+// MDX Content Collection Fallback if database had no posts
+if (posts.length === 0) {
+  try {
+    const mdxPosts = await getCollection("blog");
+    posts = mdxPosts.map((entry) => ({
+      slug: entry.slug,
+      title: entry.data.title,
+      excerpt: entry.data.excerpt,
+      category: entry.data.category,
+      date: entry.data.date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
+    }));
+  } catch (err) {
+    console.error("MDX collection fetch failed:", err);
+  }
+}
 ---
 
-<Layout title="Journal — Kinbo" description="Thoughts, explorations, and technical writings from KINBO TECHNOLOGIES on AI engineering, healthcare technology, and research methodology.">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
-  
-  <!-- Blog + BreadcrumbList JSON-LD -->
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify([
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://portfolio-sage-two-43.vercel.app" },
-        { "@type": "ListItem", "position": 2, "name": "Journal", "item": "https://portfolio-sage-two-43.vercel.app/blog" }
-      ]
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Blog",
-      "name": "KINBO TECHNOLOGIES Journal",
-      "url": "https://portfolio-sage-two-43.vercel.app/blog",
-      "description": "Technical writings, explorations, and insights from KINBO TECHNOLOGIES",
-      "publisher": {
-        "@type": "Organization",
-        "name": "KINBO TECHNOLOGIES PRIVATE LIMITED"
-      },
-      "blogPost": posts.slice(0, 10).map(p => ({
-        "@type": "BlogPosting",
-        "headline": p.title,
-        "description": p.excerpt,
-        "datePublished": p.date,
-        "author": { "@type": "Person", "name": "Arjun Jayesh" },
-        "url": `https://portfolio-sage-two-43.vercel.app/blog/${p.slug}`
-      }))
-    }
-  ])} />
-  
-  <div class="ks-page">
-    <!-- HERO -->
-    <div class="sub-hero">
-      <div class="sub-crumb hero-anim">
-        HOME <span class="sep">/</span> <span style="color: var(--ks-purple);">JOURNAL</span>
+<Layout
+  title="Technical Journal & Architecture Log — KINBO | 01 SIGNAL"
+  description="Technical writings, applied intelligence architectures, and systems research from KINBO TECHNOLOGIES."
+  schemaType="WebSite"
+>
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Page Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-8 mb-12">
+      <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-2 flex items-center gap-2">
+        <span>04 / TECHNICAL JOURNAL</span>
+        <span class="text-[rgba(244,243,239,0.4)]">//</span>
+        <span>RESEARCH & SYSTEMS</span>
       </div>
-      <h1 class="sub-h hero-anim">Thoughts &<br><span class="accent-purple">Explorations.</span></h1>
-      <p class="sub-tagline hero-anim">Technical writings, research updates, and operational insights from the team.</p>
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#FFFFFF]">
+        Engineering logs & research.
+      </h1>
+      <p class="text-base sm:text-lg text-[rgba(244,243,239,0.78)] mt-3 max-w-2xl leading-relaxed">
+        Deterministic schedulers, self-healing runtime topologies, and applied AI systems documentation from our engineering team.
+      </p>
     </div>
 
-    <!-- CONTENT WRAPPER -->
-    <div class="content-wrapper hero-anim">
-      <BlogFilter client:load posts={posts} />
-    </div>
+    {/* Filter & Articles Island */}
+    <BlogFilter client:load posts={posts} />
   </div>
 </Layout>
-
-<style>
-  .ks-page {
-    --ks-bg: #0a0a0c;
-    --ks-surface: #0f1117;
-    --ks-border: rgba(255, 255, 255, 0.07);
-    --ks-text-primary: #f0f0ec;
-    --ks-text-muted: rgba(240, 240, 236, 0.40);
-    --ks-text-faint: rgba(240, 240, 236, 0.6);
-    --ks-label: rgba(240, 240, 236, 0.7);
-    --ks-purple: #a78bfa;
-
-    background: var(--ks-bg);
-    min-height: 100vh;
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-top: 72px;
-    font-family: 'Inter', sans-serif;
-  }
-
-  /* SUB HERO */
-  .sub-hero {
-    padding: 48px 28px 44px;
-    border-bottom: 0.5px solid var(--ks-border);
-  }
-  .sub-crumb {
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ks-text-faint);
-    margin-bottom: 24px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .sub-crumb .sep { color: rgba(240,240,236,0.12); }
-  .sub-h {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(36px, 5.5vw, 58px);
-    font-weight: 800;
-    line-height: 0.94;
-    letter-spacing: -1.5px;
-    color: var(--ks-text-primary);
-    margin: 0;
-  }
-  .sub-h .accent-purple { color: var(--ks-purple); }
-  .sub-tagline {
-    font-size: 14px;
-    color: var(--ks-text-muted);
-    margin-top: 16px;
-    max-width: 600px;
-    line-height: 1.6;
-  }
-
-  /* CONTENT WRAPPER */
-  .content-wrapper {
-    padding: 44px 28px;
-    border-bottom: 0.5px solid var(--ks-border);
-  }
-  
-  /* OVERRIDE BLOG FILTER STYLES TO MATCH DARK AESTHETIC */
-  :global(.content-wrapper select), :global(.content-wrapper input) {
-    background: rgba(0,0,0,0.2) !important;
-    border: 1px solid var(--ks-border) !important;
-    color: var(--ks-text-primary) !important;
-    border-radius: 8px !important;
-  }
-  :global(.content-wrapper a) {
-    background: var(--ks-surface) !important;
-    border: 1px solid var(--ks-border) !important;
-    border-radius: 16px !important;
-    box-shadow: none !important;
-  }
-  :global(.content-wrapper a h3) {
-    font-family: 'Syne', sans-serif !important;
-    color: var(--ks-text-primary) !important;
-  }
-  :global(.content-wrapper a p) {
-    color: var(--ks-text-muted) !important;
-  }
-
-  @media (max-width: 640px) {
-    .sub-hero { padding: 40px 16px 32px; }
-    .content-wrapper { padding: 32px 16px; }
-  }
-</style>
-
-<script>
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  gsap.registerPlugin(ScrollTrigger);
-
-  function initBlog() {
-    gsap.fromTo(".hero-anim", 
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
-    );
-  }
-  document.addEventListener("astro:page-load", initBlog);
-</script>

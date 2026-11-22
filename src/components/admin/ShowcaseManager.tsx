@@ -69,7 +69,7 @@ export default function ShowcaseManager() {
 
   if (loading) {
     return (
-      <div class="flex items-center justify-center h-64 text-teal font-mono text-sm tracking-widest gap-3">
+      <div class="flex items-center justify-center h-64 text-[#FF5A52] font-mono text-sm tracking-widest gap-3">
         <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
         LOADING SHOWCASE ITEMS...
       </div>
@@ -92,19 +92,19 @@ export default function ShowcaseManager() {
   return (
     <div class="space-y-6 animate-fadeIn">
       {message && (
-        <div class="fixed top-8 right-8 bg-teal text-charcoal px-6 py-3 rounded-lg font-inter text-sm font-bold shadow-xl shadow-teal/20 z-[100]">
+        <div class="fixed top-8 right-8 bg-[#D9261C] text-charcoal px-6 py-3 rounded-lg font-inter text-sm font-bold shadow-xl shadow-[#D9261C]/20 z-[100]">
           {message}
         </div>
       )}
 
       <div class="flex justify-between items-center">
         <div>
-          <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Showcase Manager</h2>
+          <h2 class="font-sans text-xl font-bold text-offwhite uppercase tracking-wider">Showcase Manager</h2>
           <p class="font-mono text-[10px] text-muted mt-1 uppercase tracking-widest">Manage your portfolio of Websites and Apps</p>
         </div>
         <button
           onClick={() => setIsNew(true)}
-          class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+          class="bg-[#D9261C] text-charcoal px-4 py-2 rounded font-sans text-xs font-bold uppercase tracking-widest hover:bg-[#B81D14] transition-all"
         >
           + Add Project
         </button>
@@ -112,7 +112,7 @@ export default function ShowcaseManager() {
 
       <div class="grid gap-4 md:grid-cols-2">
         {projects.map((p) => (
-          <div key={p.id} class="bg-charcoal-light/10 border border-charcoal-light/30 rounded-xl overflow-hidden flex flex-col hover:border-teal/30 transition-all">
+          <div key={p.id} class="bg-charcoal-light/10 border border-charcoal-light/30 rounded-xl overflow-hidden flex flex-col hover:border-[#D9261C]/30 transition-all">
             <div class="h-32 bg-charcoal-dark/50 relative">
               {p.thumbnail && <img src={p.thumbnail} alt={p.title} class="w-full h-full object-cover opacity-60" />}
               <div class="absolute top-2 left-2 bg-charcoal text-offwhite text-[9px] font-mono uppercase px-2 py-1 rounded border border-white/10">
@@ -126,12 +126,12 @@ export default function ShowcaseManager() {
             </div>
             <div class="p-4 flex-1 flex flex-col justify-between">
               <div>
-                <h4 class="text-offwhite font-poppins font-bold text-lg leading-tight">{p.title}</h4>
-                <div class="font-mono text-[10px] text-teal mt-1">{p.category}</div>
+                <h4 class="text-offwhite font-sans font-bold text-lg leading-tight">{p.title}</h4>
+                <div class="font-mono text-[10px] text-[#FF5A52] mt-1">{p.category}</div>
                 <p class="text-xs text-muted mt-2 line-clamp-2 font-inter">{p.description}</p>
               </div>
               <div class="flex gap-4 mt-4 pt-4 border-t border-charcoal-light/10">
-                <button onClick={() => setEditing(p)} class="text-teal font-mono text-[10px] uppercase hover:underline flex-1">[ EDIT ]</button>
+                <button onClick={() => setEditing(p)} class="text-[#FF5A52] font-mono text-[10px] uppercase hover:underline flex-1">[ EDIT ]</button>
                 <button onClick={() => deleteProject(p.id)} class="text-red-400 font-mono text-[10px] uppercase hover:underline flex-1 text-right">[ DELETE ]</button>
               </div>
             </div>
@@ -156,7 +156,7 @@ function ShowcaseEditor({ project, onSave, onCancel }: any) {
   return (
     <div class="space-y-6 animate-fadeIn bg-charcoal-light/10 p-6 rounded-xl border border-charcoal-light/30">
       <div class="flex justify-between items-center pb-4 border-b border-charcoal-light/20">
-        <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">{data.id ? "Edit Project" : "New Project"}</h3>
+        <h3 class="font-sans text-sm font-bold text-offwhite uppercase tracking-widest">{data.id ? "Edit Project" : "New Project"}</h3>
         <button onClick={onCancel} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
       </div>
 
@@ -169,7 +169,7 @@ function ShowcaseEditor({ project, onSave, onCancel }: any) {
               <select 
                 value={data.type} 
                 onChange={(e) => setData({ ...data, type: (e.target as any).value })}
-                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none"
+                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-sans text-sm focus:border-[#D9261C] outline-none"
               >
                 <option value="website">Website / Web App</option>
                 <option value="app">Mobile App</option>
@@ -186,7 +186,7 @@ function ShowcaseEditor({ project, onSave, onCancel }: any) {
               id="featured"
               checked={data.featured} 
               onChange={(e) => setData({ ...data, featured: (e.target as any).checked })}
-              class="accent-teal w-4 h-4"
+              class="accent-[#D9261C] w-4 h-4"
             />
             <label for="featured" class="font-mono text-[10px] text-offwhite uppercase tracking-widest">Feature on top</label>
           </div>
@@ -202,14 +202,14 @@ function ShowcaseEditor({ project, onSave, onCancel }: any) {
             <textarea
               value={data.description}
               onInput={(e) => setData({ ...data, description: (e.target as any).value })}
-              class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-3 text-offwhite font-inter text-sm focus:border-teal outline-none transition-all h-24 resize-none"
+              class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-3 text-offwhite font-inter text-sm focus:border-[#D9261C] outline-none transition-all h-24 resize-none"
             ></textarea>
           </div>
         </div>
       </div>
       <button
         onClick={() => onSave(data)}
-        class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all shadow-lg"
+        class="w-full py-4 bg-[#D9261C] text-charcoal font-sans font-bold uppercase tracking-widest rounded hover:bg-[#B81D14] transition-all shadow-lg"
       >
         Save Project
       </button>
@@ -226,7 +226,7 @@ function Input({ label, value, onChange, uploadable = false }: any) {
             type="text"
             value={value || ""}
             onInput={(e) => onChange((e.target as any).value)}
-            class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+            class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-sans text-sm focus:border-[#D9261C] outline-none transition-all"
         />
     </div>
   );

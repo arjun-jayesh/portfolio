@@ -83,31 +83,31 @@ import WorksFilter from "../components/WorksFilter";
     border-bottom: 0.5px solid var(--ks-border);
   }
   
-  /* OVERRIDE WORKS FILTER STYLES TO MATCH DARK AESTHETIC */
+  /* OVERRIDE WORKS FILTER STYLES TO MATCH SWISS MODERNIST AESTHETIC */
   :global(.content-wrapper button) {
     background: transparent !important;
-    border: 1px solid var(--ks-border) !important;
-    color: var(--ks-text-primary) !important;
+    border: 1px solid var(--border, #222) !important;
+    color: #fff !important;
   }
-  :global(.content-wrapper button.bg-teal) {
-    background: rgba(45, 212, 191, 0.1) !important;
-    border-color: rgba(45, 212, 191, 0.3) !important;
-    color: var(--ks-teal) !important;
+  :global(.content-wrapper button[class*="bg-signal"], .content-wrapper button[class*="bg-[#D9261C]"]) {
+    background: var(--signal, #D9261C) !important;
+    border-color: var(--signal, #D9261C) !important;
+    color: #ffffff !important;
   }
-  :global(.content-wrapper .bg-charcoal-light\\/5) {
-    background: var(--ks-surface) !important;
-    border: 1px solid var(--ks-border) !important;
-    border-radius: 16px !important;
+  :global(.content-wrapper [class*="bg-charcoal"]) {
+    background: var(--carbon, #111111) !important;
+    border: 1px solid var(--border, #222) !important;
+    border-radius: 0px !important;
   }
   :global(.content-wrapper h3) {
-    font-family: 'Syne', sans-serif !important;
-    color: var(--ks-text-primary) !important;
+    font-family: 'Inter', sans-serif !important;
+    color: #fff !important;
   }
   :global(.content-wrapper p) {
-    color: var(--ks-text-muted) !important;
+    color: #888 !important;
   }
   :global(.content-wrapper span) {
-    border-color: var(--ks-border) !important;
+    border-color: var(--border, #222) !important;
   }
 
   @media (max-width: 640px) {
@@ -115,17 +115,3 @@ import WorksFilter from "../components/WorksFilter";
     .content-wrapper { padding: 32px 16px; }
   }
 </style>
-
-<script>
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  gsap.registerPlugin(ScrollTrigger);
-
-  function initWorks() {
-    gsap.fromTo(".hero-anim", 
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
-    );
-  }
-  document.addEventListener("astro:page-load", initWorks);
-</script>

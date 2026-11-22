@@ -1,5 +1,7 @@
 export const prerender = false;
 
+import { supabaseAdmin } from '../../../lib/supabase';
+
 const getEnv = (key: string) => {
     return import.meta.env[key] || (typeof process !== 'undefined' ? process.env[key] : '');
 };
@@ -13,18 +15,22 @@ export async function POST({ request }: { request: Request }) {
             return new Response(JSON.stringify({
                 error: 'Razorpay credentials not configured.',
                 fallback_url: 'https://razorpay.me/@kinbotechnologies'
-            }), { status: 503 });
+            }), { status: 503, headers: { 'Content-Type': 'application/json' } });
         }
 
         const body = await request.json();
         const { amount, currency = 'INR', service_name, customer } = body;
 
-        if (!amount || !service_name) {
-            return new Response(JSON.stringify({ error: 'Missing amount or service_name' }), { status: 400 });
+        const parsedAmount = Number(amount);
+        if (!Number.isFinite(parsedAmount) || parsedAmount < 1 || parsedAmount > 10_000_000 || !service_name) {
+            return new Response(JSON.stringify({
+                error: 'Invalid amount (must be between 1 and 10,000,000) or missing service_name'
+            }), { status: 400, headers: { 'Content-Type': 'application/json' } });
         }
 
-        // Create order via Razorpay Orders API
-        const authHeader = 'Basic ' + btoa(`${keyId}:${keySecret}`);
+        const amountInPaise = Math.round(parsedAmount * 100);
+        const safeCurrency = typeof currency === 'string' && /^[A-Z]{3}$/.test(currency) ? currency : 'INR';
+        const authHeader = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
 
         const orderRes = await fetch('https://api.razorpay.com/v1/orders', {
             method: 'POST',
@@ -33,11 +39,11 @@ export async function POST({ request }: { request: Request }) {
                 'Authorization': authHeader,
             },
             body: JSON.stringify({
-                amount: Math.round(amount * 100), // Convert to paise
-                currency,
-                receipt: `kinbo_${service_name}_${Date.now()}`,
+                amount: amountInPaise,
+                currency: safeCurrency,
+                receipt: `kinbo_${String(service_name).slice(0, 20)}_${Date.now()}`,
                 notes: {
-                    service: service_name,
+                    service: String(service_name).slice(0, 100),
                     customer_name: customer?.name || '',
                     customer_email: customer?.email || '',
                     customer_phone: customer?.phone || '',
@@ -47,25 +53,47 @@ export async function POST({ request }: { request: Request }) {
         });
 
         if (!orderRes.ok) {
-            const errData = await orderRes.json();
+            const errData = await orderRes.json().catch(() => ({}));
             console.error('Razorpay Order Creation Error:', errData);
             return new Response(JSON.stringify({
-                error: 'Failed to create payment order',
-                details: errData
-            }), { status: 500 });
+                error: 'Failed to create payment order'
+            }), { status: 502, headers: { 'Content-Type': 'application/json' } });
         }
 
         const orderData = await orderRes.json();
+
+        // Persist the authoritative order amount in Supabase immediately
+        if (supabaseAdmin) {
+            try {
+                await supabaseAdmin.from('payments').insert({
+                    razorpay_order_id: orderData.id,
+                    amount: orderData.amount,
+                    currency: orderData.currency,
+                    service_name: String(service_name),
+                    customer_name: customer?.name || null,
+                    customer_email: customer?.email || null,
+                    customer_phone: customer?.phone || null,
+                    customer_org: customer?.org || null,
+                    status: 'created',
+                    verified: false,
+                });
+            } catch (dbErr) {
+                console.error('Initial order DB insert warning:', dbErr);
+            }
+        }
 
         return new Response(JSON.stringify({
             order_id: orderData.id,
             amount: orderData.amount,
             currency: orderData.currency,
-            key_id: keyId, // Public key safe to share
-        }), { status: 200 });
+            key_id: keyId,
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 
     } catch (e: any) {
         console.error('Create Order API Error:', e);
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+        return new Response(JSON.stringify({ error: 'Internal server error' }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }

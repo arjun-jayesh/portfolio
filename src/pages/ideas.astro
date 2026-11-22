@@ -4,105 +4,20 @@ import Layout from "../layouts/Layout.astro";
 import IdeasForm from "../components/IdeasForm";
 ---
 
-<Layout title="Submit an Idea — Kinbo" description="Have a startup idea or project concept? Submit it here and let's build something extraordinary together.">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
-  <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" slot="head" />
-
-  <div class="ks-page">
-    <!-- HERO -->
-    <div class="sub-hero">
-      <div class="sub-crumb hero-anim">
-        HOME <span class="sep">/</span> <span style="color: var(--ks-amber);">IDEA LAB</span>
-      </div>
-      <h1 class="sub-h hero-anim">Got an <span class="accent-amber">Idea?</span></h1>
-      <p class="sub-tagline hero-anim">Whether it's a startup concept, a prototype you want built, or a website for your business — share your vision and we'll engineer it into reality.</p>
+<Layout
+  title="RFP & Engineering Estimator — KINBO | 01 SIGNAL"
+  description="Submit your software project specification directly to KINBO's engineering desk. Zero sales reps, direct technical feasibility review."
+  schemaType="ContactPage"
+>
+  <div class="max-w-4xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">RFP ESTIMATOR</span>
     </div>
 
-    <!-- FORM WRAPPER -->
-    <div class="form-wrapper hero-anim">
-      <IdeasForm client:load />
-    </div>
+    {/* Form Component */}
+    <IdeasForm client:load />
   </div>
 </Layout>
-
-<style>
-  .ks-page {
-    --ks-bg: #0a0a0c;
-    --ks-surface: #0f1117;
-    --ks-border: rgba(255, 255, 255, 0.07);
-    --ks-text-primary: #f0f0ec;
-    --ks-text-muted: rgba(240, 240, 236, 0.40);
-    --ks-text-faint: rgba(240, 240, 236, 0.6);
-    --ks-label: rgba(240, 240, 236, 0.7);
-    --ks-teal: #2dd4bf;
-    --ks-amber: #fbbf24;
-
-    background: var(--ks-bg);
-    min-height: 100vh;
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-top: 72px;
-    font-family: 'Inter', sans-serif;
-  }
-
-  /* SUB HERO */
-  .sub-hero {
-    padding: 48px 28px 44px;
-    border-bottom: 0.5px solid var(--ks-border);
-  }
-  .sub-crumb {
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ks-text-faint);
-    margin-bottom: 24px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .sub-crumb .sep { color: rgba(240,240,236,0.12); }
-  .sub-h {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(36px, 5.5vw, 58px);
-    font-weight: 800;
-    line-height: 0.94;
-    letter-spacing: -1.5px;
-    color: var(--ks-text-primary);
-    margin: 0;
-  }
-  .sub-h .accent-amber { color: var(--ks-amber); }
-  .sub-tagline {
-    font-size: 14px;
-    color: var(--ks-text-muted);
-    margin-top: 16px;
-    max-width: 600px;
-    line-height: 1.6;
-  }
-
-  /* FORM WRAPPER */
-  .form-wrapper {
-    padding: 44px 28px;
-    border-bottom: 0.5px solid var(--ks-border);
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  @media (max-width: 640px) {
-    .sub-hero { padding: 40px 16px 32px; }
-    .form-wrapper { padding: 32px 16px; }
-  }
-</style>
-
-<script>
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  gsap.registerPlugin(ScrollTrigger);
-
-  function initIdeas() {
-    gsap.fromTo(".hero-anim", 
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
-    );
-  }
-  document.addEventListener("astro:page-load", initIdeas);
-</script>

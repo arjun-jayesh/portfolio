@@ -26,3 +26,17 @@ vercel_env.txt
 
 # jetbrains setting folder
 .idea/
+
+# antigravity vault and caches
+.antigravity/
+
+
+sample.mp4
+public/sample.mp4
+CHECKPOINT.md
+kinbo_ad_context.txt
+node_modules_cleanup_note.md
+test-cloudinary.cjs
+tests/
+v2/
+__pycache__/

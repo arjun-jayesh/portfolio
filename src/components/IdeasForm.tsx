@@ -1,283 +1,304 @@
 import { useState } from "preact/hooks";
 
 const PROJECT_TYPES = [
-    { value: "prototype", label: "Prototype / MVP" },
-    { value: "startup_website", label: "Startup Website" },
-    { value: "web_app", label: "Web Application" },
-    { value: "mobile_app", label: "Mobile App" },
-    { value: "ai_ml", label: "AI / ML Solution" },
-    { value: "automation", label: "Automation System" },
-    { value: "other", label: "Other" },
+  { value: "prototype", label: "01 // PROTOTYPE / MVP" },
+  { value: "clinical_infra", label: "02 // CLINICAL / HEALTHCARE" },
+  { value: "web_platform", label: "03 // ENTERPRISE WEB PLATFORM" },
+  { value: "mobile_app", label: "04 // MOBILE APPLICATION" },
+  { value: "ai_vision", label: "05 // APPLIED AI & VISION" },
+  { value: "systems_audit", label: "06 // ARCHITECTURE AUDIT" },
 ];
 
-const BUDGETS = [
-    "Under $500",
-    "$500 - $1,000",
-    "$1,000 - $5,000",
-    "$5,000 - $10,000",
-    "$10,000+",
-    "Let's discuss",
+const BUDGET_TIERS = [
+  "TIER I: < ₹15,000 / $200",
+  "TIER II: ₹15,000 - ₹50,000 / $200 - $650",
+  "TIER III: ₹50,000 - ₹1,50,000 / $650 - $2,000",
+  "TIER IV: ₹1,50,000+ / $2,000+",
+  "CUSTOM / TO BE DETERMINED",
 ];
 
 const TIMELINES = [
-    "1-2 Weeks",
-    "1 Month",
-    "2-3 Months",
-    "3-6 Months",
-    "6+ Months",
-    "Flexible",
+  "RAPID SPRINT (1-2 WEEKS)",
+  "TARGET: 1 MONTH",
+  "PHASED (2-3 MONTHS)",
+  "ENTERPRISE ROADMAP (3-6 MO)",
+  "FLEXIBLE TIMELINE",
 ];
 
 const initialForm = {
-    name: "",
-    email: "",
-    phone: "",
-    project_type: "",
-    budget: "",
-    timeline: "",
-    idea_title: "",
-    idea_description: "",
-    target_audience: "",
-    features: "",
-    portfolio_url: "",
-    linkedin: "",
-    additional_notes: "",
+  name: "",
+  email: "",
+  phone: "",
+  organization: "",
+  project_type: "prototype",
+  budget: "TIER II: ₹15,000 - ₹50,000 / $200 - $650",
+  timeline: "TARGET: 1 MONTH",
+  idea_title: "",
+  idea_description: "",
+  target_audience: "",
+  features: "",
+  portfolio_url: "",
+  linkedin: "",
+  additional_notes: "",
+  _hp_company: "",
 };
 
 export default function IdeasForm() {
-    const [form, setForm] = useState(initialForm);
-    const [sending, setSending] = useState(false);
-    const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
-    const [errorMsg, setErrorMsg] = useState("");
+  const [form, setForm] = useState(initialForm);
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
-    function updateField(field: string, value: string) {
-        setForm((prev) => ({ ...prev, [field]: value }));
+  function updateField(field: string, value: string) {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  }
+
+  async function handleSubmit(e: Event) {
+    e.preventDefault();
+    setSending(true);
+    setStatus("idle");
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/ideas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data.error || "Submission failed. Please check required fields.");
+      }
+
+      setStatus("success");
+      setForm(initialForm);
+    } catch (err: any) {
+      setStatus("error");
+      setErrorMsg(err.message || "An unexpected error occurred.");
+    } finally {
+      setSending(false);
     }
+  }
 
-    async function handleSubmit(e: Event) {
-        e.preventDefault();
-        setSending(true);
-        setStatus("idle");
-        setErrorMsg("");
+  return (
+    <div class="w-full bg-[#111111] border border-[rgba(244,243,239,0.16)] rounded-[8px] p-6 sm:p-10 shadow-2xl">
+      <div class="border-b border-[rgba(244,243,239,0.12)] pb-6 mb-8">
+        <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-1">
+          RFP & TECHNICAL SCOPE SUBMISSION
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          Direct Specification Intake
+        </h2>
+        <p class="text-xs sm:text-sm text-[rgba(244,243,239,0.72)] mt-1.5">
+          We don't have a sales team. Your brief is reviewed directly by our systems architect.
+        </p>
+      </div>
 
-        try {
-            const res = await fetch("/api/ideas", {
-                method: "POST",
-                body: JSON.stringify(form),
-                headers: { "Content-Type": "application/json" },
-            });
-            const data = await res.json();
-            if (res.ok) {
-                setStatus("success");
-                setForm(initialForm);
-            } else {
-                setStatus("error");
-                setErrorMsg(data.error || "Something went wrong.");
-            }
-        } catch {
-            setStatus("error");
-            setErrorMsg("Network error. Please try again.");
-        }
-        setSending(false);
-    }
-
-    if (status === "success") {
-        return (
-            <div class="text-center py-20 space-y-6 animate-fadeIn">
-                <div class="w-20 h-20 mx-auto rounded-full bg-teal/20 flex items-center justify-center">
-                    <svg class="w-10 h-10 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                </div>
-                <h3 class="font-poppins text-2xl font-bold text-offwhite">Idea Received!</h3>
-                <p class="font-lora text-muted max-w-md mx-auto">
-                    Your submission has been logged. I'll review it and get back to you within 24-48 hours.
-                </p>
-                <button
-                    onClick={() => setStatus("idle")}
-                    class="mt-4 px-8 py-3 border border-teal/30 text-teal font-mono text-xs uppercase tracking-widest rounded-full hover:bg-teal hover:text-charcoal transition-all"
-                >
-                    Submit Another Idea
-                </button>
-            </div>
-        );
-    }
-
-    return (
-        <form onSubmit={handleSubmit} class="space-y-8 animate-fadeIn">
-            {status === "error" && (
-                <div class="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 font-mono text-xs">
-                    {errorMsg}
-                </div>
-            )}
-
-            {/* Section 1: About You */}
-            <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">1</span>
-                    About You
-                </h3>
-                <div class="grid md:grid-cols-2 gap-4 pt-2">
-                    <FormField label="Full Name *" value={form.name} onChange={(v) => updateField("name", v)} required placeholder="John Doe" />
-                    <FormField label="Email *" value={form.email} onChange={(v) => updateField("email", v)} type="email" required placeholder="john@example.com" />
-                    <FormField label="Phone" value={form.phone} onChange={(v) => updateField("phone", v)} placeholder="+1 (555) 000-0000" />
-                    <FormField label="LinkedIn Profile" value={form.linkedin} onChange={(v) => updateField("linkedin", v)} placeholder="https://linkedin.com/in/..." />
-                </div>
-                <div class="pt-2">
-                    <FormField label="Portfolio / Website URL" value={form.portfolio_url} onChange={(v) => updateField("portfolio_url", v)} placeholder="https://yourportfolio.com" />
-                </div>
-            </div>
-
-            {/* Section 2: Project Type */}
-            <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">2</span>
-                    What Do You Need?
-                </h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-                    {PROJECT_TYPES.map((type) => (
-                        <button
-                            type="button"
-                            key={type.value}
-                            onClick={() => updateField("project_type", type.value)}
-                            class={`p-3 rounded-lg border text-xs font-mono uppercase tracking-wider transition-all ${form.project_type === type.value
-                                    ? "bg-teal/20 border-teal text-teal"
-                                    : "bg-charcoal-dark border-charcoal-light/30 text-muted hover:border-teal/50"
-                                }`}
-                        >
-                            {type.label}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* Section 3: Your Idea */}
-            <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">3</span>
-                    Your Idea
-                </h3>
-                <div class="space-y-4 pt-2">
-                    <FormField label="Idea / Project Title *" value={form.idea_title} onChange={(v) => updateField("idea_title", v)} required placeholder="e.g. AI-Powered Recipe Generator" />
-                    <FormTextarea label="Describe Your Idea *" value={form.idea_description} onChange={(v) => updateField("idea_description", v)} required placeholder="Explain your concept, the problem it solves, and your vision..." rows={5} />
-                    <FormField label="Target Audience" value={form.target_audience} onChange={(v) => updateField("target_audience", v)} placeholder="e.g. Small business owners, Students, Healthcare..." />
-                    <FormTextarea label="Key Features / Requirements" value={form.features} onChange={(v) => updateField("features", v)} placeholder="List the main features you'd like to see..." rows={3} />
-                </div>
-            </div>
-
-            {/* Section 4: Budget & Timeline */}
-            <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">4</span>
-                    Budget & Timeline
-                </h3>
-                <div class="grid md:grid-cols-2 gap-6 pt-2">
-                    <div class="space-y-2">
-                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Estimated Budget</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            {BUDGETS.map((b) => (
-                                <button
-                                    type="button"
-                                    key={b}
-                                    onClick={() => updateField("budget", b)}
-                                    class={`p-2 rounded border text-[10px] font-mono tracking-wider transition-all ${form.budget === b
-                                            ? "bg-teal/20 border-teal text-teal"
-                                            : "bg-charcoal-dark border-charcoal-light/30 text-muted hover:border-teal/50"
-                                        }`}
-                                >
-                                    {b}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Expected Timeline</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            {TIMELINES.map((t) => (
-                                <button
-                                    type="button"
-                                    key={t}
-                                    onClick={() => updateField("timeline", t)}
-                                    class={`p-2 rounded border text-[10px] font-mono tracking-wider transition-all ${form.timeline === t
-                                            ? "bg-teal/20 border-teal text-teal"
-                                            : "bg-charcoal-dark border-charcoal-light/30 text-muted hover:border-teal/50"
-                                        }`}
-                                >
-                                    {t}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Section 5: Additional */}
-            <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">5</span>
-                    Anything Else?
-                </h3>
-                <FormTextarea label="Additional Notes" value={form.additional_notes} onChange={(v) => updateField("additional_notes", v)} placeholder="Any references, inspirations, competitors, or special requirements..." rows={3} />
-            </div>
-
-            {/* Submit */}
+      {status === "success" ? (
+        <div class="p-8 bg-[#181818] border-l-4 border-[#D9261C] rounded-[4px] space-y-4">
+          <div class="font-mono text-xs text-[#FF5A52] uppercase">TRANSMISSION CONFIRMED</div>
+          <h3 class="text-xl font-bold text-white">Your Project Scope Has Been Logged</h3>
+          <p class="text-sm text-[rgba(244,243,239,0.85)] leading-relaxed">
+            Our systems engineer will review the technical architecture, dependencies, and timeline. You will receive a direct reply within 4 business hours.
+          </p>
+          <div class="pt-4">
             <button
-                type="submit"
-                disabled={sending || !form.name || !form.email || !form.project_type || !form.idea_title || !form.idea_description}
-                class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded-lg hover:shadow-[0_0_30px_rgba(42,157,143,0.3)] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+              type="button"
+              onClick={() => setStatus("idle")}
+              class="touch-target px-5 py-2.5 bg-[#D9261C] hover:bg-[#B81D14] text-white text-xs font-mono font-semibold rounded-[4px] transition-colors"
             >
-                {sending ? "TRANSMITTING..." : "[ Submit Idea ]"}
+              Submit Another Technical Brief
             </button>
-        </form>
-    );
-}
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} class="space-y-6">
+          {/* Honeypot */}
+          <input
+            type="text"
+            name="_hp_company"
+            value={form._hp_company}
+            tabIndex={-1}
+            autoComplete="off"
+            style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }}
+            onInput={(e) => updateField("_hp_company", (e.target as HTMLInputElement).value)}
+          />
 
-interface FormFieldProps {
-    label: string;
-    value: string;
-    onChange: (v: string) => void;
-    type?: string;
-    required?: boolean;
-    placeholder?: string;
-}
+          {status === "error" && (
+            <div class="p-4 bg-[#D9261C]/15 border border-[#D9261C] rounded-[4px] font-mono text-xs text-[#FF5A52]">
+              {errorMsg}
+            </div>
+          )}
 
-function FormField({ label, value, onChange, type = "text", required = false, placeholder = "" }: FormFieldProps) {
-    return (
-        <div class="space-y-1">
-            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">{label}</label>
+          {/* Contact Details */}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1">
+                Your Name *
+              </label>
+              <input
+                type="text"
+                required
+                autocomplete="name"
+                value={form.name}
+                onInput={(e) => updateField("name", (e.target as HTMLInputElement).value)}
+                placeholder="e.g. Rahul Sharma"
+                class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3.5 py-2.5 text-sm text-[#F4F3EF] focus:border-[#FF5A52] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                required
+                autocomplete="email"
+                value={form.email}
+                onInput={(e) => updateField("email", (e.target as HTMLInputElement).value)}
+                placeholder="e.g. founder@company.com"
+                class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3.5 py-2.5 text-sm text-[#F4F3EF] focus:border-[#FF5A52] focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1">
+                Phone Number (WhatsApp)
+              </label>
+              <input
+                type="tel"
+                autocomplete="tel"
+                value={form.phone}
+                onInput={(e) => updateField("phone", (e.target as HTMLInputElement).value)}
+                placeholder="+91 98765 43210"
+                class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3.5 py-2.5 text-sm text-[#F4F3EF] focus:border-[#FF5A52] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1">
+                Organization / Company
+              </label>
+              <input
+                type="text"
+                autocomplete="organization"
+                value={form.organization}
+                onInput={(e) => updateField("organization", (e.target as HTMLInputElement).value)}
+                placeholder="e.g. St. Jude Healthcare or OptiRetail"
+                class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3.5 py-2.5 text-sm text-[#F4F3EF] focus:border-[#FF5A52] focus:outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Project Type & Budget */}
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1">
+                Project Domain
+              </label>
+              <select
+                value={form.project_type}
+                onChange={(e) => updateField("project_type", (e.target as HTMLSelectElement).value)}
+                class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3 py-2 text-xs font-mono text-[#F4F3EF] focus:border-[#FF5A52] focus:outline-none"
+              >
+                {PROJECT_TYPES.map((pt) => (
+                  <option key={pt.value} value={pt.value}>
+                    {pt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1">
+                Budget Target
+              </label>
+              <select
+                value={form.budget}
+                onChange={(e) => updateField("budget", (e.target as HTMLSelectElement).value)}
+                class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3 py-2 text-xs font-mono text-[#F4F3EF] focus:border-[#FF5A52] focus:outline-none"
+              >
+                {BUDGET_TIERS.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1">
+                Delivery Timeline
+              </label>
+              <select
+                value={form.timeline}
+                onChange={(e) => updateField("timeline", (e.target as HTMLSelectElement).value)}
+                class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3 py-2 text-xs font-mono text-[#F4F3EF] focus:border-[#FF5A52] focus:outline-none"
+              >
+                {TIMELINES.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Project Title & Description */}
+          <div>
+            <label class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1">
+              Project Title *
+            </label>
             <input
-                type={type}
-                value={value}
-                required={required}
-                placeholder={placeholder}
-                onInput={(e) => onChange((e.target as any).value)}
-                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded-lg px-4 py-3 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all placeholder:text-charcoal-light"
+                type="text"
+                required
+                value={form.idea_title}
+                onInput={(e) => updateField("idea_title", (e.target as HTMLInputElement).value)}
+                placeholder="e.g. Distributed Inventory Sync Engine for 12 Warehouses"
+                class="w-full touch-target bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] px-3.5 py-2.5 text-sm text-[#F4F3EF] focus:border-[#FF5A52] focus:outline-none"
             />
-        </div>
-    );
-}
+          </div>
 
-interface FormTextareaProps {
-    label: string;
-    value: string;
-    onChange: (v: string) => void;
-    required?: boolean;
-    placeholder?: string;
-    rows?: number;
-}
-
-function FormTextarea({ label, value, onChange, required = false, placeholder = "", rows = 4 }: FormTextareaProps) {
-    return (
-        <div class="space-y-1">
-            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">{label}</label>
+          <div>
+            <label class="block font-mono text-[12px] text-[rgba(244,243,239,0.75)] uppercase mb-1">
+              Architecture & Objective Description *
+            </label>
             <textarea
-                value={value}
-                required={required}
-                placeholder={placeholder}
-                rows={rows}
-                onInput={(e) => onChange((e.target as any).value)}
-                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded-lg px-4 py-3 text-offwhite font-lora text-sm focus:border-teal outline-none transition-all resize-y placeholder:text-charcoal-light"
+              required
+              rows={4}
+              value={form.idea_description}
+              onInput={(e) => updateField("idea_description", (e.target as HTMLTextAreaElement).value)}
+              placeholder="Detail your operational bottleneck, target platforms (web, mobile, backend), expected daily concurrency, and third-party integrations..."
+              class="w-full bg-[#181818] border border-[rgba(244,243,239,0.16)] rounded-[4px] p-3.5 text-sm text-[#F4F3EF] focus:border-[#FF5A52] focus:outline-none"
             ></textarea>
-        </div>
-    );
+          </div>
+
+          <div class="pt-2">
+            <button
+              type="submit"
+              disabled={sending}
+              class="w-full touch-target bg-[#D9261C] hover:bg-[#B81D14] disabled:opacity-60 text-white font-medium text-sm rounded-[4px] px-6 py-3.5 transition-colors inline-flex items-center justify-center gap-2"
+            >
+              {sending ? (
+                <span>Logging Technical Specification...</span>
+              ) : (
+                <>
+                  <span>Transmit Technical Brief to Engineer</span>
+                  <span class="font-mono">→</span>
+                </>
+              )}
+            </button>
+            <p class="font-mono text-[12px] text-[rgba(244,243,239,0.5)] text-center pt-2">
+              Direct review by principal systems engineer · No sales follow-up calls
+            </p>
+          </div>
+        </form>
+      )}
+    </div>
+  );
 }

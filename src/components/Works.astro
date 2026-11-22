@@ -2,32 +2,20 @@
 import WorksFilter from "./WorksFilter";
 ---
 
-<section id="works" class="section-padding">
+<section id="works" class="py-16 border-t border-[rgba(244,243,239,0.14)]">
   <div class="max-w-6xl mx-auto">
-    <!-- Section Header -->
-    <div class="text-center mb-12 works-header" style="opacity:0; transform:translateY(20px);">
-      <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">Portfolio</span>
-      <h2 class="font-poppins text-3xl sm:text-4xl md:text-5xl font-bold text-offwhite">
-        Selected <span class="text-teal">Works</span>
+    <div class="mb-10">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-1">
+        PORTFOLIO ARCHIVE
+      </div>
+      <h2 class="text-3xl font-bold tracking-tight text-[#FFFFFF]">
+        Selected Research & Systems
       </h2>
-      <div class="mt-4 mx-auto w-16 h-px bg-gradient-to-r from-transparent via-teal to-transparent"></div>
+      <p class="text-sm text-[rgba(244,243,239,0.7)] mt-2">
+        A chronological index of computational engines, simulation suites, and production software platforms.
+      </p>
     </div>
 
-    <!-- Preact Island -->
     <WorksFilter client:load />
   </div>
 </section>
-
-<script>
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  gsap.registerPlugin(ScrollTrigger);
-
-  gsap.to(".works-header", {
-    scrollTrigger: { trigger: ".works-header", start: "top 85%" },
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    ease: "power2.out",
-  });
-</script>

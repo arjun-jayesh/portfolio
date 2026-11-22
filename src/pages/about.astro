@@ -3,303 +3,125 @@ export const prerender = false;
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="About" description="Learn about KINBO TECHNOLOGIES PRIVATE LIMITED's mission to build intelligent everyday applications that deliver real outcomes.">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
-  <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" slot="head" />
-
-  <div class="ks-page">
-    <!-- HERO -->
-    <div class="sub-hero">
-      <div class="sub-crumb hero-anim">
-        HOME <span class="sep">/</span> <span style="color: var(--ks-teal);">ABOUT KINBO</span>
-      </div>
-      <h1 class="sub-h hero-anim">Building technology that<br><span class="accent-teal">actually helps.</span></h1>
-      <p class="sub-tagline hero-anim">Consumer technology today often prioritizes engagement metrics over meaningful outcomes. KINBO was created to address this gap. Every application we build starts with a simple question: does this make someone's day measurably better?</p>
+<Layout
+  title="About KINBO TECHNOLOGIES PRIVATE LIMITED | 01 SIGNAL"
+  description="We don't have a sales team. You talk directly to the engineer from day one. Engineering discipline, Swiss modernist clarity, and absolute technical sovereignty."
+  schemaType="AboutPage"
+>
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-32 pb-24">
+    {/* Breadcrumbs */}
+    <div class="font-mono text-[12px] uppercase tracking-wider text-[#FF5A52] mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">HOME</a>
+      <span class="text-[rgba(244,243,239,0.3)]">/</span>
+      <span class="text-white">ABOUT</span>
     </div>
 
-    <!-- PHILOSOPHY -->
-    <div class="info-section hero-anim">
-      <div class="info-ghost-num">01</div>
-      <h3 class="info-title">Our Philosophy</h3>
-      <div class="info-content">
-        <p>We build applications in areas where practical technology can make a direct difference: productivity tools, consumer utilities, digital marketplaces, communication tools, and AI-assisted everyday services.</p>
-        <p>Our approach centers on three commitments:</p>
-        <ul class="info-list">
-          <li><strong>Intelligent Assistance</strong> — Our applications use technology to provide actionable insights, not empty notifications. Every recommendation is grounded in data and presented with context.</li>
-          <li><strong>User Transparency</strong> — We clearly explain how our tools work, what data they use, and what their limitations are. Users deserve to understand the technology they rely on.</li>
-          <li><strong>Real Outcomes</strong> — We measure success by whether our users achieve better results, not by how much time they spend in our applications.</li>
-        </ul>
+    {/* Header */}
+    <div class="border-b border-[rgba(244,243,239,0.14)] pb-12 mb-16">
+      <div class="font-mono text-xs text-[#FF5A52] uppercase mb-2">
+        01 SIGNAL · INSTITUTIONAL CHARTER
       </div>
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#FFFFFF] max-w-4xl leading-[1.1]">
+        Building deterministic software that actually stands.
+      </h1>
+      <p class="text-base sm:text-xl text-[rgba(244,243,239,0.85)] mt-4 max-w-2xl leading-relaxed">
+        Software engineering has been distorted by layers of sales intermediaries, padded retainers, and fragile vendor lock-in. KINBO operates on the opposite thesis: direct engineer access, fixed-scope milestones, and complete client technical sovereignty.
+      </p>
     </div>
 
-    <!-- TECHNOLOGY -->
-    <div class="info-section hero-anim">
-      <div class="info-ghost-num">02</div>
-      <h3 class="info-title">Technology Approach</h3>
-      <div class="info-content">
-        <p>KINBO's engineering philosophy emphasizes practical functionality and reliability. We build software designed to scale and evolve with user needs, using:</p>
-        <ul class="info-list">
-          <li><strong>Scalable Architecture</strong> — Systems designed to handle growth without compromising performance or user experience.</li>
-          <li><strong>Responsible AI</strong> — Artificial intelligence applied thoughtfully, with clear boundaries between automated insights and human decision-making.</li>
-          <li><strong>Data Privacy</strong> — User data handled with care, transparency, and compliance with applicable regulations.</li>
-          <li><strong>User-Focused Development</strong> — Every feature validated against actual user needs, not industry trends or competitive pressure.</li>
-        </ul>
+    {/* The Direct Engineering Thesis */}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pb-16 border-b border-[rgba(244,243,239,0.14)]">
+      <div class="lg:col-span-5">
+        <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-1">OUR THESIS</div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#FFFFFF] tracking-tight">
+          Zero Sales Middlemen
+        </h2>
+        <p class="text-sm text-[rgba(244,243,239,0.72)] mt-3 leading-relaxed">
+          When requirements pass through non-technical business development reps, engineering details are diluted. We removed the entire sales layer. The person discussing your system on Day 1 is the software architect engineering your code.
+        </p>
       </div>
-    </div>
 
-    <!-- VALUES GRID -->
-    <div class="service-grid hero-anim">
-      <div class="svc-card">
-        <i class="ti ti-bulb svc-icon svc-icon--teal" aria-hidden="true"></i>
-        <h3 class="svc-title">Practical Innovation</h3>
-        <p class="svc-one">Technology should solve real problems. We build what's useful, not what's trendy.</p>
-      </div>
-      <div class="svc-card">
-        <i class="ti ti-eye svc-icon svc-icon--teal" aria-hidden="true"></i>
-        <h3 class="svc-title">User Transparency</h3>
-        <p class="svc-one">Applications should clearly explain their insights and operate without hidden agendas.</p>
-      </div>
-      <div class="svc-card">
-        <i class="ti ti-rocket svc-icon svc-icon--teal" aria-hidden="true"></i>
-        <h3 class="svc-title">Creator Empowerment</h3>
-        <p class="svc-one">Platforms should enable individuals to participate, grow, and build independently.</p>
-      </div>
-      <div class="svc-card">
-        <i class="ti ti-shield-check svc-icon svc-icon--teal" aria-hidden="true"></i>
-        <h3 class="svc-title">Responsible Tech</h3>
-        <p class="svc-one">Tools should improve outcomes rather than create distractions or dependencies.</p>
+      <div class="lg:col-span-7 space-y-4">
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">01 / DISCIPLINE</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Architectural Transparency</h3>
+          <p class="text-xs sm:text-sm text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Every database schema, cloud cost, and network boundary is inspectable. We deliver clean, decoupled architectures that your internal teams can maintain without proprietary dependencies.
+          </p>
+        </div>
+
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">02 / DISCIPLINE</div>
+          <h3 class="text-lg font-semibold text-white mb-2">100% Day-1 Ownership</h3>
+          <p class="text-xs sm:text-sm text-[rgba(244,243,239,0.7)] leading-relaxed">
+            All code repositories, server instances, domains, and database keys are provisioned directly under your company's credentials. We never hold your infrastructure hostage.
+          </p>
+        </div>
+
+        <div class="p-6 bg-[#111111] border border-[rgba(244,243,239,0.14)] rounded-[6px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">03 / DISCIPLINE</div>
+          <h3 class="text-lg font-semibold text-white mb-2">Lifelong Support*</h3>
+          <p class="text-xs sm:text-sm text-[rgba(244,243,239,0.7)] leading-relaxed">
+            Critical defect fixes on the delivered scope remain free for the operational lifetime of the product, backed by transparent optional AMC sprints for new features.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- BOTTOM BAR -->
-    <div class="sub-bottom">
-      <div class="flex flex-col gap-1">
-        <span class="font-mono text-xs text-teal uppercase tracking-[0.15em] mb-2">Corporate Information</span>
-        <p class="sub-bottom-statement" style="font-size: 20px;">Kinbo Technologies Pvt Ltd.</p>
-        <span class="text-[11px] text-[var(--ks-text-muted)] mt-2 font-mono">INDIA | CHINA | GCC</span>
+    {/* Operational Pillars */}
+    <div class="py-16 border-b border-[rgba(244,243,239,0.14)]">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase mb-2">CORE CAPABILITIES</div>
+      <h2 class="text-2xl sm:text-3xl font-bold text-[#FFFFFF] tracking-tight mb-8">
+        Full-Stack Systems Engineering
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">MOBILE & EDGE</div>
+          <div class="text-base font-semibold text-white mb-2">Native & Flutter</div>
+          <p class="text-xs text-[rgba(244,243,239,0.68)]">Offline-first mobile runtimes with cryptographic sync and local SQLite caches.</p>
+        </div>
+
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">WEB PLATFORMS</div>
+          <div class="text-base font-semibold text-white mb-2">SSR & Preact</div>
+          <p class="text-xs text-[rgba(244,243,239,0.68)]">High-performance SSR applications with sub-150ms INP and zero bloated bundles.</p>
+        </div>
+
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">ENTERPRISE ERP</div>
+          <div class="text-base font-semibold text-white mb-2">PostgreSQL Cores</div>
+          <p class="text-xs text-[rgba(244,243,239,0.68)]">Strict double-entry ledgers, RBAC role gates, and live audit telemetry.</p>
+        </div>
+
+        <div class="p-5 bg-[#111111] border border-[rgba(244,243,239,0.12)] rounded-[4px]">
+          <div class="font-mono text-xs text-[#FF5A52] mb-1">APPLIED AI & VISION</div>
+          <div class="text-base font-semibold text-white mb-2">Python & Rust</div>
+          <p class="text-xs text-[rgba(244,243,239,0.68)]">Edge OpenCV pipelines, local neural fine-tuning, and real-time inference.</p>
+        </div>
       </div>
-      <a href="/chat" class="sub-cta-btn sub-cta-btn--teal">Contact Us →</a>
+    </div>
+
+    {/* Direct Action Card */}
+    <div class="mt-16 p-8 bg-[#111111] border border-[rgba(244,243,239,0.16)] rounded-[8px] text-center max-w-3xl mx-auto space-y-4">
+      <div class="font-mono text-[12px] text-[#FF5A52] uppercase">ENGINEERING DESK</div>
+      <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+        Ready to Discuss Your Architecture?
+      </h2>
+      <p class="text-sm text-[rgba(244,243,239,0.75)] max-w-lg mx-auto">
+        We don't have a sales team. You talk directly to the engineer from day one.
+      </p>
+      <div class="pt-2">
+        <button
+          type="button"
+          data-open-modal="engineer"
+          data-goal="Company Overview & Architecture Advisory"
+          class="touch-target px-6 py-3 bg-[#D9261C] hover:bg-[#B81D14] text-white text-sm font-semibold rounded-[4px] transition-colors inline-flex items-center gap-2"
+        >
+          <span>Talk Directly to an Engineer</span>
+          <span class="font-mono">→</span>
+        </button>
+      </div>
     </div>
   </div>
 </Layout>
-
-<style>
-  .ks-page {
-    --ks-bg: #0a0a0c;
-    --ks-surface: #0f1117;
-    --ks-border: rgba(255, 255, 255, 0.07);
-    --ks-text-primary: #f0f0ec;
-    --ks-text-muted: rgba(240, 240, 236, 0.40);
-    --ks-text-faint: rgba(240, 240, 236, 0.6);
-    --ks-label: rgba(240, 240, 236, 0.7);
-    --ks-teal: #2dd4bf;
-    --ks-teal-bg: rgba(45, 212, 191, 0.08);
-    --ks-teal-border: rgba(45, 212, 191, 0.22);
-
-    background: var(--ks-bg);
-    min-height: 100vh;
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-top: 72px;
-    font-family: 'Inter', sans-serif;
-  }
-
-  /* SUB HERO */
-  .sub-hero {
-    padding: 48px 28px 44px;
-    border-bottom: 0.5px solid var(--ks-border);
-  }
-  .sub-crumb {
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ks-text-faint);
-    margin-bottom: 24px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .sub-crumb .sep { color: rgba(240,240,236,0.12); }
-  .sub-h {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(36px, 5.5vw, 58px);
-    font-weight: 800;
-    line-height: 0.94;
-    letter-spacing: -1.5px;
-    color: var(--ks-text-primary);
-    margin: 0;
-  }
-  .sub-h .accent-teal { color: var(--ks-teal); }
-  .sub-tagline {
-    font-size: 14px;
-    color: var(--ks-text-muted);
-    margin-top: 16px;
-    max-width: 600px;
-    line-height: 1.6;
-  }
-
-  /* INFO SECTIONS */
-  .info-section {
-    padding: 44px 28px;
-    border-bottom: 0.5px solid var(--ks-border);
-    position: relative;
-    overflow: hidden;
-  }
-  .info-ghost-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 80px;
-    font-weight: 800;
-    line-height: 1;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    color: var(--ks-teal);
-    opacity: 0.03;
-    letter-spacing: -4px;
-    pointer-events: none;
-    user-select: none;
-  }
-  .info-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 24px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: var(--ks-text-primary);
-    margin-bottom: 20px;
-  }
-  .info-content {
-    font-size: 13px;
-    color: var(--ks-text-muted);
-    line-height: 1.7;
-    max-width: 680px;
-  }
-  .info-content p {
-    margin-bottom: 16px;
-  }
-  .info-list {
-    list-style: none;
-    padding-left: 0;
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .info-list li {
-    padding-left: 20px;
-    position: relative;
-  }
-  .info-list li::before {
-    content: "→";
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: var(--ks-teal);
-    font-family: monospace;
-    opacity: 0.7;
-  }
-  .info-list strong {
-    color: var(--ks-text-primary);
-    font-weight: 500;
-  }
-
-  /* SERVICE CARDS GRID */
-  .service-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    border-bottom: 0.5px solid var(--ks-border);
-  }
-  @media (max-width: 540px) {
-    .service-grid { grid-template-columns: 1fr; }
-  }
-  .svc-card {
-    padding: 28px;
-    border-right: 0.5px solid var(--ks-border);
-    border-bottom: 0.5px solid var(--ks-border);
-    display: flex;
-    flex-direction: column;
-  }
-  .svc-card:nth-child(even) { border-right: none; }
-  .svc-card:nth-last-child(-n+2):nth-child(odd),
-  .svc-card:last-child { border-bottom: none; }
-
-  .svc-icon {
-    font-size: 22px;
-    margin-bottom: 16px;
-    opacity: 0.65;
-  }
-  .svc-icon--teal { color: var(--ks-teal); }
-
-  .svc-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.3px;
-    color: var(--ks-text-primary);
-    margin: 0 0 6px 0;
-    line-height: 1.15;
-  }
-  .svc-one {
-    font-size: 12px;
-    color: rgba(240, 240, 236, 0.45);
-    margin: 0;
-    line-height: 1.55;
-  }
-
-  /* BOTTOM BAR */
-  .sub-bottom {
-    padding: 32px 28px;
-    border-bottom: 0.5px solid var(--ks-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  .sub-bottom-statement {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(18px, 3vw, 22px);
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: rgba(240, 240, 236, 0.85);
-    line-height: 1.1;
-    margin: 0;
-  }
-  .sub-cta-btn {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 10px 22px;
-    border-radius: 4px;
-    text-decoration: none;
-    border: 0.5px solid;
-    background: none;
-    transition: opacity 0.18s;
-    white-space: nowrap;
-  }
-  .sub-cta-btn:hover { opacity: 0.65; }
-  .sub-cta-btn--teal { color: var(--ks-teal); border-color: var(--ks-teal-border); }
-
-  @media (max-width: 640px) {
-    .sub-hero { padding: 40px 16px 32px; }
-    .info-section { padding: 32px 16px; }
-    .svc-card { padding: 28px 16px; border-right: none !important; }
-    .svc-card:nth-last-child(-n+2):nth-child(odd) { border-bottom: 0.5px solid var(--ks-border); }
-    .svc-card:last-child { border-bottom: none; }
-    .sub-bottom { padding: 32px 16px; flex-direction: column; align-items: flex-start; }
-  }
-</style>
-
-<script>
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  gsap.registerPlugin(ScrollTrigger);
-
-  function initAbout() {
-    gsap.fromTo(".hero-anim", 
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
-    );
-  }
-  document.addEventListener("astro:page-load", initAbout);
-</script>

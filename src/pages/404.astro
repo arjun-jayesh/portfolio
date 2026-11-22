@@ -1,0 +1,51 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+
+Astro.response.status = 404;
+Astro.response.statusText = "Not Found";
+---
+
+<Layout
+  title="404 — Network Coordinate Fault // KINBO"
+  description="The requested architectural resource coordinate could not be resolved on the edge network."
+>
+  <div class="max-w-4xl mx-auto px-5 sm:px-8 py-36 min-h-[75vh] flex flex-col justify-center">
+    <div class="font-mono text-xs text-[#FF5A52] uppercase mb-2">
+      SYS.ROUTING // FAULT_CODE_404 // URI_RESOLUTION_FAILURE
+    </div>
+    
+    <h1 class="text-6xl sm:text-8xl font-bold tracking-tight text-white mb-3">
+      404
+    </h1>
+
+    <p class="text-xl sm:text-2xl font-medium text-[rgba(244,243,239,0.7)] mb-8">
+      Unresolvable Network Coordinates.
+    </p>
+
+    <p class="text-sm text-[rgba(244,243,239,0.65)] max-w-lg mb-8 leading-relaxed">
+      The requested route does not exist within the compiled edge topology. Select a verified architectural directory node below.
+    </p>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <a
+        href="/"
+        class="touch-target px-5 py-2.5 bg-[#D9261C] hover:bg-[#B81D14] text-white font-mono text-xs rounded-[4px] transition-colors"
+      >
+        [ Return to Home Index ]
+      </a>
+      <a
+        href="/products"
+        class="touch-target px-5 py-2.5 bg-[#181818] hover:bg-[#222222] border border-[rgba(244,243,239,0.16)] text-[#F4F3EF] font-mono text-xs rounded-[4px] transition-colors"
+      >
+        [ Product Registry ]
+      </a>
+      <a
+        href="/blog"
+        class="touch-target px-5 py-2.5 bg-[#181818] hover:bg-[#222222] border border-[rgba(244,243,239,0.16)] text-[#F4F3EF] font-mono text-xs rounded-[4px] transition-colors"
+      >
+        [ Technical Journal ]
+      </a>
+    </div>
+  </div>
+</Layout>

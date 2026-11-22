@@ -8,9 +8,9 @@ import Layout from "../../layouts/Layout.astro";
     <div class="max-w-lg w-full text-center">
       <!-- Success Animation -->
       <div class="relative mx-auto mb-8 w-24 h-24">
-        <div class="absolute inset-0 rounded-full bg-teal/10 animate-ping" style="animation-duration: 2s;"></div>
-        <div class="relative w-24 h-24 rounded-full bg-teal/20 border-2 border-teal flex items-center justify-center success-check" style="opacity: 0; transform: scale(0.5);">
-          <svg class="w-10 h-10 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="absolute inset-0 rounded-full bg-[#D9261C]/10 animate-ping" style="animation-duration: 2s;"></div>
+        <div class="relative w-24 h-24 rounded-full bg-[#D9261C]/20 border-2 border-[#D9261C] flex items-center justify-center success-check" style="opacity: 0; transform: scale(0.5);">
+          <svg class="w-10 h-10 text-[#FF5A52]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
           </svg>
         </div>
@@ -36,15 +36,15 @@ import Layout from "../../layouts/Layout.astro";
         </p>
 
         <!-- Payment Details Card -->
-        <div class="mt-6 p-6 rounded-2xl border border-teal/15 bg-teal/[0.03] text-left">
+        <div class="mt-6 p-6 rounded-2xl border border-[#D9261C]/15 bg-[#D9261C]/[0.03] text-left">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-2 h-2 rounded-full bg-teal animate-pulse"></div>
-            <span class="font-mono text-[10px] text-teal uppercase tracking-widest">Transaction Confirmed</span>
+            <div class="w-2 h-2 rounded-full bg-[#D9261C] animate-pulse"></div>
+            <span class="font-mono text-[10px] text-[#FF5A52] uppercase tracking-widest">Transaction Confirmed</span>
           </div>
           <div class="grid grid-cols-2 gap-3 font-mono text-[11px]">
             <div>
               <span class="text-muted/60 block">Status</span>
-              <span class="text-teal font-semibold">Verified</span>
+              <span class="text-[#FF5A52] font-semibold">Verified</span>
             </div>
             <div>
               <span class="text-muted/60 block">Platform</span>
@@ -69,14 +69,14 @@ import Layout from "../../layouts/Layout.astro";
 
           <a
             href="/services"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-charcoal-light/30 text-muted font-poppins text-xs font-semibold uppercase tracking-widest transition-all hover:border-teal/30 hover:text-offwhite hover:translate-y-[-2px]"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-charcoal-light/30 text-muted font-poppins text-xs font-semibold uppercase tracking-widest transition-all hover:border-[#D9261C]/30 hover:text-offwhite hover:translate-y-[-2px]"
           >
             Return to Services
           </a>
         </div>
 
         <div class="mt-6">
-          <a href="/chat" class="font-mono text-[10px] text-muted/50 uppercase tracking-widest hover:text-teal transition-colors">
+          <a href="/chat" class="font-mono text-[10px] text-muted/50 uppercase tracking-widest hover:text-[#FF5A52] transition-colors">
             Contact Support →
           </a>
         </div>
@@ -103,18 +103,3 @@ import Layout from "../../layouts/Layout.astro";
     100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
   }
 </style>
-
-<script>
-  import { gsap } from "gsap";
-
-  function initSuccess() {
-    gsap.to(".success-check", {
-      opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.7)", delay: 0.3
-    });
-    gsap.to(".success-content", {
-      opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 0.7
-    });
-  }
-
-  document.addEventListener("astro:page-load", initSuccess);
-</script>
