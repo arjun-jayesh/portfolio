@@ -88,6 +88,8 @@ const SECURITY_HEADERS: Record<string, string> = {
     "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(self)",
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
     "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
+    "Content-Signal": "search=yes, ai-input=yes, ai-train=yes",
+    "Link": '<https://kinbosoft.com/llms.txt>; rel="describedby", <https://kinbosoft.com/.well-known/llms.txt>; rel="describedby"',
     "Content-Security-Policy": [
         "default-src 'self'",
         "script-src 'self' https://va.vercel-scripts.com https://challenges.cloudflare.com 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://checkout.razorpay.com https://apis.google.com https://*.firebaseapp.com https://*.googleapis.com https://static.cloudflareinsights.com",

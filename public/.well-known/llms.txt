@@ -1,0 +1,20 @@
+# KINBO TECHNOLOGIES PRIVATE LIMITED
+
+> Enterprise technology company building intelligent everyday applications, high-velocity full-stack software, and clinical queue infrastructure with 100% Day-1 source code ownership.
+
+KINBO TECHNOLOGIES PRIVATE LIMITED was founded by Arjun Jayesh. Operating across India, China, and the GCC region, KINBO engineers production AI systems, healthcare technology, and enterprise platforms.
+
+## Core Documentation
+
+- [Home & Capabilities](https://kinbosoft.com): High-velocity engineering overview, architectural principles, and rate estimates
+- [QueueZero Clinical Runtime](https://kinbosoft.com/products/queuezero): Clinical triage and automated OPD queue orchestration infrastructure
+- [Products & Deployments](https://kinbosoft.com/products): Overview of flagship deployments including QueueZero, Glowup, and Relic
+- [Showcase & Client Works](https://kinbosoft.com/works): Engineering case studies across mobile apps, web platforms, and ERPs
+- [Founder Dossier](https://kinbosoft.com/founder): Background, research publications, and architecture dossier of Arjun Jayesh
+- [Engineering Journal](https://kinbosoft.com/blog): Technical articles on distributed systems, deterministic schedulers, and edge infrastructure
+
+## Optional
+
+- [Project RFP Submission](https://kinbosoft.com/ideas): Direct project submission for scoped client builds
+- [Terms & Delivery Standard](https://kinbosoft.com/terms): 100% Day-1 IP ownership, lifelong support guarantees, and SLAs
+- [Privacy Policy](https://kinbosoft.com/privacy): Data protection practices, DPDP Act compliance, and telemetry isolation

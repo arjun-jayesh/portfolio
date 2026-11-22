@@ -65,6 +65,10 @@ Disallow: /api/
 # ─── Sitemap ───
 Sitemap: https://kinbosoft.com/sitemap-index.xml
 
-# ─── LLM Context ───
+# ─── LLM & Agent Context ───
 # Canonical machine-readable knowledge base:
 # https://kinbosoft.com/llms.txt
+# https://kinbosoft.com/.well-known/llms.txt
+
+# ─── Content Signals Policy (Cloudflare & Machine-Readiness Standard) ───
+Content-Signal: search=yes, ai-input=yes, ai-train=yes

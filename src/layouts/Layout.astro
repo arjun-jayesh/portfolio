@@ -131,6 +131,9 @@ if (pathSegments.length > 0) {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="describedby" href="/llms.txt" />
+    <link rel="describedby" href="/.well-known/llms.txt" />
+    <link rel="alternate" type="text/markdown" href="/llms.txt" />
+    <meta name="content-signal" content="search=yes, ai-input=yes, ai-train=yes" />
 
     {/* Preconnect Fonts */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -445,6 +448,36 @@ if (pathSegments.length > 0) {
             toggle.focus();
           }
         });
+      }
+
+      // WebMCP (Web Model Context Protocol) Browser Agent Tool Registration
+      if (typeof window !== 'undefined') {
+        const mc = (window as any).modelContext || (navigator as any).modelContext || (document as any).modelContext;
+        if (mc && typeof mc.registerTool === 'function') {
+          mc.registerTool({
+            name: "kinbo_estimate_project",
+            description: "Calculate custom software development cost estimate and 30/40/30 milestone breakdown for KINBO Technologies.",
+            parameters: {
+              type: "object",
+              properties: {
+                projectType: {
+                  type: "string",
+                  enum: ["web", "mobile", "ai", "enterprise", "healthcare"],
+                  description: "Domain or category of the software build"
+                }
+              },
+              required: ["projectType"]
+            },
+            execute: async () => {
+              return {
+                status: "success",
+                agencyModel: "Direct-to-Engineer (Zero sales layer, 100% Day-1 source code ownership)",
+                milestones: "30% Research & Spec lock, 40% Staging Verification, 30% Handover & 100% IP transfer",
+                contactWhatsApp: "https://wa.me/919074811984"
+              };
+            }
+          });
+        }
       }
     </script>
   </body>

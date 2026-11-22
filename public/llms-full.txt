@@ -1,0 +1,43 @@
+# KINBO TECHNOLOGIES PRIVATE LIMITED - Comprehensive System Context
+
+> Enterprise technology company building intelligent everyday applications, high-velocity full-stack software, and clinical queue infrastructure with 100% Day-1 source code ownership.
+
+## Institutional Profile
+
+- Legal Entity: KINBO TECHNOLOGIES PRIVATE LIMITED
+- Founder & Principal Systems Architect: Arjun Jayesh
+- Headquarters: Kerala, India
+- Operational Footprint: India, China, GCC Region
+- Core Focus: High-velocity software engineering, clinical runtime infrastructure, machine learning pipelines, and custom enterprise platforms
+- Business Model: Direct-to-Engineer, zero sales layer, transparent 30 / 40 / 30 milestone payments, 100% Day-1 IP ownership
+
+## Core Products & Infrastructure
+
+### QueueZero Clinical Runtime
+- URL: https://kinbosoft.com/products/queuezero
+- Overview: Distributed clinical queuing and automated outpatient department (OPD) orchestration platform designed for hospitals, specialty clinics, and regional diagnostic networks. Eliminates physical waiting queues and stabilizes doctor consultation cadence.
+
+### Glowup Vision AI
+- URL: https://kinbosoft.com/products
+- Overview: Computer vision and dermatological intelligence pipeline delivering objective skin condition scoring, longitudinal progress tracking, and lifestyle correlation metrics.
+
+### Relic Framework
+- URL: https://kinbosoft.com/products
+- Overview: Offline-first data synchronization and resilient edge runtime for field operations and mission-critical distributed environments.
+
+## Engineering Philosophy & Pricing
+
+- Web Applications: Custom responsive web platforms starting from ₹7,000.
+- Mobile Applications: Cross-platform iOS and Android architectures starting from ₹15,000.
+- Custom AI Systems: Automated agent workflows starting from ₹3,000; domain model fine-tuning starting from ₹23,000.
+- Milestone Schedule: 30% Research & Spec Lock, 40% Staging Verification, 30% Refine & Full Source Code Handover.
+- Direct Contact: WhatsApp +91 90748 11984 or email contact@kinbosoft.com.
+
+## Content & Agentic Governance
+
+- Machine Learning Training: Allowed (`ai-train=yes`)
+- Search Engine Indexing: Allowed (`search=yes`)
+- AI Answer & Grounding: Allowed (`ai-input=yes`)
+- Canonical Discovery Endpoints:
+  - https://kinbosoft.com/llms.txt
+  - https://kinbosoft.com/.well-known/llms.txt
