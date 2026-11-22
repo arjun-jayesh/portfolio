@@ -86,7 +86,7 @@ h1, h2, h3, h4, h5, h6 {
 .mono-sm {
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   font-variant-numeric: tabular-nums;
-  font-size: 12px; /* Strict 12px minimum — never render 10px mono labels */
+  font-size: 12px; /* Strict 12px minimum  -  never render 10px mono labels */
   letter-spacing: 0.06em;
 }
 

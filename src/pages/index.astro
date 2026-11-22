@@ -40,6 +40,14 @@ const defaultWaUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
   <meta name="description" content="State-of-the-art apps, websites, ERPs, and AI systems built in Research-Build-Refine stages with lifelong support. Transparent rates from ₹7,000. Talk directly to an engineer.">
   <link rel="canonical" href="https://kinbosoft.com/">
 
+  <!-- Favicons and Agentic Discovery -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="describedby" href="/llms.txt">
+
   <!-- CSP-Safe Typography: Standard preconnect + display=swap stylesheet (zero inline onload) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1679,6 +1687,9 @@ const defaultWaUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
       justify-content: space-between;
       align-items: center;
     }
+    .deployment-footer .mono-label {
+      color: #F4F3EF;
+    }
 
     /* =========================================================================
        INSTITUTIONAL VALUES STRIP
@@ -2370,7 +2381,7 @@ const defaultWaUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
 
             <div class="est-actions">
               <button type="button" id="estBriefBtn" class="btn btn-light">Discuss with Engineer</button>
-              <a id="estWaBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark">
+              <a id="estWaBtn" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp an Engineer about your scope estimate" class="btn btn-outline-dark">
                 WhatsApp Engineer &rarr;
               </a>
             </div>
@@ -2483,7 +2494,7 @@ const defaultWaUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
           <button type="button" class="btn btn-light" data-open-brief data-prefill="Direct Engineer Brief">
             Talk to an Engineer
           </button>
-          <a id="closingWaLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark">
+          <a id="closingWaLink" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp an Engineer for direct consultation" class="btn btn-outline-dark">
             WhatsApp Engineer &rarr;
           </a>
         </div>
@@ -2566,7 +2577,7 @@ const defaultWaUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
        ========================================================================= -->
   <div class="mobile-bar" role="region" aria-label="Quick actions">
     <a href="#estimator" class="mb-est">Estimate</a>
-    <a id="mobileBarWa" href="#" target="_blank" rel="noopener noreferrer" class="mb-wa">WhatsApp Engineer</a>
+    <a id="mobileBarWa" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp an Engineer via mobile quick action" class="mb-wa">WhatsApp Engineer</a>
   </div>
 
   <!-- =========================================================================
@@ -2608,7 +2619,7 @@ const defaultWaUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
 
           <div class="modal-foot-row">
             <span>Reply &lt; 4 business hrs</span>
-            <a id="modalWaDirect" href="#" target="_blank" rel="noopener noreferrer" class="modal-wa-link">
+            <a id="modalWaDirect" href="#" target="_blank" rel="noopener noreferrer" aria-label="Or WhatsApp an Engineer directly" class="modal-wa-link">
               Or WhatsApp Engineer &rarr;
             </a>
           </div>
@@ -2621,7 +2632,7 @@ const defaultWaUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
         <p id="briefConfirmMsg" style="margin:10px auto 0;max-width:360px;color:rgba(17,17,17,0.75);"></p>
         <div class="confirm-actions">
           <button type="button" id="briefDoneBtn" class="btn btn-carbon">Done</button>
-          <a id="confirmWaBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light">
+          <a id="confirmWaBtn" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp conversation with engineer" class="btn btn-outline-light">
             Open WhatsApp &rarr;
           </a>
         </div>

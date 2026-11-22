@@ -1,58 +1,20 @@
 # KINBO TECHNOLOGIES PRIVATE LIMITED
 
-> Enterprise technology company building intelligent everyday applications.
-> Canonical Domain: https://kinbosoft.com
+> Enterprise technology company building intelligent everyday applications, high-velocity full-stack software, and clinical queue infrastructure with 100% Day-1 source code ownership.
 
-## Company Overview
+KINBO TECHNOLOGIES PRIVATE LIMITED was founded by Arjun Jayesh. Operating across India, China, and the GCC region, KINBO engineers production AI systems, healthcare technology, and enterprise platforms.
 
-KINBO TECHNOLOGIES PRIVATE LIMITED is an enterprise technology company founded by Arjun Jayesh. The company specializes in building intelligent, practical applications that combine cutting-edge technology with user-focused design. Operating across India, China, and the GCC region, KINBO TECHNOLOGIES develops solutions spanning enterprise software, artificial intelligence, healthcare technology, and research infrastructure.
+## Core Documentation
 
-## Official Websites & Repositories
+- [Home & Capabilities](https://kinbosoft.com): High-velocity engineering overview, architectural principles, and rate estimates
+- [QueueZero Clinical Runtime](https://kinbosoft.com/products/queuezero): Clinical triage and automated OPD queue orchestration infrastructure
+- [Products & Deployments](https://kinbosoft.com/products): Overview of flagship deployments including QueueZero, Glowup, and Relic
+- [Showcase & Client Works](https://kinbosoft.com/works): Engineering case studies across mobile apps, web platforms, and ERPs
+- [Founder Dossier](https://kinbosoft.com/founder): Background, research publications, and architecture dossier of Arjun Jayesh
+- [Engineering Journal](https://kinbosoft.com/blog): Technical articles on distributed systems, deterministic schedulers, and edge infrastructure
 
-- Canonical Production: https://kinbosoft.com
-- Engineering Showcase: https://kinbosoft.com/works
-- Products & Deployments: https://kinbosoft.com/products
-- Founder Dossier: https://kinbosoft.com/founder
-- Technical Journal: https://kinbosoft.com/blog
+## Optional
 
-## Founder
-
-**Arjun Jayesh** - Founder & Systems Architect
-- Focus: AI Engineering, Healthcare Technology, Computer Vision, RAG Systems, Clinical Workflow Optimization
-- Role: Lead architect and technical visionary behind all KINBO TECHNOLOGIES systems
-
-## Flagship Products
-
-### QueueZero (Q0)
-Clinical infrastructure platform for healthcare facilities. Provides real-time patient queue management, clinical assessment tools, and workflow optimization for hospitals and clinics.
-- URL: https://kinbosoft.com/products#queuezero
-- Architecture: Low-latency event streaming, HIPAA-compliant patient flow architecture, multi-station triage display.
-
-### Glowup
-Consumer technology product focused on personal development, daily habit formation, and lifestyle optimization.
-- URL: https://kinbosoft.com/products#glowup
-
-### Relic
-Digital preservation and archival technology system designed for secure, immutable asset storage and historical records.
-- URL: https://kinbosoft.com/products#relic
-
-## Services & Delivery Units
-
-### KINBO Hub
-Full-stack product development and technology consulting services with 100% Day-1 source code ownership.
-
-### KINBO Cares
-Research mentorship, academic guidance, and educational technology programs.
-
-### KINBO Expert
-Technical consulting, senior systems architecture, and engineering expertise for enterprise clients.
-
-### KINBO Consultancy
-Strategic technology advisory, cloud migrations, and startup infrastructure consulting.
-
-## Technical Capabilities & Stack
-
-- **AI & Machine Learning**: RAG architectures, computer vision pipelines, NLP, embeddings.
-- **Healthcare Technology**: Clinical workflow systems, patient telemetry, hospital operations.
-- **Enterprise Software**: Astro SSR, Preact Islands, Tailwind CSS, Supabase (PostgreSQL), Edge Functions.
-- **Cloud & DevOps**: Vercel Edge Network, Cloudinary CDN, Razorpay Payments, Cloudflare Security.
+- [Project RFP Submission](https://kinbosoft.com/ideas): Direct project submission for scoped client builds
+- [Terms & Delivery Standard](https://kinbosoft.com/terms): 100% Day-1 IP ownership, lifelong support guarantees, and SLAs
+- [Privacy Policy](https://kinbosoft.com/privacy): Data protection practices, DPDP Act compliance, and telemetry isolation
